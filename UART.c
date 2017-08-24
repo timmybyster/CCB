@@ -16,9 +16,12 @@ int TransmitPiBufferIG = 0;
 unsigned char PiBufferTXLenUCA = 0;
 unsigned char PiBufferTXNEXTUCA = 0;
 unsigned char PiBufferRXNEXTUCA = 0;
-char ReceivedPiBufferCG[PI_RECEIVE_BUFFER_LENGTH]; //Character Buffer to receive packets from the Pi, Should be fixed length of 7
-//char TransmitPiBufferCG[PI_TRANSMIT_BUFFER_LENGTH]; //Character Buffer containing data & packet going to the Pi. Length 8 to 72
+char ReceivedPiBufferCG[PI_RECEIVE_BUFFER_LENGTH];                              //Character Buffer to receive packets from the Pi, Should be fixed length of 7
 char TransmitPiBufferCG[80];
+
+//extern unsigned char RX_ready_Global;
+//extern unsigned short RX_TimoutCounter;
+
 //Function prototypes
 
 char UART_Init(const long int baudrate);
@@ -30,7 +33,6 @@ void SendUARTPacket(void);
 unsigned char DataReadyUART(void);
 unsigned short PacketReadParamUART(unsigned char paramName);
 unsigned char CheckCRCUART(void);
-//void CreateMessageUARTTest(void);
 void ClearDataReady(void);
 void CreateMessageUARTTest(unsigned char Command);
 void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
@@ -43,41 +45,40 @@ extern unsigned short CRC16(char *, unsigned short);
 char UART_Init(const long int baudrate)
 {
   unsigned int x;
-  //ReceivedPiBufferCG[2] = PI_RECEIVE_BUFFER_LENGTH;
-  x = (_XTAL_FREQ*4 - baudrate*64)/(baudrate*64);   //SPBRG for Low Baud Rate
-  if(x>255)                                       //If High Baud Rage Required
+  x = (_XTAL_FREQ*4 - baudrate*64)/(baudrate*64);                               //SPBRG for Low Baud Rate
+  if(x>255)                                                                     //If High Baud Rage Required
   {
-    x = (_XTAL_FREQ*4 - baudrate*16)/(baudrate*16); //SPBRG for High Baud Rate
-    TXSTA1bits.BRGH = 1;                                     //Setting High Baud Rate
+    x = (_XTAL_FREQ*4 - baudrate*16)/(baudrate*16);                             //SPBRG for High Baud Rate
+    TXSTA1bits.BRGH = 1;                                                    //Setting High Baud Rate
   }
   if(x<256)
   {
     x=25;
-    SPBRG1 = x;                                   //Writing SPBRG Register
-    TXSTA1bits.SYNC = 0;                          //Setting Asynchronous Mode, ie UART
-    RCSTA1bits.SPEN = 1;                          //Enables Serial Port
-    RCSTA1bits.CREN = 1;                          //Enables Continuous Reception
-    TXSTA1bits.TXEN = 1;                          //Enables Transmission
-    return 1;                                     //Returns 1 to indicate Successful Completion
+    SPBRG1 = x;                                                                 //Writing SPBRG Register
+    TXSTA1bits.SYNC = 0;                                                        //Setting Asynchronous Mode, ie UART
+    RCSTA1bits.SPEN = 1;                                                        //Enables Serial Port
+    RCSTA1bits.CREN = 1;                                                        //Enables Continuous Reception
+    TXSTA1bits.TXEN = 1;                                                        //Enables Transmission
+    return 1;                                                                   //Returns 1 to indicate Successful Completion
   }
-  return 0;                                       //Returns 0 to indicate UART initialization failed
+  return 0;                                                                     //Returns 0 to indicate UART initialization failed
 }
 
 char UART_Read(void)
 {
     char charRS232;   
-    
-    charRS232 = RCREG1; //get a single character off the USART line    
-                            
-        if((PI_RECEIVE_BUFFER_LENGTH - 1) == PiBufferRXNEXTUCA){                            //Entire packet read?
+    charRS232 = RCREG1; //get a single character off the USART line                  
+        if((PI_RECEIVE_BUFFER_LENGTH - 1) == PiBufferRXNEXTUCA){                //Entire packet read?       
+//            RX_ready_Global=1;
             flagUARTRead = 1;
             ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
-            PiBufferRXNEXTUCA = 0;//Indicate we have received a full packet            
+            PiBufferRXNEXTUCA = 0;                                              //Indicate we have received a full packet      
             return;
         }
-        else if (PiBufferRXNEXTUCA > PI_RECEIVE_BUFFER_LENGTH){
+        else if (PiBufferRXNEXTUCA > PI_RECEIVE_BUFFER_LENGTH  || flagUARTRead == 1){
+            PiBufferRXNEXTUCA = 0;                                              //ensure it never gets stuck
         }
-        else{
+        else{            
             flagUARTRead = 0;
             ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
             PiBufferRXNEXTUCA++;
@@ -85,21 +86,26 @@ char UART_Read(void)
         }    
 }
 
+void resetUARTPointers(void){
+    flagUARTRead = 1;
+    PiBufferRXNEXTUCA = 0;
+}
+
 unsigned short PacketReadParamUART(unsigned char paramName){
     unsigned short retValueUS = 0;
 
     switch(paramName){        
-        case(UART_HEADER):                                                    //Retrieve the source address
+        case(UART_HEADER):                                                      //Retrieve the source address
             retValueUS |= ((unsigned short) ReceivedPiBufferCG[0] << 8);
             retValueUS |= ReceivedPiBufferCG[1];
             return retValueUS;
-        case(UART_CMD):                                                       //Retrieve the command
+        case(UART_CMD):                                                         //Retrieve the command
             return ReceivedPiBufferCG[2];
-        case(UART_SN):                                                    //Retrieve the source address
+        case(UART_SN):                                                          //Retrieve the source address
             retValueUS |= ((unsigned short) ReceivedPiBufferCG[3] << 8);
             retValueUS |= ReceivedPiBufferCG[4];
             return retValueUS;
-        case(UART_CRC_VALID):                                                 //Does the CRC match
+        case(UART_CRC_VALID):                                                   //Does the CRC match
             return CheckCRCUART();
     }
 
@@ -113,8 +119,7 @@ unsigned char CheckCRCUART(void){
     unsigned short packetCRCUS = 0;
 
     packetLenUC = PI_RECEIVE_BUFFER_LENGTH-2;
-    expectedCRCUS = CRC16(ReceivedPiBufferCG, packetLenUC);                      //Calculate the expected CRC
-    //packetCRCUS = CRC16(TransmitPiBufferCG, 5);
+    expectedCRCUS = CRC16(ReceivedPiBufferCG, packetLenUC);                     //Calculate the expected CRC
     receivedCRCUS |= (((unsigned short) ReceivedPiBufferCG[5]) << 8);
     receivedCRCUS |= ReceivedPiBufferCG[5+1];
 
@@ -122,7 +127,7 @@ unsigned char CheckCRCUART(void){
 }
 
 unsigned char DataReadyUART(void){
-    return flagUARTRead;                               //Is the received data ready
+    return flagUARTRead;                                                        //Is the received data ready
 }
 
 void ClearDataReady(void){
@@ -135,16 +140,16 @@ void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSource
     unsigned short packetCRCUS = 0;
     unsigned short packetCRCUStemp = 0;
 
-    TransmitPiBufferCG[0] = 0xAA;//0x42;//0xAA;   //B                                             //Preamble
-    TransmitPiBufferCG[1] = 0xAA;//0x41;//0xAA;
+    TransmitPiBufferCG[0] = 0xAA;                                               //0x42;//0xAA;   //B                                             //Preamble
+    TransmitPiBufferCG[1] = 0xAA;                                               //0x41;//0xAA;
 
-    TransmitPiBufferCG[2] = Command;//0x2B;//Command;                                             //Command
+    TransmitPiBufferCG[2] = Command;                                            //0x2B;//Command;                                                //Command
 
-    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                            //Serial No MSB
-    TransmitPiBufferCG[4] = packetSourceUS;                                            //Serial No LSB
+    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                //Serial No MSB
+    TransmitPiBufferCG[4] = packetSourceUS;                                     //Serial No LSB
 
     packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)PI_TRANSMIT_MIN_BUFFER_LENGTH - 2));
-    packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);//Calcualte CRC
+    packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);                             //Calcualte CRC
     TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
     TransmitPiBufferCG[6] = packetCRCUStemp;
 
@@ -157,16 +162,16 @@ void CreateMessageUARTTest(unsigned char Command){
     unsigned short packetCRCUS = 0;
     unsigned short packetCRCUStemp = 0;    
 
-    TransmitPiBufferCG[0] = 0xAA;//0x42;//0xAA;   //B                                             //Preamble
-    TransmitPiBufferCG[1] = 0xAA;//0x41;//0xAA;
+    TransmitPiBufferCG[0] = 0xAA;                                               //0x42;//0xAA;   //B                                             //Preamble
+    TransmitPiBufferCG[1] = 0xAA;                                               //0x41;//0xAA;
 
-    TransmitPiBufferCG[2] = Command;//0x2B;//Command;                                             //Command
+    TransmitPiBufferCG[2] = Command;                                            //0x2B;//Command;                                             //Command
 
-    TransmitPiBufferCG[3] = 0x31;                                            //Serial No MSB
-    TransmitPiBufferCG[4] = 0x30;                                            //Serial No LSB
+    TransmitPiBufferCG[3] = 0x31;                                               //Serial No MSB
+    TransmitPiBufferCG[4] = 0x30;                                               //Serial No LSB
 
     packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)PI_TRANSMIT_MIN_BUFFER_LENGTH - 2));
-    packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);//Calcualte CRC
+    packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);                             //Calcualte CRC
     TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
     TransmitPiBufferCG[6] = packetCRCUStemp;
     //TransmitPiBufferCG[5] = 0x43; //C
@@ -187,22 +192,21 @@ void CreateMessageUARTTest(unsigned char Command){
 
 }
 
-//CreateMessageUARTDEBUG(PacketReadParamST7540(ST7540_DATA_LEN),PacketReadParamST7540(ST7540_SOURCE), PacketReadParamST7540(ST7540_DEST),PacketReadParamST7540(ST7540_NUMBER),PacketReadParamST7540(ST7540_CMD),PacketDataST7540());
 void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf){
     unsigned char dataBufLocUC;
     unsigned short packetCRCUS;
 
-    TransmitPiBufferCG[0] = 0xF3;                                                //Preamble
+    TransmitPiBufferCG[0] = 0xF3;                                               //Preamble
     TransmitPiBufferCG[1] = 0xCF;
 
     TransmitPiBufferCG[2] = dataLenUC;
 
-    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                 //IBC-1 S/N
+    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                //IBC-1 S/N
     TransmitPiBufferCG[4] = packetSourceUS;
 
 
 
-    TransmitPiBufferCG[5] = packetDestUS >> 8;                                 //IBC-1 S/N
+    TransmitPiBufferCG[5] = packetDestUS >> 8;                                  //IBC-1 S/N
     TransmitPiBufferCG[6] = packetDestUS;
 
     TransmitPiBufferCG[7] = packetNOUC;
@@ -228,7 +232,7 @@ void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, u
     unsigned char dataBufLocUC;
     unsigned short packetCRCUS;
 
-    TransmitPiBufferCG[0] = 0xAA;                                                //Preamble
+    TransmitPiBufferCG[0] = 0xAA;                                               //Preamble
     TransmitPiBufferCG[1] = 0xAA;
 
     TransmitPiBufferCG[2] = PI_TRANSMIT_MIN_BUFFER_LENGTH + dataLenUC;          //Packet length
@@ -250,27 +254,25 @@ void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, u
 
 void SendUARTPacket(void){
 
-    flagUART |= FLAG_UART_TX_ACTIVE;                                        //Set TX state as active
+    flagUART |= FLAG_UART_TX_ACTIVE;                                            //Set TX state as active
     UART_Write(TransmitPiBufferCG[0]);                                          //Write first byte
-    PiBufferTXNEXTUCA = 1;                                                        //Set index
-    //PiBufferTXNEXTUCA
+    PiBufferTXNEXTUCA = 1;                                                      //Set index
 }
 
 void UART_Write(char data)
 {
-  while(!TXSTA1bits.TRMT); //Check the buffer is empty
-  TXREG1 = data; //Write character into buffer
+  while(!TXSTA1bits.TRMT);                                                      //Check the buffer is empty
+  TXREG1 = data;                                                                //Write character into buffer
 }
 
 void UART_TX_ISRHandler(void){
 
-    if(flagUART & FLAG_UART_TX_ACTIVE){                                     //Are we in TX mode
-        if(PiBufferTXNEXTUCA > PiBufferTXLenUCA){                           //Done transmitting buffer?
-            flagUART &= ~FLAG_UART_TX_ACTIVE;                               //Disable TX mode
+    if(flagUART & FLAG_UART_TX_ACTIVE){                                         //Are we in TX mode
+        if(PiBufferTXNEXTUCA > PiBufferTXLenUCA){                               //Done transmitting buffer?
+            flagUART &= ~FLAG_UART_TX_ACTIVE;                                   //Disable TX mode
             return;
         }
-        //SSP2BUF = bufferTXST7540UCA[bufferTXNextUCA++];                         //Send next byte
-        UART_Write(TransmitPiBufferCG[PiBufferTXNEXTUCA++]);                                          //Write next byte        
+        UART_Write(TransmitPiBufferCG[PiBufferTXNEXTUCA++]);                    //Write next byte        
     }
 
 }

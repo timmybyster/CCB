@@ -1,5 +1,5 @@
 
-# 1 "Released IBC-1 Code - 03-06-2016/UART.c"
+# 1 "UART.c"
 
 # 26 "C:\Program Files (x86)\Microchip\xc8\v1.36\include\htc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -8793,7 +8793,7 @@ extern __nonreentrant void _delaywdt(unsigned long);
 extern __nonreentrant void _delay3(unsigned char);
 
 
-# 22 "Released IBC-1 Code - 03-06-2016/main.h"
+# 22 "main.h"
 #pragma config FOSC = INTIO67
 #pragma config PLLCFG = OFF
 #pragma config PRICLKEN = ON
@@ -8854,7 +8854,7 @@ extern __nonreentrant void _delay3(unsigned char);
 
 #pragma config EBTRB = OFF
 
-# 12 "Released IBC-1 Code - 03-06-2016/UART.c"
+# 12 "UART.c"
 unsigned char flagUART = 0;
 unsigned char flagUARTRead = 0;
 int ReceivedPiBufferIndexIG = 0;

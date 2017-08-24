@@ -31,7 +31,7 @@
 #pragma config BORV = 190       // Brown Out Reset Voltage bits (VBOR set to 1.90 V nominal)
 
 // CONFIG2H
-#pragma config WDTEN = SWON      // Watchdog Timer Enable bits (Watch dog timer is always disabled. SWDTEN has no effect.)
+#pragma config WDTEN = SWON //SWDTEN has no effect and is enabled //SWON      // Watchdog Timer Enable bits (Watch dog timer is always disabled. SWDTEN has no effect.)
 //#pragma config WDTPS = 32768    // Watchdog Timer Postscale Select bits (1:32768)
 #pragma config WDTPS = 2048    // Watchdog Timer Postscale Select bits (1:32768)
 
@@ -89,6 +89,11 @@
 #define ARMED                   1
 #define DISARMED                0
 
+#define PI_COM_FAULT            1
+#define PI_COM_GOOD             0
+
+#define RX_TIMEOUT              30
+
 #define FIRING                  2
 #define TEST                    0
 
@@ -101,12 +106,15 @@
 #define VOLT_EL_HIGH            390 //For Rel = 2k
 #define VOLT_CF_HIGH            375// calculateion get 389 but testing showed 375 to be more accurate. 275 //NEED TO CALCULATE
 #define COUNTER_CF              40 //Amount of cable faults dettected to trigger alarm
+#define COUNTER_EL              4  //Amount of EL faults detected to trigger alarm
+#define START_EL                5 //Amount of cycles before it actually does the test
+
 
 //#define VOLT_ZC_THRESHOLD       10 //Calculate
 #define VOLT_ZC_THRESHOLD       1 //Calculate
 #define VOLT_MAINS_THRESHOLD    800
 
-#define IBC_SN                  0x01
+#define IBC_SN                  0x0003 // must be changed in UART and main header. - UART seems to take priotiry
 #define ISC_SN_BROADCAST_ADD    0x00
 #define ISC_DEFAULT_SN          0x3FFE
 #define ISC_NULL_SN             0x3FFF
@@ -122,10 +130,10 @@
 #define CMD_SEND_AC             0b00000010
 #define CMD_FORCE_AC            0b01000010
 #define CMD_SEND_BLAST_VALUE    0b00000011
-#define CMD_FORCE_BLAST_VALUE   0b01000011
+#define CMD_FORCE_BLAST_VALUE   0b01100011
 #define CMD_SEND_TEMPERATURE    0b00000100
 #define CMD_OPEN_RELAY          0b00000110
-#define CMD_CLOSE_RELAY         0b00000101
+#define CMD_CLOSE_RELAY         0b00001101
 #define CMD_GET_SN              0b00000111
 #define CMD_SN_LIST_CHANGED     0b00001000
 #define CMD_BLAST_COMMAND       0b00100101
@@ -135,6 +143,8 @@
 #define CMD_CABLE_FAULT         0b00100110
 #define CMD_ISC_NEW_SN          0b00001001
 #define CMD_NULL                0b11111111
+#define CMD_AB1_UID             0b00001010
+#define CMD_AB1_DATA            0b00001011
 
 #define CMD_SEND_DEFAULT_B        0b10000000
 #define CMD_FORCE_DEFAULT_B       0b11000000
@@ -160,26 +170,33 @@
 #define CMD_PI_SN_IB651         0b00000010
 #define CMD_PI_DEFAULT_DATA     0b00000011
 #define CMD_PI_FORCE_DEFAULT    0b01000011
-#define CMD_PI_DC_DATA          0b00000100
-#define CMD_PI_FORCE_DC         0b01000100
-#define CMD_PI_AC_DATA          0b00000101
-#define CMD_PI_FORCE_AC         0b01000101
 #define CMD_PI_BLAST_VALUE      0b00000110
 #define CMD_PI_FORCE_BLAST_VAL  0b01000110
 #define CMD_PI_IBC_DEFAULT      0b00001000
 #define CMD_PI_IBC_ERRORS       0b00001100
 #define CMD_PI_ISC_PARENT       0b00001111
+#define CMD_PI_CLOSE_RELAY      0b00010001
+#define CMD_PI_OPEN_RELAY       0b00010010
+#define CMD_PI_CLEAR_ISC_LIST   0b00010011              //clear the IBC's list of ISC's
+#define CMD_PI_MISSING_ISC_LIST 0b00010100              //gives the list of missing ISC's sent to PI
+#define CMD_PI_CLEAR_ALARM      0b00010101              //Command to clear the alarm on the IBC
 #define CMD_PI_BLAST_PERMISSION 0b10010000
 #define CMD_PI_BLAST_DENIED     0b10010111
 #define CMD_PI_BLAST_ACK        0b10100101
 #define CMD_PI_PING_ISC         0b00101001
 #define CMD_PI_ARM_ISC          0b10110001
 #define CMD_PI_DISARM           0b10110000
+#define CMD_PI_DC_DATA          0b00111110
+#define CMD_PI_FORCE_DC         0b01111110
+#define CMD_PI_AC_DATA          0b00111111
+#define CMD_PI_FORCE_AC         0b01111111
+
+#define CMD_PI_AB1_UID          0b00000100
+#define CMD_PI_AB1_DATA         0b00000101
 
 #define CMD_PI_DEFAULT_DATA_B   0b10000011              //COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #define CMD_PI_PING_ISC_B       0b10101001
-//#define CMD_PI_CLOSE_RELAY
-//#define CMD_PI_OPEN_RELAY
+//
 
 #define FLAG_UART_TX_ACTIVE         1
 
@@ -212,6 +229,9 @@
 #define DATA_SERIAL_NUMBER          4
 #define DATA_LENGTH                 5
 #define DATA_TYPE_COUNT             6
+
+#define IBC_COMSCRASH_COUNT         240     //tickes every 1 second amounts to 4 minures
+
 
 //A2D Input definitions
 #define TRIS_CFAULT_READ        TRISAbits.TRISA0        //Cable Fault Read

@@ -1,5 +1,5 @@
 
-# 1 "Released IBC-1 Code - 03-06-2016/UART.c"
+# 1 "ST7540.c"
 
 # 26 "C:\Program Files (x86)\Microchip\xc8\v1.36\include\htc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -8793,7 +8793,7 @@ extern __nonreentrant void _delaywdt(unsigned long);
 extern __nonreentrant void _delay3(unsigned char);
 
 
-# 22 "Released IBC-1 Code - 03-06-2016/main.h"
+# 22 "main.h"
 #pragma config FOSC = INTIO67
 #pragma config PLLCFG = OFF
 #pragma config PRICLKEN = ON
@@ -8854,267 +8854,303 @@ extern __nonreentrant void _delay3(unsigned char);
 
 #pragma config EBTRB = OFF
 
-# 12 "Released IBC-1 Code - 03-06-2016/UART.c"
-unsigned char flagUART = 0;
-unsigned char flagUARTRead = 0;
-int ReceivedPiBufferIndexIG = 0;
-int TransmitPiBufferIG = 0;
-unsigned char PiBufferTXLenUCA = 0;
-unsigned char PiBufferTXNEXTUCA = 0;
-unsigned char PiBufferRXNEXTUCA = 0;
-char ReceivedPiBufferCG[7];
-char TransmitPiBufferCG[80];
+# 40 "ST7540.c"
+unsigned char flagST7540;
+unsigned char bufferTXST7540UCA[(unsigned long short) 75+2+2];
+unsigned char bufferRXST7540UCA[(unsigned long short) 75];
+unsigned char bufferTXLenUCA;
+unsigned char bufferTXNextUCA;
+unsigned char bufferRXLenUCA;
+unsigned char bufferRXNextUCA;
+unsigned char packetNumberUC;
 
-# 27
-char UART_Init(const long int baudrate);
-char UART_Read(void);
-void UART_Write(char data);
-void UART_TX_ISRHandler(void);
-void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf);
-void SendUARTPacket(void);
-unsigned char DataReadyUART(void);
-unsigned short PacketReadParamUART(unsigned char paramName);
-unsigned char CheckCRCUART(void);
-void ClearDataReady(void);
-void CreateMessageUARTTest(unsigned char Command);
-void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
-void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf);
+unsigned char InitST7540(void);
+void InitST7540Pins(void);
+void WriteConfigST7540(unsigned long short, unsigned long short);
+void ReadConfigST7540(unsigned long short *, unsigned long short *);
+void SPIISRHandlerST7540(void);
+void RXReadyISRHandlerST7540(void);
+unsigned char LineIdleST7540(void);
+void CreateMessageST7540(unsigned short, unsigned short, unsigned char, unsigned char, char *);
+void StartTransmitST7540(void);
+unsigned char TransmitBusyST7540(void);
+void ReceiveNewDataST7540(void);
+unsigned char DataReadyST7540(void);
+unsigned short PacketReadParamST7540(unsigned char);
+unsigned char CheckCRCST7540(void);
+unsigned short CalcCRCST7540(void);
 
-
+extern void WaitTickCount(unsigned short);
 extern unsigned short CRC16(char *, unsigned short);
 
+unsigned char InitST7540(void){
+unsigned long short frameDataTXUS;
+unsigned long short frameDataRXUS = 0;
+unsigned long short configDataTXUS;
+unsigned long short configDataRXUS = 0;
 
-char UART_Init(const long int baudrate)
-{
-unsigned int x;
-x = (16000000*4 - baudrate*64)/(baudrate*64);
-if(x>255)
-{
-x = (16000000*4 - baudrate*16)/(baudrate*16);
-TXSTA1bits.BRGH = 1;
-}
-if(x<256)
-{
-x=25;
-SPBRG1 = x;
-TXSTA1bits.SYNC = 0;
-RCSTA1bits.SPEN = 1;
-RCSTA1bits.CREN = 1;
-TXSTA1bits.TXEN = 1;
+InitST7540Pins();
+
+frameDataTXUS = (unsigned long short) 0x9b58;
+configDataTXUS = 0b000000000000000000000110 |
+0b000000000000000000010000 |
+0b000000000000000000000000 |
+0b000000000000000000000000 |
+0b000000000000000010000000 |
+0b000000000000001000000000 |
+0b000000000001000000000000 |
+0b000000000000000000000000 |
+0b000000011000000000000000 |
+0b000000100000000000000000 |
+0b000001000000000000000000 |
+0b000000000000000000000000 |
+0b000100000000000000000000 |
+0b001000000000000000000000 |
+0b010000000000000000000000 |
+0b000000000000000000000000;
+
+SSP2STATbits.CKE = 1;
+SSP2CON1bits.SSPM = 0b0101;
+
+WriteConfigST7540(frameDataTXUS, configDataTXUS);
+WriteConfigST7540(frameDataTXUS, configDataTXUS);
+ReadConfigST7540(&frameDataRXUS, &configDataRXUS);
+if((frameDataTXUS != frameDataRXUS) && (configDataTXUS != configDataRXUS))
+return 0;
+
+PIE3bits.SSP2IE = 1;
+INTCONbits.PEIE = 1;
+
 return 1;
 }
+
+void WriteConfigST7540(unsigned long short frameDataUS, unsigned long short configDataUS){
+unsigned char discardUC;
+unsigned char bitsSentUC;
+
+bufferTXST7540UCA[0] = (frameDataUS & 0b111111110000000000000000) >> 16;
+bufferTXST7540UCA[1] = (frameDataUS & 0b000000001111111100000000) >> 8;
+bufferTXST7540UCA[2] = frameDataUS & 0b000000000000000011111111;
+bufferTXST7540UCA[3] = (configDataUS & 0b111111110000000000000000) >> 16;
+bufferTXST7540UCA[4] = (configDataUS & 0b000000001111111100000000) >> 8;
+bufferTXST7540UCA[5] = configDataUS & 0b000000000000000011111111;
+
+LATCbits.LATC4 = 1;
+LATCbits.LATC5 = 0;
+while(PORTBbits.RB1);
+SSP2CON1bits.SSPEN = 1;
+
+for(bitsSentUC = 0; bitsSentUC < 6; bitsSentUC++){
+discardUC = SSP2BUF;
+SSP2BUF = bufferTXST7540UCA[bitsSentUC];
+while(!SSP2STATbits.BF);
+}
+
+LATCbits.LATC4 = 0;
+LATCbits.LATC5 = 1;
+SSP2CON1bits.SSPEN = 0;
+WaitTickCount(20);
+}
+
+void ReadConfigST7540(unsigned long short *frameDataUS, unsigned long short *configDataUS){
+unsigned char bitsReceivedUC;
+unsigned char discardUC;
+
+LATCbits.LATC4 = 1;
+LATCbits.LATC5 = 1;
+while(PORTBbits.RB1);
+SSP2CON1bits.SSPEN = 1;
+
+discardUC = SSP2BUF;
+SSP1BUF = 0;
+for(bitsReceivedUC = 0; bitsReceivedUC < 6; bitsReceivedUC++){
+while(!SSP2STATbits.BF);
+bufferRXST7540UCA[bitsReceivedUC] = SSP2BUF;
+SSP2BUF = 0;
+}
+
+LATCbits.LATC4 = 0;
+SSP2CON1bits.SSPEN = 0;
+
+*frameDataUS |= ((unsigned long short) bufferRXST7540UCA[0] << 16);
+*frameDataUS |= ((unsigned long short) bufferRXST7540UCA[1] << 8);
+*frameDataUS |= bufferRXST7540UCA[2];
+*configDataUS |= ((unsigned long short) bufferRXST7540UCA[3] << 16);
+*configDataUS |= ((unsigned long short) bufferRXST7540UCA[4] << 8);
+*configDataUS |= bufferRXST7540UCA[5];
+}
+
+void SPIISRHandlerST7540(void){
+unsigned char dataReadUC;
+
+if(!PIE3bits.SSP2IE){
+PIR3bits.SSP2IF = 0;
+return;
+}
+
+dataReadUC = SSP2BUF;
+SSP2BUF = 0;
+
+if(flagST7540 & 1){
+if(bufferTXNextUCA > bufferTXLenUCA){
+flagST7540 &= ~1;
+SSP2CON1bits.SSPEN = 0;
+PIR3bits.SSP2IF = 0;
+LATCbits.LATC5 = 1;
+return;
+}
+SSP2BUF = bufferTXST7540UCA[bufferTXNextUCA++];
+}else if(flagST7540 & 2){
+bufferRXST7540UCA[bufferRXNextUCA++] = dataReadUC;
+if(bufferRXST7540UCA[0] == bufferRXNextUCA){
+flagST7540 |= 4;
+flagST7540 &= ~2;
+SSP2CON1bits.SSPEN = 0;
+PIR3bits.SSP2IF = 0;
+return;
+}
+}
+PIR3bits.SSP2IF = 0;
+}
+
+void RXReadyISRHandlerST7540(void){
+
+char ReadIOCC;
+if((flagST7540 & 2) && !PORTBbits.RB0)
+SSP2CON1bits.SSPEN = 1;
+ReadIOCC = PORTBbits.RB4;
+}
+
+unsigned char LineIdleST7540(void){
+if(PORTCbits.RC3)
 return 0;
+return 1;
 }
 
-char UART_Read(void)
-{
-char charRS232;
-charRS232 = RCREG1;
-if((7 - 1) == PiBufferRXNEXTUCA){
+void CreateMessageST7540(unsigned short packetSourceUS, unsigned short packetDestUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf){
+unsigned char dataBufLocUC;
+unsigned short packetCRCUS;
 
-flagUARTRead = 1;
-ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
-PiBufferRXNEXTUCA = 0;
-return;
-}
-else if (PiBufferRXNEXTUCA > 7 || flagUARTRead == 1){
-PiBufferRXNEXTUCA = 0;
-}
-else{
-flagUARTRead = 0;
-ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
-PiBufferRXNEXTUCA++;
-return;
-}
+bufferTXST7540UCA[0] = 0xAA;
+bufferTXST7540UCA[1] = 0xAA;
+bufferTXST7540UCA[2] = (unsigned long short) 0x9b58 >> 8;
+bufferTXST7540UCA[3] = (unsigned long short) 0x9b58;
+bufferTXST7540UCA[4] = 9 + dataLenUC;
+bufferTXST7540UCA[5] = packetSourceUS >> 8;
+bufferTXST7540UCA[6] = packetSourceUS;
+bufferTXST7540UCA[7] = packetDestUS >> 8;
+bufferTXST7540UCA[8] = packetDestUS;
+bufferTXST7540UCA[9] = packetNumberUC++;
+bufferTXST7540UCA[10] = commandUC;
+
+for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)
+bufferTXST7540UCA[dataBufLocUC + 11] = dataBuf[dataBufLocUC];
+dataBufLocUC += 11;
+
+packetCRCUS = CRC16(bufferTXST7540UCA + 4, 9 + dataLenUC - 2);
+bufferTXST7540UCA[dataBufLocUC++] = packetCRCUS >> 8;
+bufferTXST7540UCA[dataBufLocUC] = packetCRCUS;
+bufferTXLenUCA = dataBufLocUC;
 }
 
-void resetUARTPointers(void){
-flagUARTRead = 1;
-PiBufferRXNEXTUCA = 0;
+void StartTransmitST7540(void){
+unsigned char discardUC;
+
+flagST7540 |= 1;
+LATCbits.LATC5 = 0;
+while(PORTBbits.RB1);
+SSP2CON1bits.SSPEN = 1;
+discardUC = SSP1BUF;
+SSP2BUF = bufferTXST7540UCA[0];
+bufferTXNextUCA = 1;
 }
 
-unsigned short PacketReadParamUART(unsigned char paramName){
+unsigned char TransmitBusyST7540(void){
+return (flagST7540 & 1);
+}
+
+void ReceiveNewDataST7540(void){
+unsigned char discardUC;
+
+flagST7540 |= 2;
+flagST7540 &= ~4;
+discardUC = SSP1BUF;
+SSP2BUF = 0;
+bufferRXNextUCA = 0;
+}
+
+unsigned short PacketReadParamST7540(unsigned char paramName){
 unsigned short retValueUS = 0;
 
 switch(paramName){
 case(0):
-retValueUS |= ((unsigned short) ReceivedPiBufferCG[0] << 8);
-retValueUS |= ReceivedPiBufferCG[1];
-return retValueUS;
+return bufferRXST7540UCA[0] - 9;
 case(1):
-return ReceivedPiBufferCG[2];
+retValueUS |= ((unsigned short) bufferRXST7540UCA[1] << 8);
+retValueUS |= bufferRXST7540UCA[2];
+return retValueUS;
 case(2):
-retValueUS |= ((unsigned short) ReceivedPiBufferCG[3] << 8);
-retValueUS |= ReceivedPiBufferCG[4];
+retValueUS |= ((unsigned short) bufferRXST7540UCA[3] << 8);
+retValueUS |= bufferRXST7540UCA[4];
 return retValueUS;
 case(3):
-return CheckCRCUART();
+return bufferRXST7540UCA[5];
+case(4):
+return bufferRXST7540UCA[6];
+case(5):
+return CheckCRCST7540();
 }
 
 return 0;
 }
 
-unsigned char CheckCRCUART(void){
-unsigned short expectedCRCUS = 0;
+char *PacketDataST7540(void){
+return (bufferRXST7540UCA + 7);
+}
+
+unsigned char DataReadyST7540(void){
+return (flagST7540 & 4);
+}
+
+unsigned char CheckCRCST7540(void){
+unsigned short expectedCRCUS;
 unsigned short receivedCRCUS = 0;
 unsigned char packetLenUC;
-unsigned short packetCRCUS = 0;
 
-packetLenUC = 7-2;
-expectedCRCUS = CRC16(ReceivedPiBufferCG, packetLenUC);
-receivedCRCUS |= (((unsigned short) ReceivedPiBufferCG[5]) << 8);
-receivedCRCUS |= ReceivedPiBufferCG[5+1];
+packetLenUC = bufferRXST7540UCA[0]-2;
+expectedCRCUS = CRC16(bufferRXST7540UCA, packetLenUC);
+receivedCRCUS |= ((unsigned short) bufferRXST7540UCA[packetLenUC] << 8);
+receivedCRCUS |= bufferRXST7540UCA[packetLenUC+1];
 
 return (expectedCRCUS == receivedCRCUS);
 }
 
-unsigned char DataReadyUART(void){
-return flagUARTRead;
-}
+void InitST7540Pins(void){
 
-void ClearDataReady(void){
-flagUARTRead = 0;
-}
+TRISBbits.TRISB0 = 1;
+ANSELBbits.ANSB0 = 0;
 
+TRISCbits.TRISC4 = 0;
+ANSELCbits.ANSC4 = 0;
+LATCbits.LATC4 = 0;
 
+TRISBbits.TRISB2 = 1;
+ANSELBbits.ANSB2 = 0;
 
-void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS){
-unsigned short packetCRCUS = 0;
-unsigned short packetCRCUStemp = 0;
+TRISBbits.TRISB3 = 0;
+ANSELBbits.ANSB3 = 0;
+LATBbits.LATB3 = 0;
 
-TransmitPiBufferCG[0] = 0xAA;
-TransmitPiBufferCG[1] = 0xAA;
+TRISCbits.TRISC5 = 0;
+ANSELCbits.ANSC5 = 0;
+LATCbits.LATC5 = 1;
 
-TransmitPiBufferCG[2] = Command;
+TRISCbits.TRISC3 = 1;
+ANSELCbits.ANSC3 = 0;
 
-TransmitPiBufferCG[3] = packetSourceUS >> 8;
-TransmitPiBufferCG[4] = packetSourceUS;
+TRISBbits.TRISB1 = 1;
+ANSELBbits.ANSB1 = 0;
 
-packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)8 - 2));
-packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);
-TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
-TransmitPiBufferCG[6] = packetCRCUStemp;
-
-PiBufferTXLenUCA = 6;
-__nop();
-}
-
-void CreateMessageUARTTest(unsigned char Command){
-
-unsigned short packetCRCUS = 0;
-unsigned short packetCRCUStemp = 0;
-
-TransmitPiBufferCG[0] = 0xAA;
-TransmitPiBufferCG[1] = 0xAA;
-
-TransmitPiBufferCG[2] = Command;
-
-TransmitPiBufferCG[3] = 0x31;
-TransmitPiBufferCG[4] = 0x30;
-
-packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)8 - 2));
-packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);
-TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
-TransmitPiBufferCG[6] = packetCRCUStemp;
-
-
-
-PiBufferTXLenUCA = 6;
-__nop();
-
-ReceivedPiBufferCG[0] = TransmitPiBufferCG[0];
-ReceivedPiBufferCG[1] = TransmitPiBufferCG[1];
-ReceivedPiBufferCG[2] = TransmitPiBufferCG[2];
-ReceivedPiBufferCG[3] = TransmitPiBufferCG[3];
-ReceivedPiBufferCG[4] = TransmitPiBufferCG[4];
-ReceivedPiBufferCG[5] = TransmitPiBufferCG[5];
-ReceivedPiBufferCG[6] = TransmitPiBufferCG[6];
-
-flagUARTRead = 1;
-
-}
-
-void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf){
-unsigned char dataBufLocUC;
-unsigned short packetCRCUS;
-
-TransmitPiBufferCG[0] = 0xF3;
-TransmitPiBufferCG[1] = 0xCF;
-
-TransmitPiBufferCG[2] = dataLenUC;
-
-TransmitPiBufferCG[3] = packetSourceUS >> 8;
-TransmitPiBufferCG[4] = packetSourceUS;
-
-
-
-TransmitPiBufferCG[5] = packetDestUS >> 8;
-TransmitPiBufferCG[6] = packetDestUS;
-
-TransmitPiBufferCG[7] = packetNOUC;
-
-TransmitPiBufferCG[8] = commandUC;
-
-TransmitPiBufferCG[9] = 0xFF;
-
-for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)
-TransmitPiBufferCG[dataBufLocUC + 10] = dataBuf[dataBufLocUC];
-dataBufLocUC += 10;
-
-packetCRCUS = CRC16(TransmitPiBufferCG, 10 + dataLenUC - 2);
-TransmitPiBufferCG[dataBufLocUC++] = packetCRCUS >> 8;
-TransmitPiBufferCG[dataBufLocUC] = packetCRCUS;
-PiBufferTXLenUCA = dataBufLocUC++;
-
-
-
-}
-
-void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf){
-unsigned char dataBufLocUC;
-unsigned short packetCRCUS;
-
-TransmitPiBufferCG[0] = 0xAA;
-TransmitPiBufferCG[1] = 0xAA;
-
-TransmitPiBufferCG[2] = 8 + dataLenUC;
-
-TransmitPiBufferCG[3] = commandUC;
-
-TransmitPiBufferCG[4] = packetSourceUS >> 8;
-TransmitPiBufferCG[5] = packetSourceUS;
-
-for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)
-TransmitPiBufferCG[dataBufLocUC + 6] = dataBuf[dataBufLocUC];
-dataBufLocUC += 6;
-
-packetCRCUS = CRC16(TransmitPiBufferCG, 8 + dataLenUC - 2);
-TransmitPiBufferCG[dataBufLocUC++] = packetCRCUS >> 8;
-TransmitPiBufferCG[dataBufLocUC] = packetCRCUS;
-PiBufferTXLenUCA = dataBufLocUC++;
-}
-
-void SendUARTPacket(void){
-
-flagUART |= 1;
-UART_Write(TransmitPiBufferCG[0]);
-PiBufferTXNEXTUCA = 1;
-}
-
-void UART_Write(char data)
-{
-while(!TXSTA1bits.TRMT);
-TXREG1 = data;
-}
-
-void UART_TX_ISRHandler(void){
-
-if(flagUART & 1){
-if(PiBufferTXNEXTUCA > PiBufferTXLenUCA){
-flagUART &= ~1;
-return;
-}
-UART_Write(TransmitPiBufferCG[PiBufferTXNEXTUCA++]);
-}
-
+TRISBbits.TRISB4 = 1;
+ANSELBbits.ANSB4 = 0;
 }

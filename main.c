@@ -1,11 +1,17 @@
 /* 
  * File:   main.c
- * Author: N. Bennet
+ * Author: Steven Burford
  *
  * Created on 28 January, 2015, 8:23 AM
  *
  * IBC-1 V1.00 Code
  *
+ */
+
+/*
+ 28/07/2016 - Changed IBC Default data from 55 to 05 to bring in line with documentation of IBC on default port of 
+            - Updated to trigger a pulsing fault if reset was pressed with key in the armed position
+            
  */
 
 #include "ST7540.h"
@@ -26,19 +32,26 @@ unsigned char boosterCommsData[DATA_TYPE_COUNT][60];
 unsigned char boosterCommsDataReverse[60];
 unsigned char test;
 
+unsigned char routerData[60];
+
 unsigned short ISC_SN_ArrayUIG[MAX_NO_ISC];
+unsigned short ISC_SN_ArrayUIG_Missing[MAX_NO_ISC];
 unsigned char ISC_SN_Array_ReverseUSG[MAX_NO_ISC * 2];
+unsigned char ISC_SN_Array_Missing_ReverseUSG[MAX_NO_ISC * 2];
 unsigned short ISC_Switch_TempUSG;
 unsigned int ISC_PARENT_SNArrayUIG[MAX_NO_ISC];
 unsigned char ISC_SN_ArrayIndexUCG = 0;
 unsigned char ISC_SN_Array_SizeUCG = 0;
+unsigned char ISC_SN_Array_MissingUCG = 0;
 unsigned int HighSpeedTickUIG;
 unsigned int HighSpeedTickPAUIG;
 unsigned int BTHighSpeedTickUIG;
 unsigned int CFLEDFlashTickUIG = 0;
 unsigned int IdleTimerUIG = 0;
 unsigned int CF_STAUTS_TimerUIG = 0;
+unsigned int ELT_Counter = 0;
 unsigned int CheckISCTimerUIG = 0;
+unsigned int IBC_ComsCrashTimer = 0;
 char LowSpeedTickCG;
 unsigned int HighSpeedTickPBTUIG;
 char DeArmTickCG;
@@ -62,6 +75,8 @@ unsigned char RelayStatusUCG;
 unsigned char KeySwitchStatusUCG;
 unsigned char FireButtonStatusUCG;
 unsigned char CableFaultStatusUCG;
+unsigned char FiringStatusUCG;
+unsigned char ResetStatusUCG;
 unsigned char NewCFStatusUCG;
 unsigned char AlarmStatusUCG;
 unsigned char CFLEDFlashState;
@@ -71,7 +86,11 @@ unsigned char Pi_Status_Update = 0;
 unsigned char New_ISC_SN = 0;
 unsigned char BroadcastCheckUC = 0;
 unsigned char Discover_ISC_ModeUCG = 0;
+unsigned char Show_Missing_ISC = 0;
 unsigned char Discovered_New_ISC = 0;
+
+
+//unsigned char RX_ready_Global;
 
 char HighPulseCountCG;
 
@@ -80,6 +99,13 @@ unsigned char KeySwitchStateUCG;
 unsigned char earthLeakageProblemUCG;
 unsigned char cableFaultProblemUCG;
 unsigned short cableFaultCounter;
+unsigned short earthLeakageCounter;
+unsigned short earthLeakageStart;
+
+//unsigned short RX_TimoutCounter;
+//unsigned short RX_TimoutCounter2;
+
+
 unsigned short mainsZero_CrossingValueUSG;
 short long fireOutValueSLG;
 float FireOutFloat;
@@ -97,6 +123,7 @@ unsigned char EEPWrite[5], EEPRead[5];
 unsigned char Production_ISC_SN_Counter[2];
 
 void InitSystem(void);
+void InitReset(void);
 inline void WaitNewTick(void);
 void WaitTickCount(unsigned short);
 void ReadKeySwitch(void);                                                       //Read the status of the key switch
@@ -127,11 +154,10 @@ void StartBlastTimer(void);
 void StopBlastTimer(void);
 void StartPreArmedTimer(void);
 void StopPreArmedTimer(void);
-void Construct_ISC_Packet(void);
 void Receive_ISC_Packet(void);
-void Construct_Pi_Packet(void);
 void Receive_Pi_Packet(void);
 unsigned short getISC_SN(unsigned char ISC_Index);
+void Reverse_ISC_SN_List(void);
 void BroadcastGetISC_SNumbers(void);
 void GetIB651_SNumbers(unsigned short ISC_SN);
 void Add_ISC_SN(unsigned short ISC_SN);
@@ -149,7 +175,6 @@ void Update_Blast_Loop_Data(unsigned short ISC_SN, unsigned short Data_Length, c
 void Update_Serial_Number(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
 unsigned char getISC_Index(unsigned short ISC_SN);
 void Inspect_Default_Data_Packet(unsigned short Data_Length);
-unsigned char Check_ISC_Cable_Faults(void);
 unsigned short getIBCDefaultData(void);
 void Transmit_Pi_Default_Data(void);
 unsigned short getParentForISC(unsigned short ISC_SN);
@@ -158,14 +183,13 @@ void DEBUG_Print_Packet(void);
 void Check_ALL_ISC(void);
 void EEPROMTest(void);
 void EEPROMWrite(void);
+void EEPROMClearReset(void);
+void EEPROMSetReset(void);
 void EEPROMRead(void);
 void Assign_ISC_New_SN(void);
 void CheckBroadcastPacket(unsigned char Command);
 void Transmit_NULL_Packet(void);
 void Transmit_BLAST_Command_Packet(void);
-void Reverse_ISC_SN_List(void);
-void Reverse_Data(unsigned char TypeUC);
-
 
 
 void Write_b_eep( unsigned int badd,unsigned char bdat );
@@ -182,6 +206,7 @@ extern void CreateMessageUART(unsigned short packetSourceUS, unsigned char comma
 extern void SendUARTPacket(void);
 extern short PacketReadParamUART(unsigned char paramName);
 extern char CheckCRCUART(void);
+extern void resetUARTPointers(void);
 
 extern unsigned char InitST7540(void);
 extern void SPIISRHandlerST7540(void);
@@ -203,28 +228,23 @@ extern void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packet
 void interrupt isr(void){
 
     if(PIR1bits.TMR2IF != 0){
-        //LAT_TEST_LED = 1;
-	PIR1bits.TMR2IF = 0;
+        PIR1bits.TMR2IF = 0;
         statusFlagsUSG |= FLAG_TICK;        
         UART_TX_ISRHandler();        
 
-        if (DataReadyST7540()){                                                     //We have a new packet
-            
+        ELT_Counter++;              //add 1 to the ELT counter, cleared by the ELT tester
+        
+        if (DataReadyST7540()){
             Receive_ISC_Packet();
-            Construct_Pi_Packet();
-            
-            if (PacketForPiIdentifier != 0b11111111){                               //We have a packet ready for the dispatcher
-                SendUARTPacket();
-                PacketForPiIdentifier = 0b11111111;
+            if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){
+                IdleTimerUIG = 0;           
             }
-            
-            IdleTimerUIG = 0;           
+            ReceiveNewDataST7540();
         }
-
         if (CF_STAUTS_TimerUIG < (20000)){   //10 seconds
             CF_STAUTS_TimerUIG++;
             }
-
+        
         if (DeArmHighTickUIG < 2000){
             DeArmHighTickUIG++;             
         }
@@ -234,7 +254,6 @@ void interrupt isr(void){
                 DeArmTickCG++;                
             }
         }
-
         if (CFLEDFlashTickUIG < 1000)
             CFLEDFlashTickUIG++;
         else{
@@ -242,80 +261,86 @@ void interrupt isr(void){
             if (CFLEDFlashEnable)
                 CFLEDFlashState = !CFLEDFlashState;
         }
+        
         //////////////////////////////////////////////////////////////////////////////////
         if (BTEnabled){
             BTHighSpeedTickUIG++;
         }
-        else{
+        else{                       
             BTHighSpeedTickUIG = 0;
-            if (IdleTimerUIG > 2000){   //1 second
-                //Transmit Null Packet down the line
+            
+            if (IdleTimerUIG > 2000){                                           //1 second then trigger null packet to let ISC's know you are here
+                                                                                //Transmit Null Packet down the line
                 Transmit_NULL_Packet();
                 IdleTimerUIG = 0;
+                IBC_ComsCrashTimer++;                                           //increment counter every 1 second when coms is active
             }
             else
                 IdleTimerUIG++;
-
-
-        if (CheckISCTimerUIG > (2000*10)){   //10 seconds
-                Discover_ISC_ModeUCG = 1;
-                Check_ALL_ISC();
-                CheckISCTimerUIG = 0;
-                IdleTimerUIG = 0;
-            }
-            else
+                                        
+//            if (CheckISCTimerUIG > (2000*10)){                                  //10 seconds
+//                Discover_ISC_ModeUCG = 1;                                       // set to try discover ISC's
+//                Check_ALL_ISC();
+//                CheckISCTimerUIG = 0;
+//                IdleTimerUIG = 0;
+//                
+//                ISC_SN_Array_MissingUCG = 0;                                    // show that unit 
+//            }
+            //else
                 CheckISCTimerUIG++;
         }
 
         if (PATEnabled){
-            if (HighSpeedTickPAUIG < 2000){ //2000 Ticks is 1 second: 500us per tick.
+            if (HighSpeedTickPAUIG < 2000){                                     //2000 Ticks is 1 second: 500us per tick.
                 HighSpeedTickPAUIG++;
             }
-        else{
+            else{
             HighSpeedTickPAUIG = 0;
             LowSpeedTickPATCG++;
             }
         }        
         //////////////////////////////////////////////////////////////////////////////////
-        if (HighSpeedTickUIG < 2000){ //2000 Ticks is 1 second: 500us per tick.
+        if (HighSpeedTickUIG < 2000){                                           //2000 Ticks is 1 second: 500us per tick.
             HighSpeedTickUIG++;
         }
         else{
             HighSpeedTickUIG = 0;
             LowSpeedTickCG++;
+            
             if (PBTEnabled){
                 LowSpeedTickPBTCG++;                
-            }                        
+            }        
+//            if(RX_TimoutCounter2<RX_TIMEOUT)  //thus 1000 counts of 240
+//                RX_TimoutCounter2++;
         }
         
-        if (LowSpeedTickPBTCG >= 60){     //Post Blast Timer
+        if (LowSpeedTickPBTCG >= 60){                                           //Post Blast Timer
             AlarmStatusUCG = FAULT;
             CFLEDFlashEnable = 1;
         }
-        if (LowSpeedTickPATCG >= 60){     //Pre Arm Timer
+        if (LowSpeedTickPATCG >= 120){                                          //Pre Arm Timer adjusted to 2 minutes
             AlarmStatusUCG = FAULT;
             CFLEDFlashEnable = 1;
         }
-        if (DeArmTickCG >= 7){           //Amount of seconds the keyswitch needs to be in the disarmed position before firing is enabled
+        if (DeArmTickCG >= 7){                                                  //Amount of seconds the keyswitch needs to be in the disarmed position before firing is enabled
             ClearToFire = 1;              
         }
         else
-            //LAT_DIAG1_LED = ON;
             Nop();
 
         if (LowSpeedTickCG >= 60)
-            LowSpeedTickCG = 0;    
+            LowSpeedTickCG = 0;
     }
+    
     if(PIR3bits.SSP2IF){
         SPIISRHandlerST7540();        
     }
     if (PIR1bits.RC1IF){
-        UART_Read();         
+        UART_Read();    
         PIR1bits.RC1IF = 0;
     }
-    if (INTCONbits.RBIF){   //else if(neg pin change on SSX){
+    if (INTCONbits.RBIF){                                                       //else if(neg pin change on SSX){
         INTCONbits.RBIF = 0;
-        //LAT_TEST_LED = ON;
         RXReadyISRHandlerST7540();
     }
 }
@@ -324,502 +349,269 @@ void main(void){
 
     InitSystem();
     Pi_Status_Update = CLEAR_UPDATE;
-
-    //Add_ISC_SN(0x3130);
-//
-//    Nop();
-//
-
-//
-//    Inspect_Default_Data_Packet(0b01);
-
-    //CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf){
-    //CreateMessageUART(IBC_SN, 0xC3C3, 5, "abcde");
-    
-    //CreateMessageUARTTest(CMD_PI_DEFAULT_DATA);  //Working
-    //CreateMessageUARTTest(CMD_PI_DC_DATA);  //Working
-    //CreateMessageUARTTest(CMD_PI_AC_DATA);  //Working
-    //CreateMessageUARTTest(CMD_PI_BLAST_VALUE);  //Working
-    //CreateMessageUARTTest(CMD_PI_SN_IB651);  //Working
-    //CreateMessageUARTTest(CMD_PI_PING_ISC);
-
-    //SendUARTPacket(); //Working
-    //WaitTickCount(5000);
-    //CreateMessageUARTTest(CMD_PI_SN_IB651);
-    //CreateMessageUARTTest(CMD_PI_PING_ISC);
-    //SendUARTPacket(); //Working
-    //CreatePiToIBCUARTMessage(CMD_PI_SN_IB651, 0b00000001);
-    
-    
-    //CreatePiToIBCUARTMessage(CMD_PI_IBC_ERRORS, IBC_SN);
-    //CreatePiToIBCUARTMessage(CMD_PI_SN_IB651, 0x3130);  //ISC SN
-    //CreatePiToIBCUARTMessage(CMD_PI_DEFAULT_DATA, 0x3130);  //ISC SN
-    //CreatePiToIBCUARTMessage(CMD_PI_FORCE_DEFAULT, 0x3130);
-//    CreatePiToIBCUARTMessage(CMD_PI_DC_DATA, 0b00000001);  //ISC SN
-//    CreatePiToIBCUARTMessage(CMD_PI_AC_DATA, 0b00000001);  //ISC SN
-//    CreatePiToIBCUARTMessage(CMD_PI_BLAST_VALUE, 0b00000001);  //ISC SN
-//
-//    CreatePiToIBCUARTMessage(CMD_PI_IBC_DEFAULT, IBC_SN);  //IBC SN  CMD_PI_IBC_ERRORS
-//    CreatePiToIBCUARTMessage(CMD_PI_IBC_ERRORS, IBC_SN);
-//
-//    CreatePiToIBCUARTMessage(CMD_PI_ISC_PARENT, 0b00000001); //ISC SN
-
-
-
-    //CreatePiToIBCUARTMessage(CMD_PI_DEFAULT_DATA_B, 0x3130); //ISC SN
-    //SendUARTPacket(); //Working
-    //WaitTickCount(5000);
-    //BroadcastGetISC_SNumbers();
-//    CreatePiToIBCUARTMessage(CMD_PI_DC_DATA, 0x3130); //ISC SN
-//
-//    SendUARTPacket(); //Working
-//    WaitTickCount(5000);
-//    CreatePiToIBCUARTMessage(CMD_PI_AC_DATA, 0x3130); //ISC SN
-//
-//    SendUARTPacket(); //Working
-//    WaitTickCount(5000);
-    //CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, PING_ISC, 0, "");
-//    CreatePiToIBCUARTMessage(CMD_PI_SN_IB651, 0x0002); //ISC SN
-//    SendUARTPacket(); //Working
-//    WaitTickCount(2000);
-
-//    CreatePiToIBCUARTMessage(CMD_PI_SN_IB651, 0x00A8); //ISC SN
-//    SendUARTPacket(); //Working
-//    WaitTickCount(2000);
-//
-//    CreatePiToIBCUARTMessage(CMD_PI_SN_IB651, 0x00A9); //ISC SN
-//    SendUARTPacket(); //Working
-//    WaitTickCount(2000);
-
-  
-    //CreateMessageST7540(unsigned short packetSourceUS, unsigned short packetDestUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf)
-
-    
-//Discover_ISC_ModeUCG = 1;       //Now in Discovery mode
-//BroadcastGetISC_SNumbers();       //Works so far!!!
-
-    
-//        CreateMessageST7540(IBC_SN, 0x3130, CMD_OPEN_RELAY, 0, "");
-//        StartTransmitST7540();
-//        WaitTickCount(4000);
-//        CreateMessageST7540(IBC_SN, 0x3130, CMD_CLOSE_RELAY, 0, "");
-//        StartTransmitST7540();
-
-
-LAT_CABLE_FAULT_LED = OFF;
-WDTCONbits.SWDTEN = 1; //Enable WDT
+    LAT_CABLE_FAULT_LED = OFF;
+    WDTCONbits.SWDTEN = 1;                                                      //Enable WDT 
 
 while(1){        
-        
-//        CreateMessageST7540(IBC_SN, 0x3130, CMD_OPEN_RELAY, 0, "");
-//            StartTransmitST7540();
-//            WaitTickCount(500);
-//        CreateMessageST7540(IBC_SN, 0x3130, CMD_CLOSE_RELAY, 0, "");
-//            StartTransmitST7540();
     CLRWDT();
-    //CONFIG2Hbits.WDTCON = 1000;
+    if (DataReadyUART()){                                                       //We have received a packet, now process the packet
+        ClearDataReady();
+        IBC_ComsCrashTimer =0;                                                  //we have received data from the PI thus reset counter
+        if(PacketReadParamUART(UART_CRC_VALID)){
+            Receive_Pi_Packet();
+        }
+    }
 
-    if (Discovered_New_ISC == 1){   //We have discovered a new ISC through our ping
-        Discovered_New_ISC = 0;
-        Reverse_ISC_SN_List();
-        CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, ISC_SN_Array_SizeUCG * 2, ISC_SN_Array_ReverseUSG);
-        PacketForPiIdentifier = CMD_PI_SN_ISCS;
+    if (ISC_Transmit_Packet_Ready == 1){
+        
+        if (!TransmitBusyST7540() && LineIdleST7540()){                         //Only allowed to transmit if the we are not already transmitting and not receiving
+            
+            StartTransmitST7540();
+            ISC_Transmit_Packet_Ready = 0;
+            IdleTimerUIG = 0;
+        }
+    }
+    
+    checkCableFaults();             //check cable faults normally all the time, should it clear then clear the cable as soon as
+                                    //reset is pressed or past when reset is pressed but fault clears in the field
+    
+    if (CableFaultStatusUCG == CABLEFAULT || CableFaultStatusUCG == EARTHFAULT){  //We have a cable fault
+        if (NewCFStatusUCG == 1){                                               //We have a new cable fault
+            NewCFStatusUCG = 0;
+            Pi_Status_Update = DEFAULT_UPDATE;
+            AlarmStatusUCG = FAULT;                                             //Turn on general alarm
+        }
+        LAT_CABLE_FAULT_LED = ON;                                               //Have cable fault so turn LED on
+    }
+    else{                                                                       //We dont have a cable fault any more
+        if (CFLEDFlashEnable == 0 && AlarmStatusUCG == CLEAR){
+                LAT_CABLE_FAULT_LED = OFF;
+                TurnRelayOff();                                                     //Fault Clear, turn relay back on
+                CF_STAUTS_TimerUIG = 0;
+                if (NewCFStatusUCG == 0){                                           //We no longer have cable fault
+                NewCFStatusUCG = 1;                                                 //Fault is cleared, hence next time a fault occurs, it is a new fault
+                Pi_Status_Update = DEFAULT_UPDATE;
+            }
+        }                        
     }
         
-        if (PacketForPiIdentifier != 0b11111111){
-         SendUARTPacket();
-         PacketForPiIdentifier = 0b11111111;
+    if (getResetButtonState() == PRESSED){                                      //Reset button is pressed    
+        if (getKeySwitchState() == DISARMED){
+           AlarmStatusUCG = CLEAR;                                              //Clear the general alarm
+           if (CableFaultStatusUCG == CLEAR){                                   //If the cable fault is clear?
+                LAT_CABLE_FAULT_LED = OFF;                                      //Turn the LED off
+                TurnRelayOff();                                                 //Fault Clear, turn relay back on
+                CFLEDFlashEnable = 0;
+                CFLEDFlashState = 0;
+           }
+           else
+               CF_STAUTS_TimerUIG = 20000;
         }
+        else{
+            AlarmStatusUCG = FAULT;
+             CFLEDFlashEnable = 1;
+        }
+    }
+    if (getKeySwitchState() == DISARMED){      
+        if(KeySwitchStatusUCG == ARMED)
+            Pi_Status_Update = DEFAULT_UPDATE;
 
+            KeySwitchStatusUCG = DISARMED;
+            StopPostFireTimer();
+            StopPreArmedTimer();
+        }
+    else{ //Keyswitch is in the Armed State
+        if(KeySwitchStatusUCG == DISARMED)
+            Pi_Status_Update = DEFAULT_UPDATE;
         
-        if (DataReadyUART()){ //We have received a packet, now process the packet            
-            ClearDataReady();
-            if(PacketReadParamUART(UART_CRC_VALID)){
-                Receive_Pi_Packet();                
-            }
+        KeySwitchStatusUCG = ARMED;
+        
+        if (PATEnabled == 0)                                                    //Check if the Armed state timer is running yet
+            StartPreArmedTimer();                                               //If not, start the timer
+        
+            ClearToFire = 1;
         }
+    
+        //IBC has timed out with no comms from the PI = 4 minutes
+    if(IBC_ComsCrashTimer > IBC_COMSCRASH_COUNT){          
+        //also need to make it reset not turn on the alarm
+        EEPROMSetReset();                                                       //set the reset flags to ensure that it doesnt alarm.
+//        CreateMessageUART(IBC_SN, CMD_PI_IBC_ERRORS, 1, IBC_Faults_Data);
+//        PacketForPiIdentifier = CMD_PI_IBC_ERRORS;
+        resetUARTPointers();
+        ResetStatusUCG = 1;
+        Pi_Status_Update = DEFAULT_UPDATE;
+        IBC_ComsCrashTimer= (IBC_COMSCRASH_COUNT-10);                           //subtract 10 counts from it.
+    }
+    
+    if (Pi_Status_Update == DEFAULT_UPDATE){                                    //Default Data has updated and we require letting the Pi know            
+        Pi_Status_Update = CLEAR_UPDATE;
+        getIBCDefaultData();
+        Transmit_Pi_Default_Data();
+    }
+    
+    if (Pi_Status_Update == ERROR_UPDATE){                                      //An error has occured and we need to let the Pi know of the error
 
-        if (ISC_Transmit_Packet_Ready == 1){
-            if (!TransmitBusyST7540() && LineIdleST7540()){  //Only allowed to transmit if the we are not already transmitting and not receiving
-                StartTransmitST7540();
-                ISC_Transmit_Packet_Ready = 0;
-                IdleTimerUIG = 0;
-                //LAT_DIAG1_LED = !LAT_DIAG1_LED;
-            }
+        Pi_Status_Update = CLEAR_UPDATE;
+    }
+        
+    if (getFireButtonState() == PRESSED){                                       //The fire button has been pressed
+        if (FireButtonStatusUCG == DEPRESSED)
+            Pi_Status_Update = DEFAULT_UPDATE;
+        FireButtonStatusUCG = PRESSED;
+        //Check for Cable Fault or if Keyswitch is in the ARMED Position
+        if (CableFaultStatusUCG == FAULT){
+             AlarmStatusUCG = FAULT;
         }
-
-        if (Pi_Status_Update == DEFAULT_UPDATE){    //Default Data has updated and we require letting the Pi know            
-            Pi_Status_Update = CLEAR_UPDATE;
+        //Check if the KeySwitch is in the DISARMED state
+        else if (getKeySwitchState() == DISARMED){
+            AlarmStatusUCG = FAULT;
+            CFLEDFlashEnable = 1;
+        }
+        else if (ClearToFire == 0){
+            AlarmStatusUCG = FAULT;
+            CFLEDFlashEnable = 1;
+        }
+        //Else all faults are clear and we can fire
+        else if (AlarmStatusUCG == CLEAR && ClearToFire == 1){
+            FiringStatusUCG=1;                                                  //firing has begun
             getIBCDefaultData();
             Transmit_Pi_Default_Data();
-        }
-        if (Pi_Status_Update == ERROR_UPDATE){      //An error has occured and we need to let the Pi know of the error
-
-            Pi_Status_Update = CLEAR_UPDATE;
-        }
-
-        if (CableFaultStatusUCG == CABLEFAULT || CableFaultStatusUCG == EARTHFAULT){      //We are in a cable fault state, check
-        //We are in a fault status
-        //Do we have timeout yet? If so, turn on relay and measure
-            if (CF_STAUTS_TimerUIG > 19999){
- //               TurnRelayOff();        //DISABLE SO RELAY DOES Not SWITCH IN CABLE FAULT
-                WaitTickCount(100);
-                checkCableFaults();
-                WaitTickCount(100);
-//                TurnRelayOn();       //Disable so relay does not switch in cable fault
-                CF_STAUTS_TimerUIG = 0;
-            }
-
-        }
-        else //We are not in a fault state,
-            checkCableFaults();
-
-        if (CableFaultStatusUCG == CABLEFAULT || CableFaultStatusUCG == EARTHFAULT || Check_ISC_Cable_Faults() == FAULT){  //We have a cable fault
-        //if (CableFaultStatusUCG == CABLEFAULT ){  //We have a cable fault
-            if (NewCFStatusUCG == 1){   //We have a new cable fault
-                NewCFStatusUCG = 0;
-                Pi_Status_Update = DEFAULT_UPDATE;
-                AlarmStatusUCG = FAULT;     //Turn on general alarm
-            }
-            LAT_CABLE_FAULT_LED = ON;   //Have cable fault so turn LED on
- //           TurnRelayOn();             //Turn Relay off to stop fault melting things
-        }
-        else{                           //We dont have a cable fault any more
-            if (CFLEDFlashEnable == 0 && AlarmStatusUCG == CLEAR){
-                LAT_CABLE_FAULT_LED = OFF;
-                TurnRelayOff();          //Fault Clear, turn relay back on
-                CF_STAUTS_TimerUIG = 0;
-                if (NewCFStatusUCG == 0){   //We no longer have cable fault
-                //NewCFStatusUCG = 0;
-                NewCFStatusUCG = 1;        //Fault is cleared, hence next time a fault occurs, it is a new fault
-                Pi_Status_Update = DEFAULT_UPDATE;
-                }
-            }                        
-        }
-        
-        if (getResetButtonState() == PRESSED){     //Reset button is pressed    
-            if (getKeySwitchState() == DISARMED){
-               AlarmStatusUCG = CLEAR;  //Clear the general alarm
-               if (CableFaultStatusUCG == CLEAR){ //If the cable fault is clear?
-                    LAT_CABLE_FAULT_LED = OFF;  //Turn the LED off
-                    TurnRelayOff();          //Fault Clear, turn relay back on
-                    CFLEDFlashEnable = 0;
-                    CFLEDFlashState = 0;
-               }
-               else
-                   CF_STAUTS_TimerUIG = 20000;
-            }
-        }        
-
-        if (getKeySwitchState() == DISARMED){
-            if(KeySwitchStatusUCG == ARMED)
-                Pi_Status_Update = DEFAULT_UPDATE;
-                KeySwitchStatusUCG = DISARMED;
-                StopPostFireTimer();
-                StopPreArmedTimer();
-                //if (AlarmStatusUCG == CLEAR && CableFaultStatusUCG == CLEAR)
-                    //StartDeArmedTimer();
-                
-            }
-        else { //Keyswitch is in the Armed State
-            if(KeySwitchStatusUCG == DISARMED)
-                Pi_Status_Update = DEFAULT_UPDATE;
-            KeySwitchStatusUCG = ARMED;
-            if (PATEnabled == 0)    //Check if the Armed state timer is running yet
-                StartPreArmedTimer();   //If not, start the timer
-                //ResetDeArmedTimer();
-                ClearToFire = 1;
-        }
-        
-        if (getFireButtonState() == PRESSED){             //The fire button has been pressed
-            if (FireButtonStatusUCG == DEPRESSED)
-                Pi_Status_Update = DEFAULT_UPDATE;
-            FireButtonStatusUCG = PRESSED;
-            //Check for Cable Fault or if Keyswitch is in the ARMED Position
-            if (CableFaultStatusUCG == FAULT){
-                 AlarmStatusUCG = FAULT;
-            }
-            //Check if the KeySwitch is in the DISARMED state
-            else if (getKeySwitchState() == DISARMED){
-                AlarmStatusUCG = FAULT;
-                CFLEDFlashEnable = 1;
-            }
-            else if (ClearToFire == 0){
-                AlarmStatusUCG = FAULT;
-                CFLEDFlashEnable = 1;
-            }
-            //Else all faults are clear and we can fire
-            else if (AlarmStatusUCG == CLEAR && ClearToFire == 1){
-                ClearToFire = 0;
-                //Blasting and therefore stop the prearmed timer
-                StopPreArmedTimer();
-                //Change the relay over - ie OFF
-                TurnRelayOn(); //Patch Mains through
-                //Wait long enough for relay to close so we can read the mains voltage before firing
-                WaitTickCount(100);
-                TurnSSR1On();
-                WaitTickCount(100);
-                //WaitTickCount(10000);    //Debug
-                //WaitTickCount(10000);
-                //WaitTickCount(10000);
-                FireOutFloat = 0;
-                ReadFireOut();
-                //if (FireOutFloat > 400)
-                    //LAT_TEST_LED = 1;
-                FireOutFloat = 1000.0; //debug
-                TurnSSR1Off();
-
-                if (FireOutFloat > 815.0){                    
-                    //Fire
-                    Transmit_BLAST_Command_Packet();
-                    //LAT_TEST_LED = ON;
-                    CLRWDT();
-                    WaitTickCount(2000*4);    //Delay so that the booster comms line goes down
-                    CLRWDT();
-                    //BTEnabled = 1;
-                    FIRE();
-                    //LAT_TEST_LED = OFF;
-                    //WaitTickCount(1000);
-                    //BTEnabled = 0;
-                }
-                else{
-                    AlarmStatusUCG = FAULT;
-                }
-                //Always Turn SSR OFF as precautionary measure
-                TurnSSR1Off();
-                //We have fired and required Disarm prior to refiring
-                
-                //After Firing turn the relay back
-                TurnRelayOff(); //Keep Mains off of the output                
-            }
-        }
-        else{
-            if (FireButtonStatusUCG == PRESSED)
-                Pi_Status_Update = DEFAULT_UPDATE;
-            FireButtonStatusUCG = DEPRESSED;
-        }
-        //if (CFLEDFlashEnable == 1 && CableFaultStatusUCG == CLEAR)
-            //LAT_CABLE_FAULT_LED = CFLEDFlashState;
-
-        if (AlarmStatusUCG == 1){
+            SendUARTPacket(); 
             
-            if (CFLEDFlashEnable == 1){
-                if (CFLEDFlashState == 1)
-                    TurnBuzzer_AlarmOn();
-                if (CFLEDFlashState == 0)
-                    TurnBuzzer_AlarmOff();
-            }
-            else
-                TurnBuzzer_AlarmOn();
-        }
-        else{
-            TurnBuzzer_AlarmOff();
-        }
-    } //END WHILE LOOP
-}
+            ClearToFire = 0;
+            //Blasting and therefore stop the prearmed timer
+            StopPreArmedTimer();
+            //Change the relay over - ie OFF
+            TurnRelayOn(); //Patch Mains through
+            //Wait long enough for relay to close so we can read the mains voltage before firing
+            WaitTickCount(100);
+            TurnSSR1On();
+            WaitTickCount(100);
+            FireOutFloat = 0;
+            ReadFireOut();
+            FireOutFloat = 1000.0; //debug
+            TurnSSR1Off();
 
-void Construct_ISC_Packet(void){
+            if (FireOutFloat > 815.0){                                          //confirm it is not currently firing.            
+                //Fire
+                
+                Transmit_BLAST_Command_Packet();
+                CLRWDT();
+                WaitTickCount(2000*4);                                          //Delay so that the booster comms line goes down
+                CLRWDT();
+                
+                BTEnabled = 1;                                                  // engage firing counter
+                FIRE();
+                
+                WaitTickCount(1000);
+                BTEnabled = 0;                                                  // engage communication mode counter
+                IBC_ComsCrashTimer = IBC_COMSCRASH_COUNT-60;                    // jump the counter to only allow a 1 min leeway before resetting must happen
+            }
+            else{
+                AlarmStatusUCG = FAULT;
+            }
+            //Always Turn SSR OFF as precautionary measure
+            
+            FiringStatusUCG=0;                                                  //firing is complete
+            TurnSSR1Off();
+            //We have fired and required Disarm prior to refiring
+
+            //After Firing turn the relay back
+            TurnRelayOff();                                                     //Keep Mains off of the output                
+        }
+    }
+    else{
+        if (FireButtonStatusUCG == PRESSED)
+            Pi_Status_Update = DEFAULT_UPDATE;
+        FireButtonStatusUCG = DEPRESSED;
+    }
     
+    if (AlarmStatusUCG == 1){
+
+        if (CFLEDFlashEnable == 1){
+            if (CFLEDFlashState == 1)
+                TurnBuzzer_AlarmOn();
+            if (CFLEDFlashState == 0)
+                TurnBuzzer_AlarmOff();
+        }
+        else
+            TurnBuzzer_AlarmOn();
+    }
+    else{
+        TurnBuzzer_AlarmOff();
+    }
+    }                                                                           //END WHILE LOOP
 }
 
 void Receive_ISC_Packet(void){
+        unsigned short tempIscSerial = PacketReadParamST7540(ST7540_SOURCE);
+        LAT_DIAG1_LED = !LAT_DIAG1_LED;
+        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){                        //CRC passes and the data is valid
+            ReceiveNewDataST7540();
+            CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
+            if (BroadcastCheckUC == 0){
 
-    //LAT_DIAG2_LED = !LAT_DIAG2_LED;
-            if(PacketReadParamST7540(ST7540_CRC_VALID)){                            //CRC passes and the data is valid
-                //DEBUG_Print_Packet();
-                ReceiveNewDataST7540();
-                CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
-                if (BroadcastCheckUC == 0){
-                switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
-                    case(CMD_SEND_DEFAULT):                                               //Receiving Default Values
-                        Update_Default_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_DEFAULT):                                               //Receiving Default Values
-                        Update_Default_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_DC):                                                    //Receiving DC Value
-                        Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    //case(CMD_FORCE_DC):                                                    //Receiving DC Value
-                        //Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        //return;
-                    case(CMD_FORCE_DC):                                                    //Receiving DC Value
-                        Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_AC):                                                    //Receiving AC Value
-                        Update_AC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_AC):                                                    //Receiving AC Value
-                        Update_AC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_BLAST_VALUE):                                           //Receiving Blast Circuit Value
-                        Update_Blast_Loop_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_BLAST_VALUE):                                           //Receiving Blast Circuit Value
-                        Update_Blast_Loop_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    //case(CMD_SEND_TEMPERATURE):                                           //Receiving Temeperatures
-                        //return;
-                    case(CMD_OPEN_RELAY):                                                 //Receiving open relay ack
-                        Update_Open_Relay(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_CLOSE_RELAY):                                                //Receiving closed relay ack
-                        Update_Close_Relay(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_GET_SN):                                                     //Receiving serial no of ISC/IB651s
-                        //if (PacketReadParamST7540(ST7540_DATA_LEN) == 0)
-                            //Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
-                        //else{                                                             //Then we have some serial numbers of boosters attached to an ISC
-                            Update_Serial_Number(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        //}
-                        return;
-                    case(CMD_SN_LIST_CHANGED):                                            //Receiving serial no list has changed
-                        GetIB651_SNumbers(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_BLAST_COMMAND):                                              //Receiving ACK blast command
-                        return;
-                    case(CMD_ISC_NEW_SN):
-                        Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
+            switch(PacketReadParamST7540(ST7540_CMD)){                      //Extract the command from the Packet
+                case CMD_GET_SN :
+                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_SN_IB651, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+                    SendUARTPacket();
+                    return;
 
-                        if (New_ISC_SN == 0){       //Not a new serial number, therefore a PING
-                            Update_Ping_Command(PacketReadParamST7540(ST7540_SOURCE));
-                        }
-                        else{ //It is a new serial number, lets broadcast ping again to get a new one
-                            New_ISC_SN = 0;
-                            //BroadcastGetISC_SNumbers();
-                        }
-                        return;
-                    case(PING_ISC):                                                       //Receiving ACK for PING
-                        if (PacketReadParamST7540(ST7540_SOURCE) == ISC_DEFAULT_SN){                   //An ISC with no SN has replied. We need to give it a serial number
-                            Assign_ISC_New_SN();
-                            return;
-                        }
-
-                        Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
-                        if (New_ISC_SN == 0){       //Not a new serial number, therefore a PING
-                            if (Discover_ISC_ModeUCG == 0)
-                            Update_Ping_Command(PacketReadParamST7540(ST7540_SOURCE));
-                        }
-                        else{ //It is a new serial number, lets broadcast ping again to get a new one
-                            New_ISC_SN = 0;
-                                if (Discover_ISC_ModeUCG == 1)
-                                    Discovered_New_ISC = 1;
-                            //BroadcastGetISC_SNumbers();
-                        }
-                        //LAT_TEST_LED = !LAT_TEST_LED;
-                        return;
+                case CMD_SEND_DEFAULT :
+                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+                    SendUARTPacket();
+                    return;
                     
-                    case(ARM_ISC):                                                        //Receiving ACK for ARMING of ISC
-                        Update_ARM_ISC(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(DISARM_ISC):                                                     //Receiving ACK for DISARMING of ISC
-                        Update_DISARM_ISC(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_CABLE_FAULT):                                                //Receiving Cable fault from ISC
-                        Update_ISC_Cable_Fault(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                }
-                }
+                case CMD_FORCE_DEFAULT :
+                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+                    SendUARTPacket();
+                    return;
 
-                else{//Broadcast Messages
+                case CMD_AB1_UID :
+                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_UID, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+                    SendUARTPacket();
+                    CreateMessageST7540(IBC_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_UID, 0, "");
+                    ISC_Transmit_Packet_Ready = 1;
+                    return;
 
-                    if (PacketReadParamST7540(ST7540_DEST) != IBC_SN){  //If packet is not for ISC-1, bounce packet
-                        PacketForPiIdentifier = CMD_NULL;
-                        return;
-                    }
+                case CMD_AB1_DATA :
+                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+                    SendUARTPacket();
+                    CreateMessageST7540(IBC_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_DATA, 0, "");
+                    ISC_Transmit_Packet_Ready = 1;
+                    return;
+                    
+                case(CMD_ISC_NEW_SN):
+                    tempIscSerial = (tempIscSerial << 8) & 0XFF00;
+                    tempIscSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+                    CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempIscSerial);
+                    SendUARTPacket();
+                    return;
+                    
+                case(PING_ISC):                                             //Receiving ACK for PING
+                    tempIscSerial = (tempIscSerial << 8) & 0XFF00;
+                    tempIscSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+                    CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempIscSerial);
+                    SendUARTPacket();
+                    return;
 
-                    switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
-                    case(CMD_SEND_DEFAULT_B):                                               //Receiving Default Values
-                        Update_Default_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_DEFAULT_B):                                               //Receiving Default Values
-                        Update_Default_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_DC_B):                                                    //Receiving DC Value
-                        Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    //case(CMD_FORCE_DC):                                                    //Receiving DC Value
-                        //Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        //return;
-                    case(CMD_FORCE_DC_B):                                                    //Receiving DC Value
-                        Update_DC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_AC_B):                                                    //Receiving AC Value
-                        Update_AC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_AC_B):                                                    //Receiving AC Value
-                        Update_AC_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_SEND_BLAST_VALUE_B):                                           //Receiving Blast Circuit Value
-                        Update_Blast_Loop_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    case(CMD_FORCE_BLAST_VALUE_B):                                           //Receiving Blast Circuit Value
-                        Update_Blast_Loop_Data(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        return;
-                    //case(CMD_SEND_TEMPERATURE):                                           //Receiving Temeperatures
-                        //return;
-                    case(CMD_OPEN_RELAY_B):                                                 //Receiving open relay ack
-                        Update_Open_Relay(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_CLOSE_RELAY_B):                                                //Receiving closed relay ack
-                        Update_Close_Relay(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_GET_SN_B):                                                     //Receiving serial no of ISC/IB651s
-                        //if (PacketReadParamST7540(ST7540_DATA_LEN) == 0)
-                            //Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
-                        //else{                                                             //Then we have some serial numbers of boosters attached to an ISC
-                            Update_Serial_Number(PacketReadParamST7540(ST7540_SOURCE),PacketReadParamST7540(ST7540_DATA_LEN),PacketDataST7540());
-                        //}
-                        return;
-                    case(CMD_SN_LIST_CHANGED_B):                                            //Receiving serial no list has changed
-                        GetIB651_SNumbers(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_BLAST_COMMAND_B):                                              //Receiving ACK blast command
-                        return;
-                    case(CMD_ISC_NEW_SN_B):
-                        Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(PING_ISC_B):                                                       //Receiving ACK for PING
-                        if (PacketReadParamST7540(ST7540_SOURCE) == ISC_DEFAULT_SN){                   //An ISC with no SN has replied. We need to give it a serial number
-                            Assign_ISC_New_SN();
-                            return;
-                        }
-
-                        Add_ISC_SN(PacketReadParamST7540(ST7540_SOURCE));
-                        if (New_ISC_SN == 0){       //Not a new serial number, therefore a PING
-                            if (Discover_ISC_ModeUCG == 0)
-                                Update_Ping_Command(PacketReadParamST7540(ST7540_SOURCE));
-                        }
-                        else{ //It is a new serial number, lets broadcast ping again to get a new one
-                            New_ISC_SN = 0;
-                            CreateMessageST7540(IBC_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_CLOSE_RELAY, 0, "");
-                            StartTransmitST7540();
-                            WaitTickCount(200); //Get Message out before next message
-                            BroadcastGetISC_SNumbers();
-                        }
-                        //LAT_TEST_LED = !LAT_TEST_LED;
-                        return;
-                    case(ARM_ISC_B):                                                        //Receiving ACK for ARMING of ISC
-                        Update_ARM_ISC(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(DISARM_ISC_B):                                                     //Receiving ACK for DISARMING of ISC
-                        Update_DISARM_ISC(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                    case(CMD_CABLE_FAULT_B):                                                //Receiving Cable fault from ISC
-                        Update_ISC_Cable_Fault(PacketReadParamST7540(ST7540_SOURCE));
-                        return;
-                }
             }
         }
+        else                                                                //invalid CRC - How do we handle this?
+            ReceiveNewDataST7540();                                         //configure to recieve next data as this must be ignored.
+    }
+            
 }
 
-void Receive_Pi_Packet(void){   //We have received a request from the Pi to aquire data from an ISC
+void Receive_Pi_Packet(void){                                                   //We have received a request from the Pi to aquire data from an ISC
+    
     unsigned char BroadcastUC;
+            
 //CreateMessageST7540(unsigned short packetSourceUS, unsigned short packetDestUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf)
 temp = PacketReadParamUART(UART_HEADER);
 //We have received a packet from the PI, now we need to extract the info and perform the relevant task
 CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
-
     switch(PacketReadParamUART(UART_CMD)){//Extract the command from the Packet
         case(CMD_PI_DEFAULT_DATA):
             //Get IB651 Default Values
@@ -829,14 +621,6 @@ CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
             CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
             ISC_Transmit_Packet_Ready = 1;         
             return;
-        case(CMD_PI_DEFAULT_DATA_B):
-            //Get IB651 Default Values
-            BroadcastUC = CMD_SEND_DEFAULT;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
         case(CMD_PI_FORCE_DEFAULT):
             //Get IB651 Default Values
             BroadcastUC = CMD_FORCE_DEFAULT;
@@ -845,72 +629,6 @@ CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
             CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
             ISC_Transmit_Packet_Ready = 1;
             return;
-        case(CMD_PI_DC_DATA):                                                    
-            //Get IB651 DC Values
-            BroadcastUC = CMD_SEND_DC;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_FORCE_DC):
-            //Get IB651 DC Values
-            BroadcastUC = CMD_FORCE_DC;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_AC_DATA):                                                    
-            //Get IB651 AC Values
-            BroadcastUC = CMD_SEND_AC;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;            
-            return;
-        case(CMD_PI_FORCE_AC):
-            //Get IB651 AC Values
-            BroadcastUC = CMD_FORCE_AC;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_BLAST_VALUE):                                           
-            //Get IB651 Blast Circuit Values
-            BroadcastUC = CMD_SEND_BLAST_VALUE;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_FORCE_BLAST_VAL):
-            //Get IB651 Blast Circuit Values
-            BroadcastUC = CMD_FORCE_BLAST_VALUE;
-            if (BroadcastCheckUC)
-                BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_IBC_DEFAULT):
-            //Return own data - Return default data of the IB
-            //BroadcastUC = CMD_FORCE_DC;
-            //BroadcastUC |= 0b10000000;
-            CreateMessageUART(IBC_SN, CMD_PI_IBC_DEFAULT, 1, IBC_Default_Data);
-            PacketForPiIdentifier = CMD_PI_IBC_DEFAULT;
-            return;
-        case(CMD_PI_IBC_ERRORS):
-            //Return own data - Return error data of the IBC to the Pi
-            CreateMessageUART(IBC_SN, CMD_PI_IBC_ERRORS, 1, IBC_Faults_Data);
-            PacketForPiIdentifier = CMD_PI_IBC_ERRORS;
-            return;
-        case(CMD_PI_SN_ISCS):
-            //Ordered list of ISC's, stored on the IBC - No downstream request required
-            Reverse_ISC_SN_List();
-            CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, ISC_SN_Array_SizeUCG * 2, ISC_SN_Array_ReverseUSG);
-            PacketForPiIdentifier = CMD_PI_SN_ISCS;
-            return;
         case(CMD_PI_SN_IB651):
             //Get serial number list of the IB651s connected to particular ISC
             BroadcastUC = CMD_GET_SN;
@@ -918,16 +636,11 @@ CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
                 BroadcastUC |= 0b10000000;
             CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
             ISC_Transmit_Packet_Ready = 1;
-            return;
-        case(CMD_PI_BLAST_PERMISSION):
-            //Permission to blast granted
-            return;
-        case(CMD_PI_BLAST_DENIED):
-            //Permission to blast denied
-            return;
-        case(CMD_PI_BLAST_ACK):                                              
-            //Blast Command - Probably not going to be used
-            return;
+            return;    
+        case(CMD_PI_SN_ISCS):          
+            //Ordered list of ISC's, stored on the IBC - No downstream request required
+            Check_ALL_ISC();
+            return;     
         case(CMD_PI_PING_ISC):                                                       
             //Ping the relevant ISC
             BroadcastUC = PING_ISC;
@@ -962,63 +675,38 @@ CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
             CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
             ISC_Transmit_Packet_Ready = 1;
             return;
-        case(CMD_PI_ISC_PARENT):
-            CreateMessageUART(PacketReadParamUART(UART_SN), CMD_PI_ISC_PARENT, 2, getParentForISC(PacketReadParamUART(UART_SN)));
+        case(CMD_PI_OPEN_RELAY):
+            //set ISC Relay open
+            BroadcastUC = CMD_OPEN_RELAY;
+            if (BroadcastCheckUC)
+                BroadcastUC |= 0b10000000;
+            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            ISC_Transmit_Packet_Ready = 1;         
             return;
+        case(CMD_PI_CLOSE_RELAY):
+            //Set ISC relay closed
+            BroadcastUC = CMD_CLOSE_RELAY;
+            if (BroadcastCheckUC)
+                BroadcastUC |= 0b10000000;
+            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            ISC_Transmit_Packet_Ready = 1;         
+            return;
+        case(CMD_PI_CLEAR_ISC_LIST):
+            //Clear the list of ISC's normally for remapping purposes
+                for (int i = 0; i < ISC_SN_Array_SizeUCG; i++)
+                    ISC_SN_ArrayUIG[i] = 0; //clear the logs
+                
+                ISC_SN_Array_SizeUCG=0; //clear the logs       
+            return;
+        case(CMD_PI_CLEAR_ALARM):
+            //Clear Alarm remotely
+            AlarmStatusUCG = CLEAR;                    
+            return;
+            
+        default :
+            return;
+                    
     }//END SWITCH
-}
-
-void Construct_Pi_Packet(void){
-
-    switch(PacketForPiIdentifier){                          //Extract the command from the Packet
-        case(CMD_SEND_DEFAULT):                                               //Receiving Default Values
-            Reverse_Data(DATA_STATUS);            
-            //CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_DEFAULT_DATA, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsData[DATA_STATUS]);
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_DEFAULT_DATA, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsDataReverse);
-            return;
-        case(CMD_SEND_DC):                                                    //Receiving DC Value
-            Reverse_Data(DATA_DC_VOLT);
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_DC_DATA, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsDataReverse);
-            return;
-        case(CMD_SEND_AC):                                                    //Receiving AC Value
-            Reverse_Data(DATA_AC_VOLT);
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_AC_DATA, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsDataReverse);
-            return;
-        case(CMD_SEND_BLAST_VALUE):                                           //Receiving Blast Circuit Value
-            Reverse_Data(DATA_BL_VOLT);
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_BLAST_VALUE, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsDataReverse);
-            return;
-        case(CMD_OPEN_RELAY):                                                 //Receiving open relay ack
-            //CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_OPEN_RELAY, 0,"");
-            return;
-        case(CMD_CLOSE_RELAY):                                                //Receiving closed relay ack
-            //CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_CLOSE_RELAY, 0,"");
-            return;
-        case(CMD_GET_SN):            
-            //Receiving serial no of ISC/IB651s
-            //for(int dataBufLocUC = 0; dataBufLocUC < boosterCommsData[DATA_LENGTH][ISC_Packet_Index]; dataBufLocUC++)             //Packet payload
-                //boosterCommsDataTemp[dataBufLocUC] = boosterCommsData[DATA_SERIAL_NUMBER][dataBufLocUC];//TransmitPiBufferCG[dataBufLocUC + 9] = dataBuf[dataBufLocUC];
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_SN_IB651, boosterCommsData[DATA_LENGTH][ISC_Packet_Index], boosterCommsData[DATA_SERIAL_NUMBER]);
-            return;
-        case(CMD_SN_LIST_CHANGED):                                            //Receiving serial no list has changed
-            //Finish
-            return;
-        case(CMD_BLAST_COMMAND):                                              //Receiving ACK blast command
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_BLAST_ACK, 0,"");
-            return;
-        case(PING_ISC):                                                       //Receiving ACK for PING
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_PING_ISC, 0,"");
-            return;
-        case(ARM_ISC):                                                        //Receiving ACK for ARMING of ISC
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_ARM_ISC, 0,"");
-            return;
-        case(DISARM_ISC):                                                     //Receiving ACK for DISARMING of ISC
-            CreateMessageUART(getISC_SN(ISC_Packet_Index), CMD_PI_DISARM, 0,"");
-            return;
-        case(CMD_CABLE_FAULT):                                                //Receiving Cable fault from ISC
-
-            return;
-    }
 }
 
 void Transmit_BLAST_Command_Packet(void){
@@ -1026,9 +714,6 @@ void Transmit_BLAST_Command_Packet(void){
         CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, CMD_BLAST_COMMAND, 0, "");
                 StartTransmitST7540();
                 ISC_Transmit_Packet_Ready = 0;
-
-    //CreateMessageST7540(IBC_SN, ISC_NULL_SN, PING_ISC, 0, "");
-    //ISC_Transmit_Packet_Ready = 1;
     }
 }
 
@@ -1042,18 +727,18 @@ void Check_ALL_ISC(void){
     ISC_Transmit_Packet_Ready = 1;
 }
 
-void DEBUG_Print_Packet(void){
-//    LAT_TEST_LED = ON;
- CreateMessageUARTDEBUG(PacketReadParamST7540(ST7540_DATA_LEN),PacketReadParamST7540(ST7540_SOURCE), PacketReadParamST7540(ST7540_DEST),PacketReadParamST7540(ST7540_NUMBER),PacketReadParamST7540(ST7540_CMD),PacketDataST7540());
- SendUARTPacket();
- //PacketForPiIdentifier = 0b11111111;
-// LAT_TEST_LED = OFF;
- //WaitTickCount(50);
-}
-
 void Transmit_Pi_Default_Data(void){
     CreateMessageUART(IBC_SN, CMD_PI_IBC_DEFAULT, 2, PiDefaultData);
-    PacketForPiIdentifier = 0b11111110;
+    SendUARTPacket();
+}
+
+void Update_Ping_Command(unsigned short ISC_SN){
+    ISC_Packet_Index = getISC_Index(ISC_SN);
+}
+
+void CheckBroadcastPacket(unsigned char Command){
+
+ BroadcastCheckUC = (Command & 0b10000000);
 }
 
 void Reverse_ISC_SN_List(void){
@@ -1070,39 +755,64 @@ void Reverse_ISC_SN_List(void){
 
 }
 
-void Reverse_Data(unsigned char TypeUC){
-   
-   
-    for (int i = 0; i < boosterCommsData[DATA_LENGTH][ISC_Packet_Index]; i+=2){
+unsigned short getISC_SN(unsigned char ISC_Index){
+    return ISC_SN_ArrayUIG[ISC_Index - 1];
+}
 
-        boosterCommsDataReverse[i] = boosterCommsData[TypeUC][i + 1];
-        boosterCommsDataReverse[i + 1] = boosterCommsData[TypeUC][i];
+unsigned char getISC_Index(unsigned short ISC_SN){
+    int index = 0;
 
+    for (index = 0; index < ISC_SN_Array_SizeUCG; index++){
+        if (ISC_SN_ArrayUIG[index] == ISC_SN)
+            return index + 1;
+    }
+
+    if (index == 0)
+        Add_ISC_SN(ISC_SN);
+    return 1;
+}
+
+void Add_ISC_SN(unsigned short ISC_SN){
+
+    if (ISC_SN_Array_SizeUCG == 0){                                             //We have no ISCs listed
+        ISC_SN_Array_SizeUCG++;
+        ISC_SN_ArrayUIG[0] = ISC_SN;
+        New_ISC_SN = 1; 
+    }
+    else{                                                                       //We already have an ISC listed
+        if (Check_Clash_ISC_SN(ISC_SN) != 1){
+            ISC_SN_ArrayUIG[ISC_SN_Array_SizeUCG] = ISC_SN;
+            ISC_SN_Array_SizeUCG++;
+            New_ISC_SN = 1;                                                     //If we dont have a Clash, then it is a new Serial Number
+        }
     }
 }
 
-void CheckBroadcastPacket(unsigned char Command){
-
- BroadcastCheckUC = (Command & 0b10000000);
+unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN){
+    for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
+        if (ISC_SN_ArrayUIG[i] == ISC_SN){
+            
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void Assign_ISC_New_SN(void){
     unsigned char ISC_NEW_SN[2];
     //Method
     EEPROMRead();
-    //ISC_NEW_SN[0] = 0x30;
-    //ISC_NEW_SN[1] = 0x31;
-    ISC_NEW_SN[0] = EEPRead[0]; //MSB
-    ISC_NEW_SN[1] = EEPRead[1]; //LSB
+    ISC_NEW_SN[0] = EEPRead[0];                                                 //MSB
+    ISC_NEW_SN[1] = EEPRead[1];                                                 //LSB
     //Get Last ISC_SN from EEPROM
 
-    if (EEPRead[1] == 0xFF){ //We need to roll over LSB and increment MSB
+    if (EEPRead[1] == 0xFF){                                                    //We need to roll over LSB and increment MSB
         ISC_NEW_SN[1] = EEPRead[1] + 1;
         ISC_NEW_SN[0] = 0x00;
     }
     else{
-        ISC_NEW_SN[0] = EEPRead[0]; //MSB
-        ISC_NEW_SN[1] = EEPRead[1] + 1; //LSB
+        ISC_NEW_SN[0] = EEPRead[0];                                             //MSB
+        ISC_NEW_SN[1] = EEPRead[1] + 1;                                         //LSB
     }
 
     EEPWrite[0] = ISC_NEW_SN[0];
@@ -1114,66 +824,26 @@ void Assign_ISC_New_SN(void){
     ISC_Transmit_Packet_Ready = 1;
 }
 
-unsigned short getParentForISC(unsigned short ISC_SN){
-    //return ISC_SN_ArrayUIG[getISC_Index(ISC_SN)][1];                                  //[X][1] is the Parent ISC SN
-    return ISC_PARENT_SNArrayUIG[getISC_Index(ISC_SN)];
-}
-
-void AddParentForISC(unsigned short ISC_SN, unsigned short ISC_PARENT_SN){
-    ISC_PARENT_SNArrayUIG[getISC_Index(ISC_SN)] = ISC_PARENT_SN;
-}
-
 unsigned short getIBCDefaultData(void){
     unsigned short returningData = 0b00000000;
 
     if (KeySwitchStatusUCG)
-        returningData |= 0b10000000;        //Keyswitch Status
-    if (RelayStatusUCG)                     //Isolation Relay Status
+        returningData |= 0b10000000;                                            //Keyswitch Status
+    if (RelayStatusUCG)                                                         //Isolation Relay Status
         returningData |= 0b01000000;
-    if (FireButtonStatusUCG)                //Fire Button Status - COMPLETE STILL
+    if (FireButtonStatusUCG)                                                    //Fire Button Status - COMPLETE STILL
         returningData |= 0b00100000;
-    if (CableFaultStatusUCG == CABLEFAULT)  //Cable Fault
+    if (CableFaultStatusUCG == CABLEFAULT)                                      //Cable Fault
         returningData |= 0b00010000;
-    if (CableFaultStatusUCG == EARTHFAULT)  //Earth Leakage Fault
+    if (CableFaultStatusUCG == EARTHFAULT)                                      //Earth Leakage Fault
         returningData |= 0b00001000;
-        PiDefaultData[0] = 0b01010101;
+    if (FiringStatusUCG)                                                        //Is the unit firing.
+        returningData |= 0b00000100;
+    if (ResetStatusUCG)                                                        //Reset BIT, indicates that the unit has lost coms and will reset quitly
+        returningData |= 0b00000010;
+        PiDefaultData[0] = 0b00000101;                                          //0b01010101;
         PiDefaultData[1] = returningData;
     return returningData;
-}
-
-void BroadcastGetISC_SNumbers(void){
-    CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, PING_ISC, 0, "");
-    StartTransmitST7540();
-    WaitTickCount(250);
-}
-
-void GetIB651_SNumbers(unsigned short ISC_SN){
-    CreateMessageST7540(IBC_SN, ISC_SN, CMD_GET_SN, 0, "");
-    StartTransmitST7540();
-}
-
-unsigned char Check_ISC_Cable_Faults(void){
-    unsigned char data;
-    unsigned char CF;
-    unsigned char EL;
-    unsigned char Fault = 0;
-
-    data = boosterCommsData[DATA_STATUS][1];                        //ISC Index is always the first index
-    EL = (data & 0b0000100) >> 2;
-    CF = (data & 0b0001000) >> 3;
-    if (EL == 1 || CF == 1){
-        Fault = 1;
-        ISC_CF_Index = ISC_Packet_Index;
-    }
-    else{                                   //No Fault
-        if (ISC_CF_Index == ISC_Packet_Index)
-            ISC_CF_Index = 0;
-    }
-
-    if (ISC_CF_Index > 0)                  //There are no cable faults below
-        return 1;
-    else
-        return 0;
 }
 
 void Inspect_Default_Data_Packet(unsigned short Data_Length){
@@ -1185,7 +855,7 @@ void Inspect_Default_Data_Packet(unsigned short Data_Length){
 
     //index = getISC_Index(ISC_SN);
 
-    for(index = 0; index < Data_Length / 2; index++){                     //Packet payload
+    for(index = 0; index < Data_Length / 2; index++){                           //Packet payload
         data = boosterCommsData[DATA_STATUS][(index * 2) + 1];
         EL = data & 0b0000100;
         EL = EL >> 2;
@@ -1204,150 +874,6 @@ void Update_Open_Relay(unsigned short ISC_SN){
 void Update_Close_Relay(unsigned short ISC_SN){
     ISC_Packet_Index = getISC_Index(ISC_SN);
     PacketForPiIdentifier = CMD_CLOSE_RELAY;
-}
-
-void Update_Ping_Command(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
-    PacketForPiIdentifier = PING_ISC;
-}
-
-void Update_ARM_ISC(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
-    PacketForPiIdentifier = ARM_ISC;
-}
-
-void Update_DISARM_ISC(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
-    PacketForPiIdentifier = DISARM_ISC;
-}
-
-void Update_ISC_Cable_Fault(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
-    PacketForPiIdentifier = CMD_CABLE_FAULT;
-}
-
-void Update_Default_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf){                                                                 //Function to update the default data set
-    unsigned char index = 0;
-    unsigned char dataBufLocUC;
-
-    index = getISC_Index(ISC_SN);
-
-    for(dataBufLocUC = 0; dataBufLocUC < Data_Length; dataBufLocUC++)                     //Packet payload
-        boosterCommsData[DATA_STATUS][dataBufLocUC] = dataBuf[dataBufLocUC];                     //PacketDataST7540();
-        boosterCommsData[DATA_LENGTH][index] = Data_Length;
-    ISC_Packet_Index = index;
-    PacketForPiIdentifier = CMD_SEND_DEFAULT;
-}
-
-void Update_DC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf){                                                                 //Function to update the default data set
-    unsigned char index = 0;
-    unsigned char dataBufLocUC;
-
-    index = getISC_Index(ISC_SN);
-
-    for(dataBufLocUC = 0; dataBufLocUC < Data_Length; dataBufLocUC++)                     //Packet payload
-        boosterCommsData[DATA_DC_VOLT][dataBufLocUC] = dataBuf[dataBufLocUC];                     //PacketDataST7540();
-        boosterCommsData[DATA_LENGTH][index] = Data_Length;
-    ISC_Packet_Index = index;
-    PacketForPiIdentifier = CMD_SEND_DC;
-}
-
-void Update_AC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf){                                                                 //Function to update the default data set
-    unsigned char index = 0;
-    unsigned char dataBufLocUC;
-
-    index = getISC_Index(ISC_SN);
-
-    for(dataBufLocUC = 0; dataBufLocUC < Data_Length; dataBufLocUC++)                     //Packet payload
-        boosterCommsData[DATA_AC_VOLT][dataBufLocUC] = dataBuf[dataBufLocUC];                     //PacketDataST7540();
-        boosterCommsData[DATA_LENGTH][index] = Data_Length;
-    ISC_Packet_Index = index;
-    PacketForPiIdentifier = CMD_SEND_AC;
-}
-
-void Update_Blast_Loop_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf){                                                                 //Function to update the default data set
-    unsigned char index = 0;
-    unsigned char dataBufLocUC;
-
-    index = getISC_Index(ISC_SN);
-
-    for(dataBufLocUC = 0; dataBufLocUC < Data_Length; dataBufLocUC++)                     //Packet payload
-        boosterCommsData[DATA_BL_VOLT][dataBufLocUC] = dataBuf[dataBufLocUC];                     //PacketDataST7540();
-        boosterCommsData[DATA_LENGTH][index] = Data_Length;
-    ISC_Packet_Index = index;
-    PacketForPiIdentifier = CMD_SEND_BLAST_VALUE;
-}
-
-void Update_Serial_Number(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf){              //CHECK IF WE NEED???                                                   //Function to update the default data set
-    unsigned char index = 0;
-    unsigned char dataBufLocUC;
-    //unsigned short DataTemp;
-    //unsigned char debug = 0;
-
-    index = getISC_Index(ISC_SN);
-
-    //for(index = 0; index < Data_Length / 2; index++){                     //Packet payload
-        //data = boosterCommsData[DATA_STATUS][(index * 2) + 1];
-
-//    for(dataBufLocUC = 0; dataBufLocUC < Data_Length / 2; dataBufLocUC++){                     //Packet payload
-//        DataTemp = (dataBuf[dataBufLocUC * 2]) << 8;
-//        DataTemp += dataBuf[(dataBufLocUC * 2) + 1];
-//        boosterCommsData[DATA_SERIAL_NUMBER][dataBufLocUC] = DataTemp;                     //PacketDataST7540();
-//    }
-
-    for(dataBufLocUC = 0; dataBufLocUC < Data_Length; dataBufLocUC++){                     //Packet payload
-        boosterCommsData[DATA_SERIAL_NUMBER][dataBufLocUC] = dataBuf[dataBufLocUC];        //PacketDataST7540();
-    }
-        boosterCommsData[DATA_LENGTH][index] = Data_Length;
-    ISC_Packet_Index = index;
-    //PacketForPiIdentifier = CMD_SN_LIST_CHANGED;
-    PacketForPiIdentifier = CMD_GET_SN;
-}
-
-unsigned short getISC_SN(unsigned char ISC_Index){
-    return ISC_SN_ArrayUIG[ISC_Index - 1];
-}
-
-unsigned char getISC_Index(unsigned short ISC_SN){
-    //unsigned char index = 0;
-    int index = 0;
-
-    for (index = 0; index < ISC_SN_Array_SizeUCG; index++){
-        if (ISC_SN_ArrayUIG[index] == ISC_SN)
-        //if (ISC_SN_ArrayUIG[index][0] == ISC_SN)
-            return index + 1;
-    }
-
-    if (index == 0)
-        Add_ISC_SN(ISC_SN);
-    return 1;
-}
-
-void Add_ISC_SN(unsigned short ISC_SN){
-
-    if (ISC_SN_Array_SizeUCG == 0){                                                         //We have no ISCs listed
-        ISC_SN_Array_SizeUCG++;
-        ISC_SN_ArrayUIG[0] = ISC_SN;
-        New_ISC_SN = 1; //It is a new serial number
-        //ISC_SN_ArrayUIG[0][0] = ISC_SN;
-    }
-    else{                                                                                   //We already have an ISC listed
-        if (Check_Clash_ISC_SN(ISC_SN) != 1){
-            ISC_SN_ArrayUIG[ISC_SN_Array_SizeUCG] = ISC_SN;
-            //ISC_SN_ArrayUIG[ISC_SN_Array_SizeUCG][0] = ISC_SN;
-            ISC_SN_Array_SizeUCG++;
-            New_ISC_SN = 1;                 //If we dont have a Clash, then it is a new Serial Number
-        }
-    }
-}
-
-unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN){
-    for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
-        if (ISC_SN_ArrayUIG[i] == ISC_SN)
-        //if (ISC_SN_ArrayUIG[i][0] == ISC_SN)
-            return 1;
-    }
-    return 0;
 }
 
 void ResetDeArmedTimer(void){
@@ -1376,7 +902,7 @@ void StopPreArmedTimer(void){
     LowSpeedTickPATCG = 0;    
 }
 
-void StartPostFireTimer(void){  //Timer to count if the system is ARMED for too long after a blast
+void StartPostFireTimer(void){                                                  //Timer to count if the system is ARMED for too long after a blast
     PBTEnabled = 1;
     HighSpeedTickUIG = 0;
     LowSpeedTickPBTCG = 0;    
@@ -1388,10 +914,8 @@ void StopPostFireTimer(void){
     LowSpeedTickPBTCG = 0;    
 }
 
-void StartBlastTimer(void){ //Timer to count if the Blast was too short
-    //HighSpeedTickUIG = 0;
+void StartBlastTimer(void){                                                     //Timer to count if the Blast was too short
     BTEnabled = 1;
-    //HighSpeedTickBTUIG = 0;
     LowSpeedTickBTCG = 0;    
 }
 
@@ -1403,29 +927,42 @@ void StopBlastTimer(void){
 
 void checkCableFaults(void){
 
-    ReadCableFault();
-    ReadEarthLeakage();
-    if (cableFaultProblemUCG == 1){                      //We have a Cable/EL Fault        
+    
+    //if in ELT test mode then finish the test before anything else
+    if(earthLeakageStart==1){
+        ReadEarthLeakage();         //then conduct the test
+        earthLeakageStart=0;        //and clear the start bit
+        ELT_Counter=0;              //clear the counter
+        TurnCableFaultDetectOff();  // turn off the test
+        
+    }
+    else{
+        ReadCableFault();           //only do the test far away from ELT
+    }
+    
+    if((ELT_Counter >= 500 && earthLeakageCounter > 0) || ELT_Counter >= 3000){
+        earthLeakageStart=1;        //start the test
+        TurnCableFaultDetectOn();   
+    }
+    
+    if (cableFaultProblemUCG == 1){                                             //We have a Cable/EL Fault        
         CableFaultStatusUCG = CABLEFAULT;
     }
-
-    else if (earthLeakageProblemUCG == 1){                      //We have a Cable/EL Fault
+    else if (earthLeakageProblemUCG == 1){                                      //We have a Cable/EL Fault
         CableFaultStatusUCG = EARTHFAULT;
     }
-
     else{
         CableFaultStatusUCG = CLEAR;
     }
 }
 
 void FIRE(void){
-
     while(ReadMAINS_ZeroCrossing() == 1);
                              //Burn off till first pulse edge comes through
     StartBlastTimer();
-    for (int i = 0; i < 120; i++){//changed to 240 for 2min timeout was 120
+    for (int i = 0; i < 120; i++){                                              //changed to 240 for 2min timeout was 120
         CLRWDT();
-        while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160);                   //4 whole cycles missed
+        while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160);       //4 whole cycles missed
           GenerateMissingPulse();
           if (BTHighSpeedTickUIG > 160){
              AlarmStatusUCG = FAULT;
@@ -1438,14 +975,14 @@ void FIRE(void){
     StartPostFireTimer();
 }
 
-void GenerateMissingPulse(void){ //Lets through N Pulses
+void GenerateMissingPulse(void){                                                //Lets through N Pulses
 
-     WaitTickCount(8);     //Wait some time after the edge so we only turn on after ZC
+     WaitTickCount(8);                                                          //Wait some time after the edge so we only turn on after ZC
      TurnSSR1On();    
     
-     for (HighPulseCountCG = 0; HighPulseCountCG < HighCycle; HighPulseCountCG++){ //
+     for (HighPulseCountCG = 0; HighPulseCountCG < HighCycle; HighPulseCountCG++){//
 
-         while(ReadMAINS_ZeroCrossing() == 1){                          //Burn off till pulse goes low
+         while(ReadMAINS_ZeroCrossing() == 1){                                  //Burn off till pulse goes low
              //LowSpeedTickBTCG = 0;
              BTHighSpeedTickUIG = 0;
              if (HighPulseCountCG == (HighCycle - 1)){
@@ -1454,10 +991,10 @@ void GenerateMissingPulse(void){ //Lets through N Pulses
                 }
         }
         if (BTHighSpeedTickUIG < 160){
-            while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160){                          //Burn off till pulse goes high
+            while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160){   //Burn off till pulse goes high
             }
         }
-     } //END for loop         
+     }                                                                          //END for loop         
 }
 
 inline void WaitNewTick(void){                                                  //Wait for the start of a new tick
@@ -1476,37 +1013,7 @@ void InitSystem(void){
     OSCCONbits.IRCF = 0b111;                                                    //Setup Internal FOSC = 16MHz
     OSCCONbits.OSTS = 0;                                                        //Clock runs from Internal Oscillator
     OSCCONbits.SCS = 0b11;                                                      //Internal Oscillator block
-
-    //Configure ADC
-    ADCON2bits.ADFM = 1;                                                        //Right justify result
-    ADCON2bits.ACQT = 0b010;                                                    //Sample for 4 TAD
-    ADCON2bits.ADCS = 0b110;                                                    //Set to Fosc/64 clock
-    ADCON0bits.ADON = 1;                                                        //Turn on the ADC
-
-    //Setup Timer2 module
-    //Interrupt generated when TMR2 = PR2 = 125 = 500us (changed to 122 because of ISR overhead)
-    //Inst.Cycle x Prescalar x Postscalar x PR2 = Tick Time
-    //   250ns   x    16     x      1     x 125 = 500us
-
-    PMD0bits.TMR2MD = 0;					//Enable Timer2
-    T2CONbits.T2OUTPS = 0b0000;                                 //Timer2 postscalar = 1:1 (1ticks every Tcy)
-    T2CONbits.TMR2ON = 0;					//Timer2 OFF, switch on just before main loop
-    T2CONbits.T2CKPS = 0b11;                                    //Timer2 prescalar = 1:16
-    TMR2 = 0;                                                   //Preload value of 0
-    INTCONbits.GIEH = 1;					//Enable all unmasked interrupts
-    INTCONbits.PEIE = 1;					//Enable all unmasked peripheral interrupts
-    PIR1bits.TMR2IF = 0;					//Clear interrupt flag
-    PIE1bits.TMR2IE = 1;					//Enable Timer2 interrupt
-    IPR1bits.TMR2IP = 0;					//Timer2 interrupt = high priority
-    PR2 = 122;                                                  //Register to match Timer2 value to
-    T2CONbits.TMR2ON = 1;                                       //Turn on Timer2
-
-    //PIR1.RC1IF = 0;                                           //EUSART1 Receive Interrupt Flag bit - (cleared when RCREG1 is read)
-    PIE1bits.RC1IE = 1;                                         //Enables the EUSART1 receive interrupt
-    INTCONbits.RBIE = 1;                                        //Enables the IOCx port change interrupt
-    //INTCON2bits.RBIP = 0/1;                                   //RB Port Change Interrupt Priority bit
-    IOCBbits.IOCB4 = 1;                                         //Enable RB4 as an IOC pin
-
+    
     //Configure A2Ds
     TRIS_CFAULT_READ = 1;               //Cable Fault Read
     TRIS_MAINS_ZEROCROSSING = 1;        //Mains/Zero Crossing detect
@@ -1532,8 +1039,6 @@ void InitSystem(void){
     //LED definitions
     TRIS_CABLE_FAULT_LED = 0;           //CABLE FAULT LED
     LAT_CABLE_FAULT_LED = 0;
-//    TRIS_TEST_LED = 0;                  //TEST LED
-//    LAT_TEST_LED = 0;
     TRIS_DIAG1_LED = 0;                  //DIAGNOSTIC LED 1
     LAT_DIAG1_LED = 0;
     TRIS_DIAG2_LED = 0;                  //DIAGNOSTIC LED 2
@@ -1542,18 +1047,74 @@ void InitSystem(void){
     //UART DEFINITIONS - Both TRIS bits set to '1' as per datasheet
     ANSEL_RX = 0;
     ANSEL_TX = 0;
-    TRIS_RX = 1;                       //RX PIN
-    TRIS_TX = 1;                       //TX PIN
+    TRIS_RX = 1;                                                                //RX PIN
+    TRIS_TX = 1;                                                                //TX PIN
+    
+    
+    
+    //Setup Timer2 module
+    //Interrupt generated when TMR2 = PR2 = 125 = 500us (changed to 122 because of ISR overhead)
+    //Inst.Cycle x Prescalar x Postscalar x PR2 = Tick Time
+    //   250ns   x    16     x      1     x 125 = 500us
+
+    PMD0bits.TMR2MD = 0;                                                        //Enable Timer2
+    T2CONbits.T2OUTPS = 0b0000;                                                 //Timer2 postscalar = 1:1 (1ticks every Tcy)
+    T2CONbits.TMR2ON = 0;                                                       //Timer2 OFF, switch on just before main loop
+    T2CONbits.T2CKPS = 0b11;                                                    //Timer2 prescalar = 1:16
+    TMR2 = 0;                                                                   //Preload value of 0
+    
+    //timer 0 setup to restart RX communication
+    //16Mhz clock/4 = 4Mhz  (/256 prescaller = 15625)
+    //2^16 = 65536  (/15625 = 4.19s) per interrup
+    //this if we want a 5 minute reconfigure then interrupt counter should =
+//    RX_TimoutCounter = 0;
+//    RX_TimoutCounter2 = 0;
+//    T0CON = 0b00000111;         //16 bit mode 256 prescaller
+//    INTCONbits.INT0IF = 0;      //clear th flag   
+//    INTCONbits.INT0IE = 1;      //set as an interrupt    
+//    INTCON2bits.TMR0IP = 1;     //high priority interrupt
+                                                                                //EUSART1 Receive Interrupt Flag bit - (cleared when RCREG1 is read)
+    PIE1bits.RC1IE = 1;                                                         //Enables the EUSART1 receive interrupt
+    INTCONbits.RBIE = 1;                                                        //Enables the IOCx port change interrupt
+    IOCBbits.IOCB4 = 1;                                                         //Enable RB4 as an IOC pin
+    
+    TXSTA1bits.BRGH = 0;                                                    //Setting High Baud Rate
+    BAUDCONbits.BRG16 = 0;
     UART_Init(9600);
     //Read from UART to clear interrupt flag
+    
+    //Configure ADC
+    ADCON2bits.ADFM = 1;                                                        //Right justify result
+    ADCON2bits.ACQT = 0b010;                                                    //Sample for 4 TAD
+    ADCON2bits.ADCS = 0b110;                                                    //Set to Fosc/64 clock
+    ADCON0bits.ADON = 1;                                                        //Turn on the ADC
 
-    TurnRelayOff(); //Keep Mains off of the output
-    TurnSSR1Off(); //Double check the relay is off
-
-    AlarmStatusUCG = FAULT;
-
-    checkCableFaults();
-
+    INTCONbits.PEIE = 1;                                                        //Enable all unmasked peripheral interrupts
+    PIR1bits.TMR2IF = 0;                                                        //Clear interrupt flag
+    PIE1bits.TMR2IE = 1;                                                        //Enable Timer2 interrupt
+    IPR1bits.TMR2IP = 0;                                                        //Timer2 interrupt = high priority
+    PR2 = 122;                                                                  //Register to match Timer2 value to
+    T2CONbits.TMR2ON = 1;                                                       //Turn on Timer2
+    INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
+    
+    
+    TurnRelayOff();                                                             //Keep Mains off of the output
+    TurnSSR1Off();                                                              //Double check the relay is off
+    
+    FiringStatusUCG = 0;                                                        //indicate that there is no fault at the start
+    ResetStatusUCG = 0;                                                        //indicate that coms should be fine now
+    
+    EEPROMRead();               //pull the coms data
+    if(EEPRead[2]!= 0xAA)       //if it is equal to AA then just clear.
+    {
+        AlarmStatusUCG = FAULT;
+        checkCableFaults();
+    }
+    else
+        AlarmStatusUCG = CLEAR;
+    
+    EEPROMClearReset();          //ensure on start that it is always cleared
+            
     NewCFStatusUCG = 0;
     ClearToFire = 0;
     CFLEDFlashEnable = 0;
@@ -1561,12 +1122,10 @@ void InitSystem(void){
 
     DeArmTimerEnabled = 0;
     DeArmTickCG = 0;
-
+    
     if(InitST7540()){
-        //LAT_DIAG2_LED = 1;
         ReceiveNewDataST7540();
     }
-
 }
 
 unsigned short ReadAnalogVoltage(unsigned char channelC){
@@ -1599,14 +1158,44 @@ unsigned short ReadAnalogVoltage(unsigned char channelC){
 void ReadEarthLeakage(void){   
     unsigned short earthLeakageValueUS;
 
-    TurnCableFaultDetectOn();                                                              //Enable EL test
-    //LAT_TEST_LED = ON;
-    __delay_us(1000);                                                             //Wait at least round trip delay for 5km (with Vfac of 0.6 is about 55uS)
-    //LAT_TEST_LED = OFF;
+    //we have now been in a test state for 50ms=+- thus start sampling
+    
+    int Failed=1;                          //tracks if we have any passes
+    for(int i=0; i<40 ;i++){//conduct 40 samples
+        __delay_us(10);                                                           //wait between samples
+        earthLeakageValueUS = ReadAnalogVoltage(ADC_VOLT_EL);                       //Read the EL test pin    
+        if(earthLeakageValueUS < VOLT_EL_HIGH){              //if it is not a EL fault then clear it.
+            Failed=0;           //clear the failed marker
+            earthLeakageCounter =0;
+        }
+    }
+    
+    if(Failed){         //if we fail then add 1 to the counter
+        (earthLeakageCounter== COUNTER_EL)?0:earthLeakageCounter++;             //if counter <40 then ++ else leave counter cableFaultCounter = 
+        //earthLeakageCounter++;  
+    }
+    else{
+        earthLeakageCounter=0;
+    }
+    
+    earthLeakageProblemUCG = (earthLeakageCounter == COUNTER_EL)?1:0;   //> VOLT_EL_HIGH)?1:0;      //if the counter has reached the trigger limit then trigger
+        
+    /* 
+    TurnCableFaultDetectOn();                                                   //Enable EL test
+    //__delay_us(1000);                                                           //Wait at least round trip delay for 5km (with Vfac of 0.6 is about 55uS)
+    __delay_ms(18);                                                           //Wait at least round trip delay for 5km (with Vfac of 0.6 is about 55uS)
     earthLeakageValueUS = ReadAnalogVoltage(ADC_VOLT_EL);                       //Read the EL test pin
-    TurnCableFaultDetectOff();                                                              //Disable EL test
+    TurnCableFaultDetectOff();                                                  //Disable EL test
 
-    earthLeakageProblemUCG = (earthLeakageValueUS > VOLT_EL_HIGH)?1:0;
+    if(earthLeakageValueUS > VOLT_EL_HIGH){
+        (earthLeakageCounter== COUNTER_EL)?0:earthLeakageCounter++;             //if counter <40 then ++ else leave counter cableFaultCounter = 
+    }
+    else{                                                                       //if it ever is not a EL fault then clear it.
+        earthLeakageCounter =0;
+    }
+    earthLeakageProblemUCG = (earthLeakageCounter == COUNTER_EL)?1:0;   //> VOLT_EL_HIGH)?1:0;      //if the counter has reached the trigger limit then trigger
+*/
+
 }
 
 void ReadCableFault(void){
@@ -1615,9 +1204,8 @@ void ReadCableFault(void){
 
     __delay_us(24);                                                             
     cableFaultValueUS = ReadAnalogVoltage(ADC_VOLT_CF);
-//    cableFaultProblemUCG = (cableFaultValueUS > VOLT_CF_HIGH)?1:0;
     if(cableFaultValueUS > VOLT_CF_HIGH){
-        (cableFaultCounter== COUNTER_CF)?0:cableFaultCounter++; //if counter <100 then ++ else leave counter cableFaultCounter = 
+        (cableFaultCounter== COUNTER_CF)?0:cableFaultCounter++;                 //if counter <40 then ++ else leave counter cableFaultCounter = 
     }
     else{
         cableFaultCounter =0;
@@ -1631,18 +1219,17 @@ unsigned char ReadMAINS_ZeroCrossing(void){
     
     //mainsZero_CrossingValueUSG = ReadAnalogVoltage(ADC_VOLT_ZC);
     mainsZero_CrossingValueUSG = PORT_MAINS_ZEROCROSSING;
-    WaitTickCount(1); //Debounce
+    WaitTickCount(1);                                                           //Debounce
     mainsZero_CrossingValueUSG2 = PORT_MAINS_ZEROCROSSING;
     if (mainsZero_CrossingValueUSG == mainsZero_CrossingValueUSG2)
         return mainsZero_CrossingValueUSG;
     else
-        return 0;//NULL;
+        return 0;                                                               //NULL;
 }
 
 void ReadFireOut(void){    
     
     for (int i = 0; i < 50; i++){
-        //__delay_us(24);
         while(ReadMAINS_ZeroCrossing() == 0);
         FireOutFloat += (float)ReadAnalogVoltage(ADC_VOLT_FO);
         while(ReadMAINS_ZeroCrossing() == 1);
@@ -1651,16 +1238,16 @@ void ReadFireOut(void){
 }
 
 void TurnRelayOff(void){
-    LAT_RELAY1 = OFF; //ON;
+    LAT_RELAY1 = OFF;                                                           //ON;
     if (RelayStatusUCG == OFF)
-        Pi_Status_Update == DEFAULT_UPDATE;
+        Pi_Status_Update = DEFAULT_UPDATE;
     RelayStatusUCG = ON;
 }
 
 void TurnRelayOn(void){
-    LAT_RELAY1 = ON;  //OFF;
+    LAT_RELAY1 = ON;                                                            //OFF;
     if (RelayStatusUCG == ON)
-        Pi_Status_Update == DEFAULT_UPDATE;
+        Pi_Status_Update = DEFAULT_UPDATE;
     RelayStatusUCG = OFF;
 }
 
@@ -1688,24 +1275,23 @@ void TurnBuzzer_AlarmOff(void){
     LAT_BUZZER_ALARM_LED = OFF;
 }
 
-unsigned char getKeySwitchState(void){                                      //Half Wave rectification,
+unsigned char getKeySwitchState(void){                                          //Half Wave rectification,
 
-                                               //Detect Half cycle - 10ms, therefore 0V for min 10mS before rising voltage occurs
-    ReadMAINS_ZeroCrossing();                                               //500uS tick, therefore 10mS is 20 Ticks
-    if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                    //Measured voltage above the threshold, therefore switch closed
+                                                                                //Detect Half cycle - 10ms, therefore 0V for min 10mS before rising voltage occurs
+    ReadMAINS_ZeroCrossing();                                                   //500uS tick, therefore 10mS is 20 Ticks
+    if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                       //Measured voltage above the threshold, therefore switch closed
         KeySwitchStateUCG = ARMED;
-        //LAT_DIAG1_LED = ON;
     }
-    else {                      //Wait quater of a cycle
+    else {                                                                      //Wait quarter of a cycle
         WaitTickCount(15);
         ReadMAINS_ZeroCrossing();  //See if we have a signal       
-        if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                    //Measured voltage above the threshold, therefore switch closed
+        if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                   //Measured voltage above the threshold, therefore switch closed
             KeySwitchStateUCG = ARMED;           
         }
         else{           //Wait half a cycle
             WaitTickCount(10);
             ReadMAINS_ZeroCrossing();
-            if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                    //Measured voltage above the threshold, therefore switch closed
+            if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){               //Measured voltage above the threshold, therefore switch closed
                 KeySwitchStateUCG = ARMED;              
             }
             else
@@ -1723,18 +1309,17 @@ unsigned char getFireButtonState(void){
    
 
     FireButtonStatusfirstUC = PORT_FIRE_SWITCH;
-    WaitTickCount(20);                           //Debounce for 10mS
+    WaitTickCount(20);                                                          //Debounce for 10mS
     FireButtonStatussecondUC = PORT_FIRE_SWITCH;
     
     if (FireButtonStatusfirstUC != FireButtonStatussecondUC)
         return DEPRESSED;
     else{
         if (FireButtonStatussecondUC == 1)
-            return DEPRESSED;                   //Inverted Logic
+            return DEPRESSED;                                                   //Inverted Logic
         else
             return PRESSED;
     }
-    //return (FireButtonStatusfirstUC == FireButtonStatussecondUC)?1:0;
 }
 
 unsigned char getResetButtonState(void){
@@ -1742,7 +1327,7 @@ unsigned char getResetButtonState(void){
     unsigned char ResetButtonStatussecondUC;
 
     ResetButtonStatusfirstUC = PORT_RESET_SWITCH;
-    WaitTickCount(50);                           //Debounce for 2mS
+    WaitTickCount(50);                                                          //Debounce for 2mS
     ResetButtonStatussecondUC = PORT_RESET_SWITCH;
 
      if (ResetButtonStatusfirstUC != ResetButtonStatussecondUC)
@@ -1755,86 +1340,57 @@ unsigned char getResetButtonState(void){
     }    
 }
 
-void ModemTXTest(void){
-    /*
-       while(TransmitBusyST7540());
-       LAT_TEST_LED = 0;
-       WaitTickCount(100);
-       CreateMessageST7540(0xC3C3, 0xC3C3, 0xBB, 5, "abcde");
-       StartTransmitST7540();
-       while(TransmitBusyST7540());
-       LAT_TEST_LED = 1;
-       WaitTickCount(100);
-       CreateMessageST7540(0xC3C3, 0xC3C3, 0xCC, 5, "abcde");
-       StartTransmitST7540();
-       */
-}
-
 void EEPROMWrite(){
     unsigned int address;
     unsigned char q=0;
     address = 0x0200;
-    INTCONbits.GIEH = 0;					//Disable all unmasked interrupts
-    Write_b_eep (address, EEPWrite[q]); // write into to EEPROM
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        address++; //increment the address of EEPROM to next location
+    INTCONbits.GIEH = 0;                                                        //Disable all unmasked interrupts
+    Write_b_eep (address, EEPWrite[q]);                                         // write into to EEPROM
+
+        address++;                                                              //increment the address of EEPROM to next location
     /* Checks & waits the status of ER bit in EECON1 register */
         Busy_eep();
         q++;
-    Write_b_eep (address, EEPWrite[q]); // write into to EEPROM
-        address++; //increment the address of EEPROM to next location
+    Write_b_eep (address, EEPWrite[q]);                                         // write into to EEPROM
+        address++;                                                              //increment the address of EEPROM to next location
     /* Checks & waits the status of ER bit in EECON1 register */
     Busy_eep();
-    INTCONbits.GIEH = 1;					//Enable all unmasked interrupts
+    INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
 
+}
+
+void EEPROMClearReset(){
+    unsigned int address;
+    address = 0x0202;
+    INTCONbits.GIEH = 0;                                                        //Disable all unmasked interrupts
+    Write_b_eep (address, 0x00);                                         // write into to EEPROM
+                                                           //increment the address of EEPROM to next location
+    /* Checks & waits the status of ER bit in EECON1 register */
+        Busy_eep();
+    INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
+}
+
+void EEPROMSetReset(){
+    unsigned int address;
+    address = 0x0202;
+    INTCONbits.GIEH = 0;                                                        //Disable all unmasked interrupts
+    Write_b_eep (address, 0xAA);                                         // write into to EEPROM
+                                                           //increment the address of EEPROM to next location
+    /* Checks & waits the status of ER bit in EECON1 register */
+        Busy_eep();
+    INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
 }
 
 void EEPROMRead(void){
     unsigned int address;
     address = 0x0200;
-    EEPRead[0] = Read_b_eep (address); //read the EEPROM data written previously from corresponding address
+    EEPRead[0] = Read_b_eep (address);                                          //read the EEPROM data written previously from corresponding address
     address++;
-    EEPRead[1] = Read_b_eep (address); //read the EEPROM data written previously from corresponding address
-
+    EEPRead[1] = Read_b_eep (address);                                          //read the EEPROM data written previously from corresponding address
+    address++;
+    EEPRead[2] = Read_b_eep (address);                                          //read the EEPROM data for the reset bits
+    address++;
 }
-
-/*
-void EEPROMTest(void){
-
-    unsigned char q=0;
-    unsigned int address;
-    address = 0x0200;
-    // Write single byte to Internal EEP
-    for(q=0;q<16;q++){
-        Write_b_eep (address, EEPWrite[q]); // write into to EEPROM
-        address++; //increment the address of EEPROM to next location
-    // Checks & waits the status of ER bit in EECON1 register
-        Busy_eep();
-    }
-    address = 0x0200; // initialize the starting address
-    Error = 0; //clear the error flag
-    //* Read single byte from Internal EEP
-    for(q=0;q<16;q++){
-        EEPRead[q] = Read_b_eep (address++); //read the EEPROM data written previously from corresponding address
-        if ( EEPRead[q] != EEPWrite[q] ) //check if the data read abck is same as that was written
-
-        {
-            Error=1; //if the data read/ write match does not occur, then flag the error status
-        }
-    }
-}*/
-
-
 
 void Write_b_eep( unsigned int badd,unsigned char bdat )
 {
@@ -1849,18 +1405,15 @@ void Write_b_eep( unsigned int badd,unsigned char bdat )
 	EECON2 = 0x55;
 	EECON2 = 0xAA;
 	EECON1bits.WR = 1;
-	while(EECON1bits.WR);				//Wait till the write completion
+	while(EECON1bits.WR);                                                       //Wait till the write completion
 	INTCONbits.GIE = GIE_BIT_VAL;
 	EECON1bits.WREN = 0;
 }
-
-
 
 void Busy_eep ( void )
 {
 	while(EECON1bits.WR);
 }
-
 
 unsigned char Read_b_eep( unsigned int badd )
 {
@@ -1868,9 +1421,9 @@ unsigned char Read_b_eep( unsigned int badd )
   	EECON1bits.CFGS = 0;
 	EECON1bits.EEPGD = 0;
 	EECON1bits.RD = 1;
-	Nop();							//Nop may be required for latency at high frequencies
-	Nop();							//Nop may be required for latency at high frequencies
-	return ( EEDATA );              // return with read byte
+	Nop();                                                                      //Nop may be required for latency at high frequencies
+	Nop();                                                                      //Nop may be required for latency at high frequencies
+	return ( EEDATA );                                                          // return with read byte
 }
 
 

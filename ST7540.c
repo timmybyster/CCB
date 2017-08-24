@@ -34,16 +34,6 @@
  * allow this so the pin was monitored every 100us.
  */
 
-//void interrupt isr(void){
-//
-//    if(PIR1bits.TMR2IF != 0){
-//	  PIR1bits.TMR2IF = 0;
-//        RXReadyISRHandlerST7540();
-//    }else if(PIR1bits.SSP1IF){
-//        SPIISRHandlerST7540();
-//    }
-//}
-
 #include "ST7540.h"
 #include "main.h"
 
@@ -83,7 +73,7 @@ unsigned char InitST7540(void){
 
     InitST7540Pins();                                                           //Configure required pins
 
-    frameDataTXUS = /*(ST7540_MAX_PACKET_LEN << 16) |*/ ST7540_HEADER;          //Build bits 48-24
+    frameDataTXUS = ST7540_HEADER;                                              //Build bits 48-24
     configDataTXUS = ST7540_FREQ_110KHZ |                                       //Build bits 23-0
                    ST7540_BAUD_2400 |                                           //Default
                    ST7540_DEVIA_05 |                                            //Default
@@ -110,12 +100,8 @@ unsigned char InitST7540(void){
     if((frameDataTXUS != frameDataRXUS) && (configDataTXUS != configDataRXUS))
         return 0;                                                               //Return false on error
 
-    //PIE1bits.SSP1IE = 1;                                                        //Enable SPI ints
-    //INTCONbits.PEIE = 1;                                                        //Enable peripheral ints
-
     PIE3bits.SSP2IE = 1;                                                        //Enable SPI ints
     INTCONbits.PEIE = 1;                                                        //Enable peripheral ints
-    //enable pin change int on SSX
 
     return 1;                                                                   //Return true if all went well
 }
@@ -191,7 +177,6 @@ void SPIISRHandlerST7540(void){
         if(bufferTXNextUCA > bufferTXLenUCA){                                   //Done transmitting buffer?
             flagST7540 &= ~FLAG_ST7540_TX_ACTIVE;                               //Disable TX mode
             SSP2CON1bits.SSPEN = 0;                                             //Disable SPI module
-            //PIR1bits.SSP1IF = 0;                                                //Clear int flag
             PIR3bits.SSP2IF = 0;                                                //Clear int flag
             LAT_RXnTX = 1;                                                      //Change to read data
             return;
@@ -203,13 +188,10 @@ void SPIISRHandlerST7540(void){
             flagST7540 |= FLAG_ST7540_DATA_READY;                               //Mark data as ready
             flagST7540 &= ~FLAG_ST7540_RX_ACTIVE;                               //Disable RX mode
             SSP2CON1bits.SSPEN = 0;                                             //Disable SPI module
-            //PIR1bits.SSP1IF = 0;                                                //Clear int flag
             PIR3bits.SSP2IF = 0;                                                //Clear int flag
             return;
         }
     }
-        
-    //PIR1bits.SSP1IF = 0;                                                        //Clear int flag
     PIR3bits.SSP2IF = 0;                                                //Clear int flag
 }
 
@@ -247,7 +229,7 @@ void CreateMessageST7540(unsigned short packetSourceUS, unsigned short packetDes
         bufferTXST7540UCA[dataBufLocUC + 11] = dataBuf[dataBufLocUC];
     dataBufLocUC += 11;
 
-    packetCRCUS = CRC16(bufferTXST7540UCA + 4, ST7540_MIN_PACKET_LEN + dataLenUC - 2);                                                    //Calculate CRC
+    packetCRCUS = CRC16(bufferTXST7540UCA + 4, ST7540_MIN_PACKET_LEN + dataLenUC - 2);//Calculate CRC
     bufferTXST7540UCA[dataBufLocUC++] = packetCRCUS >> 8;
     bufferTXST7540UCA[dataBufLocUC] = packetCRCUS;
     bufferTXLenUCA = dataBufLocUC;
@@ -353,8 +335,4 @@ void InitST7540Pins(void){
 
     TRIS_CLR_T_IOC = 1;
     ANSEL_CLR_T_IOC = 0;
-
-    //TRIS_UARTnSPI = 0; //UART/SPI Not on modem header for IBC-1
-    //ANSEL_UARTnSPI = 0;
-    //LAT_UARTnSPI = 0;
 }

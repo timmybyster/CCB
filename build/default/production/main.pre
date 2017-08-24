@@ -1,5 +1,5 @@
 
-# 1 "Released IBC-1 Code - 03-06-2016/main.c"
+# 1 "main.c"
 
 # 26 "C:\Program Files (x86)\Microchip\xc8\v1.36\include\htc.h"
 extern const char __xc8_OPTIM_SPEED;
@@ -8793,7 +8793,7 @@ extern __nonreentrant void _delaywdt(unsigned long);
 extern __nonreentrant void _delay3(unsigned char);
 
 
-# 22 "Released IBC-1 Code - 03-06-2016/main.h"
+# 22 "main.h"
 #pragma config FOSC = INTIO67
 #pragma config PLLCFG = OFF
 #pragma config PRICLKEN = ON
@@ -8854,7 +8854,7 @@ extern __nonreentrant void _delay3(unsigned char);
 
 #pragma config EBTRB = OFF
 
-# 25 "Released IBC-1 Code - 03-06-2016/main.c"
+# 25 "main.c"
 int ReceivedPLMBufferIndexIG = 0;
 int TransmitPLMBufferIG = 0;
 char ReceivedPLMBufferCG[71];
@@ -9066,7 +9066,7 @@ ELT_Counter++;
 
 if (DataReadyST7540()){
 Receive_ISC_Packet();
-if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0010){
+if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0001){
 IdleTimerUIG = 0;
 }
 ReceiveNewDataST7540();
@@ -9369,7 +9369,7 @@ TurnBuzzer_AlarmOff();
 void Receive_ISC_Packet(void){
 unsigned short tempIscSerial = PacketReadParamST7540(1);
 LATCbits.LATC0 = !LATCbits.LATC0;
-if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0010){
+if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0001){
 ReceiveNewDataST7540();
 CheckBroadcastPacket(PacketReadParamST7540(4));
 if (BroadcastCheckUC == 0){
@@ -9393,28 +9393,28 @@ return;
 case 0b00001010 :
 CreateMessageUART(PacketReadParamST7540(1), 0b00000100, PacketReadParamST7540(0), PacketDataST7540());
 SendUARTPacket();
-CreateMessageST7540(0x0010, PacketReadParamST7540(1), 0b00001010, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamST7540(1), 0b00001010, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 
 case 0b00001011 :
 CreateMessageUART(PacketReadParamST7540(1), 0b00000101, PacketReadParamST7540(0), PacketDataST7540());
 SendUARTPacket();
-CreateMessageST7540(0x0010, PacketReadParamST7540(1), 0b00001011, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamST7540(1), 0b00001011, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 
 case(0b00001001):
 tempIscSerial = (tempIscSerial << 8) & 0XFF00;
 tempIscSerial |= (PacketReadParamST7540(1) >> 8) & 0XFF;
-CreateMessageUART(0x0010, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
+CreateMessageUART(0x0001, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
 SendUARTPacket();
 return;
 
 case(0b00101001):
 tempIscSerial = (tempIscSerial << 8) & 0XFF00;
 tempIscSerial |= (PacketReadParamST7540(1) >> 8) & 0XFF;
-CreateMessageUART(0x0010, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
+CreateMessageUART(0x0001, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
 SendUARTPacket();
 return;
 
@@ -9440,7 +9440,7 @@ case(0b00000011):
 BroadcastUC = 0b00000000;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b01000011):
@@ -9448,7 +9448,7 @@ case(0b01000011):
 BroadcastUC = 0b01000000;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b00000010):
@@ -9456,7 +9456,7 @@ case(0b00000010):
 BroadcastUC = 0b00000111;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b00000001):
@@ -9468,7 +9468,7 @@ case(0b00101001):
 BroadcastUC = 0b00101001;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 Discover_ISC_ModeUCG = 0;
 CF_STAUTS_TimerUIG = 0;
@@ -9478,7 +9478,7 @@ case(0b10101001):
 BroadcastUC = 0b00101001;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b10110001):
@@ -9486,7 +9486,7 @@ case(0b10110001):
 BroadcastUC = 0b00110001;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b10110000):
@@ -9494,7 +9494,7 @@ case(0b10110000):
 BroadcastUC = 0b00110000;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b00010010):
@@ -9502,7 +9502,7 @@ case(0b00010010):
 BroadcastUC = 0b00000110;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b00010001):
@@ -9510,7 +9510,7 @@ case(0b00010001):
 BroadcastUC = 0b00001101;
 if (BroadcastCheckUC)
 BroadcastUC |= 0b10000000;
-CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
+CreateMessageST7540(0x0001, PacketReadParamUART(2), BroadcastUC, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 return;
 case(0b00010011):
@@ -9533,24 +9533,24 @@ return;
 
 void Transmit_BLAST_Command_Packet(void){
 if (!TransmitBusyST7540() && LineIdleST7540()){
-CreateMessageST7540(0x0010, 0x00, 0b00100101, 0, "");
+CreateMessageST7540(0x0001, 0x00, 0b00100101, 0, "");
 StartTransmitST7540();
 ISC_Transmit_Packet_Ready = 0;
 }
 }
 
 void Transmit_NULL_Packet(void){
-CreateMessageST7540(0x0010, 0x3FFF, 0b00101001, 0, "");
+CreateMessageST7540(0x0001, 0x3FFF, 0b00101001, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 }
 
 void Check_ALL_ISC(void){
-CreateMessageST7540(0x0010, 0x00, 0b00101001, 0, "");
+CreateMessageST7540(0x0001, 0x00, 0b00101001, 0, "");
 ISC_Transmit_Packet_Ready = 1;
 }
 
 void Transmit_Pi_Default_Data(void){
-CreateMessageUART(0x0010, 0b00001000, 2, PiDefaultData);
+CreateMessageUART(0x0001, 0b00001000, 2, PiDefaultData);
 SendUARTPacket();
 }
 
@@ -9642,7 +9642,7 @@ EEPWrite[1] = ISC_NEW_SN[1];
 EEPROMWrite();
 
 
-CreateMessageST7540(0x0010, 0x3FFE, 0b00001001, 2, ISC_NEW_SN);
+CreateMessageST7540(0x0001, 0x3FFE, 0b00001001, 2, ISC_NEW_SN);
 ISC_Transmit_Packet_Ready = 1;
 }
 

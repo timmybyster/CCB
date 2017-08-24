@@ -97,49 +97,6 @@
 #define UNSIGNED_LONG_SHORT_15_8    0b000000001111111100000000
 #define UNSIGNED_LONG_SHORT_7_0     0b000000000000000011111111
 
-/*
-#define TRIS_n_CD_PD            TRISCbits.TRISC7
-#define ANSEL_n_CD_PD           ANSELCbits.ANSC7
-#define PORT_n_CD_PD            PORTCbits.RC7
-#define LAT_n_CD_PD             LATCbits.LATC7
-
-#define TRIS_REGnDATA           TRISCbits.TRISC6
-#define ANSEL_REGnDATA          ANSELCbits.ANSC6
-#define PORT_REGnDATA           PORTCbits.RC6
-#define LAT_REGnDATA            LATCbits.LATC6
-
-#define TRIS_RXD                TRISCbits.TRISC4
-#define ANSEL_RXD               ANSELCbits.ANSC4
-#define PORT_RXD                PORTCbits.RC4
-#define LAT_RXD                 LATCbits.LATC4
-
-#define TRIS_TXD                TRISCbits.TRISC5
-#define ANSEL_TXD               ANSELCbits.ANSC5
-#define PORT_TXD                PORTCbits.RC5
-#define LAT_TXD                 LATCbits.LATC5
-
-#define TRIS_RXnTX              TRISAbits.TRISA6
-//#define ANSEL_RXnTX             ANSELAbits.ANSA6
-#define PORT_RXnTX              PORTAbits.RA6
-#define LAT_RXnTX               LATAbits.LATA6
-
-#define TRIS_BU_THERM           TRISCbits.TRISC0
-//#define ANSEL_BU_THERM          ANSELCbits.ANSC0
-#define PORT_BU_THERM           PORTCbits.RC0
-#define LAT_BU_THERM            LATCbits.LATC0
-
-#define TRIS_CLR_T              TRISCbits.TRISC3
-#define ANSEL_CLR_T             ANSELCbits.ANSC3
-#define PORT_CLR_T              PORTCbits.RC3
-#define LAT_CLR_T               LATCbits.LATC3
-
-#define TRIS_UARTnSPI           TRISCbits.TRISC1
-//#define ANSEL_UARTnSPI          ANSELCbits.ANSC1
-#define PORT_UARTnSPI           PORTCbits.RC1
-#define LAT_UARTnSPI            LATCbits.LATC1
-*/
-
-
 #define TRIS_n_CD_PD            TRISBbits.TRISB0
 #define ANSEL_n_CD_PD           ANSELBbits.ANSB0
 #define PORT_n_CD_PD            PORTBbits.RB0
@@ -179,27 +136,6 @@
 #define ANSEL_CLR_T_IOC         ANSELBbits.ANSB4
 #define PORT_CLR_T_IOC          PORTBbits.RB4
 #define LAT_CLR_T_IOC           LATBbits.LATB4
-
-/* //UART/SPI not on Modem interface for IBC-1
-#define TRIS_UARTnSPI           TRISCbits.TRISC1
-//#define ANSEL_UARTnSPI          ANSELCbits.ANSC1
-#define PORT_UARTnSPI           PORTCbits.RC1
-#define LAT_UARTnSPI            LATCbits.LATC1
- */
-
-
-//#define TRIS_
-//#define ANSEL_
-//#define PORT_
-//#define LATCH_
-
-//LED definitions
-//#define TRIS_STATUS_LED         TRISBbits.TRISB2	//Status LED
-//#define TRIS_CFAULT_LED         TRISAbits.TRISA7	//Cable Fault LED
-//#define ANSEL_STATUS_LED        ANSELBbits.ANSB2        //Status LED
-//#define ANSEL_CFAULT_LED        ANSELAbits.ANSA7        //Cable Fault LED
-//#define LAT_STATUS_LED          LATBbits.LATB2		//Status LED
-//#define LAT_CFAULT_LED          LATAbits.LATA7		//Cable Fault LED
 
 #endif	/* ST7540_H */
 

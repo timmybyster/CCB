@@ -1,382 +1,5 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"8846 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S508 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S508 . TMR1IF TMR2IF CCP1IF SSP1IF TX1IF RC1IF ADIF ]
-"8855
-[s S509 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S509 . . SSPIF TXIF RCIF ]
-"8845
-[u S507 `S508 1 `S509 1 ]
-[n S507 . . . ]
-"8862
-[v _PIR1bits `VS507 ~T0 @X0 0 e@3998 ]
-"204 Released IBC-1 Code - 03-06-2016/main.c
-[v _UART_TX_ISRHandler `(v ~T0 @X0 0 ef ]
-"218
-[v _DataReadyST7540 `(uc ~T0 @X0 0 ef ]
-"157
-[v _Receive_ISC_Packet `(v ~T0 @X0 0 ef ]
-"219
-[v _PacketReadParamST7540 `(us ~T0 @X0 0 ef1`uc ]
-"217
-[v _ReceiveNewDataST7540 `(v ~T0 @X0 0 ef ]
-"191
-[v _Transmit_NULL_Packet `(v ~T0 @X0 0 ef ]
-"43 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18.h
-[v ___nop `(v ~T0 @X0 0 ef ]
-[p i ___nop ]
-"9376 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S535 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S535 . TMR1GIF TMR3GIF TMR5GIF CTMUIF TX2IF RC2IF BCL2IF SSP2IF ]
-"9386
-[s S536 :1 `uc 1 :1 `uc 1 ]
-[n S536 . . RXBNIF ]
-"9390
-[s S537 :4 `uc 1 :1 `uc 1 ]
-[n S537 . . TXBNIF ]
-"9375
-[u S534 `S535 1 `S536 1 `S537 1 ]
-[n S534 . . . . ]
-"9395
-[v _PIR3bits `VS534 ~T0 @X0 0 e@4004 ]
-"212 Released IBC-1 Code - 03-06-2016/main.c
-[v _SPIISRHandlerST7540 `(v ~T0 @X0 0 ef ]
-"202
-[v _UART_Read `(uc ~T0 @X0 0 ef ]
-"16620 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S1053 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S1053 . RBIF INT0IF TMR0IF RBIE INT0IE TMR0IE PEIE_GIEL GIE_GIEH ]
-"16630
-[s S1054 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S1054 . . INT0F T0IF . INT0E T0IE PEIE GIE ]
-"16640
-[s S1055 :6 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S1055 . . GIEL GIEH ]
-"16619
-[u S1052 `S1053 1 `S1054 1 `S1055 1 ]
-[n S1052 . . . . ]
-"16646
-[v _INTCONbits `VS1052 ~T0 @X0 0 e@4082 ]
-"216 Released IBC-1 Code - 03-06-2016/main.c
-[v _RXReadyISRHandlerST7540 `(v ~T0 @X0 0 ef ]
-[p mainexit ]
-"125
-[v _InitSystem `(v ~T0 @X0 0 ef ]
-"7343 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S442 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S442 . LATA0 LATA1 LATA2 LATA3 LATA4 LATA5 LATA6 LATA7 ]
-"7353
-[s S443 :1 `uc 1 ]
-[n S443 . LA0 ]
-"7356
-[s S444 :1 `uc 1 :1 `uc 1 ]
-[n S444 . . LA1 ]
-"7360
-[s S445 :2 `uc 1 :1 `uc 1 ]
-[n S445 . . LA2 ]
-"7364
-[s S446 :3 `uc 1 :1 `uc 1 ]
-[n S446 . . LA3 ]
-"7368
-[s S447 :4 `uc 1 :1 `uc 1 ]
-[n S447 . . LA4 ]
-"7372
-[s S448 :5 `uc 1 :1 `uc 1 ]
-[n S448 . . LA5 ]
-"7376
-[s S449 :6 `uc 1 :1 `uc 1 ]
-[n S449 . . LA6 ]
-"7380
-[s S450 :7 `uc 1 :1 `uc 1 ]
-[n S450 . . LA7 ]
-"7342
-[u S441 `S442 1 `S443 1 `S444 1 `S445 1 `S446 1 `S447 1 `S448 1 `S449 1 `S450 1 ]
-[n S441 . . . . . . . . . . ]
-"7385
-[v _LATAbits `VS441 ~T0 @X0 0 e@3977 ]
-"15683
-[s S985 :1 `uc 1 ]
-[n S985 . SWDTEN ]
-"15686
-[s S986 :1 `uc 1 ]
-[n S986 . SWDTE ]
-"15682
-[u S984 `S985 1 `S986 1 ]
-[n S984 . . . ]
-"15690
-[v _WDTCONbits `VS984 ~T0 @X0 0 e@4049 ]
-"357 Released IBC-1 Code - 03-06-2016/main.c
-[v _DataReadyUART `(i ~T0 @X0 0 ef ]
-"222
-[v _ClearDataReady `(v ~T0 @X0 0 ef ]
-"207
-[v _PacketReadParamUART `(s ~T0 @X0 0 ef1`uc ]
-"158
-[v _Receive_Pi_Packet `(v ~T0 @X0 0 ef ]
-"215
-[v _TransmitBusyST7540 `(uc ~T0 @X0 0 ef ]
-"367
-[v _LineIdleST7540 `(i ~T0 @X0 0 ef ]
-"214
-[v _StartTransmitST7540 `(v ~T0 @X0 0 ef ]
-"147
-[v _checkCableFaults `(v ~T0 @X0 0 ef ]
-"136
-[v _TurnRelayOff `(v ~T0 @X0 0 ef ]
-"145
-[v _getResetButtonState `(uc ~T0 @X0 0 ef ]
-"143
-[v _getKeySwitchState `(uc ~T0 @X0 0 ef ]
-"152
-[v _StopPostFireTimer `(v ~T0 @X0 0 ef ]
-"156
-[v _StopPreArmedTimer `(v ~T0 @X0 0 ef ]
-"155
-[v _StartPreArmedTimer `(v ~T0 @X0 0 ef ]
-"187
-[v _EEPROMSetReset `(v ~T0 @X0 0 ef ]
-"209
-[v _resetUARTPointers `(v ~T0 @X0 0 ef ]
-"178
-[v _getIBCDefaultData `(us ~T0 @X0 0 ef ]
-"179
-[v _Transmit_Pi_Default_Data `(v ~T0 @X0 0 ef ]
-"144
-[v _getFireButtonState `(uc ~T0 @X0 0 ef ]
-"206
-[v _SendUARTPacket `(v ~T0 @X0 0 ef ]
-"135
-[v _TurnRelayOn `(v ~T0 @X0 0 ef ]
-"128
-[v _WaitTickCount `(v ~T0 @X0 0 ef1`us ]
-"137
-[v _TurnSSR1On `(v ~T0 @X0 0 ef ]
-"134
-[v _ReadFireOut `(v ~T0 @X0 0 ef ]
-"138
-[v _TurnSSR1Off `(v ~T0 @X0 0 ef ]
-"192
-[v _Transmit_BLAST_Command_Packet `(v ~T0 @X0 0 ef ]
-"148
-[v _FIRE `(v ~T0 @X0 0 ef ]
-"141
-[v _TurnBuzzer_AlarmOn `(v ~T0 @X0 0 ef ]
-"142
-[v _TurnBuzzer_AlarmOff `(v ~T0 @X0 0 ef ]
-"7607 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S462 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S462 . LATC0 LATC1 LATC2 LATC3 LATC4 LATC5 LATC6 LATC7 ]
-"7617
-[s S463 :1 `uc 1 ]
-[n S463 . LC0 ]
-"7620
-[s S464 :1 `uc 1 :1 `uc 1 ]
-[n S464 . . LC1 ]
-"7624
-[s S465 :2 `uc 1 :1 `uc 1 ]
-[n S465 . . LC2 ]
-"7628
-[s S466 :3 `uc 1 :1 `uc 1 ]
-[n S466 . . LC3 ]
-"7632
-[s S467 :4 `uc 1 :1 `uc 1 ]
-[n S467 . . LC4 ]
-"7636
-[s S468 :5 `uc 1 :1 `uc 1 ]
-[n S468 . . LC5 ]
-"7640
-[s S469 :6 `uc 1 :1 `uc 1 ]
-[n S469 . . LC6 ]
-"7644
-[s S470 :7 `uc 1 :1 `uc 1 ]
-[n S470 . . LC7 ]
-"7606
-[u S461 `S462 1 `S463 1 `S464 1 `S465 1 `S466 1 `S467 1 `S468 1 `S469 1 `S470 1 ]
-[n S461 . . . . . . . . . . ]
-"7649
-[v _LATCbits `VS461 ~T0 @X0 0 e@3979 ]
-"190 Released IBC-1 Code - 03-06-2016/main.c
-[v _CheckBroadcastPacket `(v ~T0 @X0 0 ef1`uc ]
-"205
-[v _CreateMessageUART `(v ~T0 @X0 0 ef4`us`uc`uc`*uc ]
-"557
-[v _PacketDataST7540 `(i ~T0 @X0 0 ef ]
-"213
-[v _CreateMessageST7540 `(v ~T0 @X0 0 ef5`us`us`uc`uc`*uc ]
-"183
-[v _Check_ALL_ISC `(v ~T0 @X0 0 ef ]
-"176
-[v _getISC_Index `(uc ~T0 @X0 0 ef1`us ]
-"163
-[v _Add_ISC_SN `(v ~T0 @X0 0 ef1`us ]
-"164
-[v _Check_Clash_ISC_SN `(uc ~T0 @X0 0 ef1`us ]
-"188
-[v _EEPROMRead `(v ~T0 @X0 0 ef ]
-"185
-[v _EEPROMWrite `(v ~T0 @X0 0 ef ]
-"131
-[v _ReadEarthLeakage `(v ~T0 @X0 0 ef ]
-"140
-[v _TurnCableFaultDetectOff `(v ~T0 @X0 0 ef ]
-"132
-[v _ReadCableFault `(v ~T0 @X0 0 ef ]
-"139
-[v _TurnCableFaultDetectOn `(v ~T0 @X0 0 ef ]
-"133
-[v _ReadMAINS_ZeroCrossing `(uc ~T0 @X0 0 ef ]
-"146
-[v _GenerateMissingPulse `(v ~T0 @X0 0 ef ]
-"8422 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S492 :6 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S492 . TUN PLLEN INTSRC ]
-"8427
-[s S493 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S493 . TUN0 TUN1 TUN2 TUN3 TUN4 TUN5 ]
-"8421
-[u S491 `S492 1 `S493 1 ]
-[n S491 . . . ]
-"8436
-[v _OSCTUNEbits `VS491 ~T0 @X0 0 e@3995 ]
-"15766
-[s S990 :2 `uc 1 :1 `uc 1 :1 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S990 . SCS HFIOFS OSTS IRCF IDLEN ]
-"15773
-[s S991 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S991 . SCS0 SCS1 IOFS . IRCF0 IRCF1 IRCF2 ]
-"15765
-[u S989 `S990 1 `S991 1 ]
-[n S989 . . . ]
-"15783
-[v _OSCCONbits `VS989 ~T0 @X0 0 e@4051 ]
-"7744
-[s S472 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S472 . TRISA0 TRISA1 TRISA2 TRISA3 TRISA4 TRISA5 TRISA6 TRISA7 ]
-"7754
-[s S473 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S473 . RA0 RA1 RA2 RA3 RA4 RA5 RA6 RA7 ]
-"7743
-[u S471 `S472 1 `S473 1 ]
-[n S471 . . . ]
-"7765
-[v _TRISAbits `VS471 ~T0 @X0 0 e@3986 ]
-"55
-[s S2 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S2 . ANSA0 ANSA1 ANSA2 ANSA3 . ANSA5 ]
-"54
-[u S1 `S2 1 ]
-[n S1 . . ]
-"64
-[v _ANSELAbits `VS1 ~T0 @X0 0 e@3896 ]
-"8186
-[s S484 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S484 . TRISC0 TRISC1 TRISC2 TRISC3 TRISC4 TRISC5 TRISC6 TRISC7 ]
-"8196
-[s S485 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S485 . RC0 RC1 RC2 RC3 RC4 RC5 RC6 RC7 ]
-"8185
-[u S483 `S484 1 `S485 1 ]
-[n S483 . . . ]
-"8207
-[v _TRISCbits `VS483 ~T0 @X0 0 e@3988 ]
-"7965
-[s S478 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S478 . TRISB0 TRISB1 TRISB2 TRISB3 TRISB4 TRISB5 TRISB6 TRISB7 ]
-"7975
-[s S479 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S479 . RB0 RB1 RB2 RB3 RB4 RB5 RB6 RB7 ]
-"7964
-[u S477 `S478 1 `S479 1 ]
-[n S477 . . . ]
-"7986
-[v _TRISBbits `VS477 ~T0 @X0 0 e@3987 ]
-"7475
-[s S452 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S452 . LATB0 LATB1 LATB2 LATB3 LATB4 LATB5 LATB6 LATB7 ]
-"7485
-[s S453 :1 `uc 1 ]
-[n S453 . LB0 ]
-"7488
-[s S454 :1 `uc 1 :1 `uc 1 ]
-[n S454 . . LB1 ]
-"7492
-[s S455 :2 `uc 1 :1 `uc 1 ]
-[n S455 . . LB2 ]
-"7496
-[s S456 :3 `uc 1 :1 `uc 1 ]
-[n S456 . . LB3 ]
-"7500
-[s S457 :4 `uc 1 :1 `uc 1 ]
-[n S457 . . LB4 ]
-"7504
-[s S458 :5 `uc 1 :1 `uc 1 ]
-[n S458 . . LB5 ]
-"7508
-[s S459 :6 `uc 1 :1 `uc 1 ]
-[n S459 . . LB6 ]
-"7512
-[s S460 :7 `uc 1 :1 `uc 1 ]
-[n S460 . . LB7 ]
-"7474
-[u S451 `S452 1 `S453 1 `S454 1 `S455 1 `S456 1 `S457 1 `S458 1 `S459 1 `S460 1 ]
-[n S451 . . . . . . . . . . ]
-"7517
-[v _LATBbits `VS451 ~T0 @X0 0 e@3978 ]
-"148
-[s S6 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S6 . . ANSC2 ANSC3 ANSC4 ANSC5 ANSC6 ANSC7 ]
-"147
-[u S5 `S6 1 ]
-[n S5 . . ]
-"158
-[v _ANSELCbits `VS5 ~T0 @X0 0 e@3898 ]
-"299
-[s S13 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S13 . TMR1MD TMR2MD TMR3MD TMR4MD TMR5MD TMR6MD UART1MD UART2MD ]
-"309
-[s S14 :1 `uc 1 :1 `uc 1 ]
-[n S14 . . SPI1MD ]
-"313
-[s S15 :2 `uc 1 :1 `uc 1 ]
-[n S15 . . SPI2MD ]
-"298
-[u S12 `S13 1 `S14 1 `S15 1 ]
-[n S12 . . . . ]
-"318
-[v _PMD0bits `VS12 ~T0 @X0 0 e@3903 ]
-"12698
-[s S753 :2 `uc 1 :1 `uc 1 :4 `uc 1 ]
-[n S753 . T2CKPS TMR2ON T2OUTPS ]
-"12703
-[s S754 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S754 . T2CKPS0 T2CKPS1 . T2OUTPS0 T2OUTPS1 T2OUTPS2 T2OUTPS3 ]
-"12697
-[u S752 `S753 1 `S754 1 ]
-[n S752 . . . ]
-"12713
-[v _T2CONbits `VS752 ~T0 @X0 0 e@4026 ]
-"12781
-[v _TMR2 `Vuc ~T0 @X0 0 e@4028 ]
-"8770
-[s S505 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S505 . TMR1IE TMR2IE CCP1IE SSP1IE TX1IE RC1IE ADIE ]
-"8779
-[s S506 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S506 . . SSPIE TXIE RCIE ]
-"8769
-[u S504 `S505 1 `S506 1 ]
-[n S504 . . . ]
-"8786
-[v _PIE1bits `VS504 ~T0 @X0 0 e@3997 ]
-"2651
-[s S136 :4 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S136 . . IOCB4 IOCB5 IOCB6 IOCB7 ]
-"2650
-[u S135 `S136 1 ]
-[n S135 . . ]
-"2659
-[v _IOCBbits `VS135 ~T0 @X0 0 e@3938 ]
-"10176
+"10176 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
 [s S577 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
 [n S577 . TX9D TRMT BRGH SENDB SYNC TXEN TX9 CSRC ]
 "10186
@@ -393,211 +16,47 @@ Version 3.2 HI-TECH Software Intermediate Code
 [n S576 . . . . . ]
 "10204
 [v _TXSTA1bits `VS576 ~T0 @X0 0 e@4012 ]
-"11942
-[s S685 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S685 . ABDEN WUE . BRG16 CKTXP DTRXP RCIDL ABDOVF ]
-"11952
-[s S686 :4 `uc 1 :1 `uc 1 ]
-[n S686 . . SCKP ]
-"11956
-[s S687 :1 `uc 1 ]
-[n S687 . ABDEN1 ]
-"11959
-[s S688 :7 `uc 1 :1 `uc 1 ]
-[n S688 . . ABDOVF1 ]
-"11963
-[s S689 :3 `uc 1 :1 `uc 1 ]
-[n S689 . . BRG161 ]
-"11967
-[s S690 :5 `uc 1 :1 `uc 1 ]
-[n S690 . . DTRXP1 ]
-"11971
-[s S691 :6 `uc 1 :1 `uc 1 ]
-[n S691 . . RCIDL1 ]
-"11975
-[s S692 :6 `uc 1 :1 `uc 1 ]
-[n S692 . . RCMT ]
-"11979
-[s S693 :6 `uc 1 :1 `uc 1 ]
-[n S693 . . RCMT1 ]
-"11983
-[s S694 :5 `uc 1 :1 `uc 1 ]
-[n S694 . . RXDTP ]
-"11987
-[s S695 :5 `uc 1 :1 `uc 1 ]
-[n S695 . . RXDTP1 ]
-"11991
-[s S696 :4 `uc 1 :1 `uc 1 ]
-[n S696 . . SCKP1 ]
-"11995
-[s S697 :4 `uc 1 :1 `uc 1 ]
-[n S697 . . TXCKP ]
-"11999
-[s S698 :4 `uc 1 :1 `uc 1 ]
-[n S698 . . TXCKP1 ]
-"12003
-[s S699 :1 `uc 1 :1 `uc 1 ]
-[n S699 . . WUE1 ]
-"12007
-[s S700 :5 `uc 1 :1 `uc 1 ]
-[n S700 . . RXCKP ]
-"12011
-[s S701 :1 `uc 1 :1 `uc 1 ]
-[n S701 . . W4E ]
-"11941
-[u S684 `S685 1 `S686 1 `S687 1 `S688 1 `S689 1 `S690 1 `S691 1 `S692 1 `S693 1 `S694 1 `S695 1 `S696 1 `S697 1 `S698 1 `S699 1 `S700 1 `S701 1 ]
-[n S684 . . . . . . . . . . . . . . . . . . ]
-"12016
-[v _BAUDCONbits `VS684 ~T0 @X0 0 e@4024 ]
-"201 Released IBC-1 Code - 03-06-2016/main.c
-[v _UART_Init `(uc ~T0 @X0 0 ef1`Cl ]
-"12931 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S767 :3 `uc 1 :3 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S767 . ADCS ACQT . ADFM ]
-"12937
-[s S768 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S768 . ADCS0 ADCS1 ADCS2 ACQT0 ACQT1 ACQT2 ]
-"12930
-[u S766 `S767 1 `S768 1 ]
-[n S766 . . . ]
-"12946
-[v _ADCON2bits `VS766 ~T0 @X0 0 e@4032 ]
-"13068
-[s S774 :1 `uc 1 :1 `uc 1 ]
-[n S774 . . GO_NOT_DONE ]
-"13072
-[s S775 :1 `uc 1 :1 `uc 1 :5 `uc 1 ]
-[n S775 . ADON GO_nDONE CHS ]
-"13077
-[s S776 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S776 . . GO CHS0 CHS1 CHS2 CHS3 CHS4 ]
-"13086
-[s S777 :1 `uc 1 :1 `uc 1 ]
-[n S777 . . DONE ]
-"13090
-[s S778 :1 `uc 1 :1 `uc 1 ]
-[n S778 . . NOT_DONE ]
-"13094
-[s S779 :1 `uc 1 :1 `uc 1 ]
-[n S779 . . nDONE ]
-"13098
-[s S780 :1 `uc 1 :1 `uc 1 ]
-[n S780 . . GO_DONE ]
-"13102
-[s S781 :1 `uc 1 :1 `uc 1 ]
-[n S781 . . GODONE ]
-"13067
-[u S773 `S774 1 `S775 1 `S776 1 `S777 1 `S778 1 `S779 1 `S780 1 `S781 1 ]
-[n S773 . . . . . . . . . ]
-"13107
-[v _ADCON0bits `VS773 ~T0 @X0 0 e@4034 ]
-"8922
-[s S511 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S511 . TMR1IP TMR2IP CCP1IP SSP1IP TX1IP RC1IP ADIP ]
-"8931
-[s S512 :3 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S512 . . SSPIP TXIP RCIP ]
-"8921
-[u S510 `S511 1 `S512 1 ]
-[n S510 . . . ]
-"8938
-[v _IPR1bits `VS510 ~T0 @X0 0 e@3999 ]
-"12762
-[v _PR2 `Vuc ~T0 @X0 0 e@4027 ]
-"186 Released IBC-1 Code - 03-06-2016/main.c
-[v _EEPROMClearReset `(v ~T0 @X0 0 ef ]
-"211
-[v _InitST7540 `(uc ~T0 @X0 0 ef ]
-"13001 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S770 :2 `uc 1 :2 `uc 1 :3 `uc 1 :1 `uc 1 ]
-[n S770 . NVCFG PVCFG . TRIGSEL ]
-"13007
-[s S771 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S771 . NVCFG0 NVCFG1 PVCFG0 PVCFG1 ]
-"13013
-[s S772 :3 `uc 1 :1 `uc 1 ]
-[n S772 . . CHSN3 ]
-"13000
-[u S769 `S770 1 `S771 1 `S772 1 ]
-[n S769 . . . . ]
-"13018
-[v _ADCON1bits `VS769 ~T0 @X0 0 e@4033 ]
-"13186
-[v _ADRES `Vus ~T0 @X0 0 e@4035 ]
-[v F7342 `(v ~T0 @X0 1 tf1`ul ]
-"156 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18.h
-[v __delay `JF7342 ~T0 @X0 0 e ]
-[p i __delay ]
-"6272 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[s S397 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S397 . RA0 RA1 RA2 RA3 RA4 RA5 RA6 RA7 ]
-"6282
-[s S398 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S398 . AN0 AN1 AN2 AN3 . AN4 ]
-"6290
-[s S399 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S399 . C12IN0M C12IN1M C2INP C1INP C1OUT C2OUT ]
-"6298
-[s S400 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S400 . C12IN0N C12IN1N VREFM VREFP T0CKI SS ]
-"6306
-[s S401 :5 `uc 1 :1 `uc 1 ]
-[n S401 . . NOT_SS ]
-"6310
-[s S402 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S402 . . VREFN . SRQ nSS ]
-"6317
-[s S403 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S403 . . CVREF . CCP5 LVDIN ]
-"6324
-[s S404 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
-[n S404 . . DACOUT . HLVDIN ]
-"6330
-[s S405 :5 `uc 1 :1 `uc 1 ]
-[n S405 . . SS1 ]
-"6334
-[s S406 :5 `uc 1 :1 `uc 1 ]
-[n S406 . . NOT_SS1 ]
-"6338
-[s S407 :5 `uc 1 :1 `uc 1 ]
-[n S407 . . nSS1 ]
-"6342
-[s S408 :5 `uc 1 :1 `uc 1 ]
-[n S408 . . SRNQ ]
-"6346
-[s S409 :7 `uc 1 :1 `uc 1 ]
-[n S409 . . RJPU ]
-"6350
-[s S410 :1 `uc 1 ]
-[n S410 . ULPWUIN ]
-"6271
-[u S396 `S397 1 `S398 1 `S399 1 `S400 1 `S401 1 `S402 1 `S403 1 `S404 1 `S405 1 `S406 1 `S407 1 `S408 1 `S409 1 `S410 1 ]
-[n S396 . . . . . . . . . . . . . . . ]
-"6354
-[v _PORTAbits `VS396 ~T0 @X0 0 e@3968 ]
-"195 Released IBC-1 Code - 03-06-2016/main.c
-[v _Write_b_eep `(v ~T0 @X0 0 ef2`ui`uc ]
-"197
-[v _Busy_eep `(v ~T0 @X0 0 ef ]
-"196
-[v _Read_b_eep `(uc ~T0 @X0 0 ef1`ui ]
-"9631 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
-[v _EEADR `Vuc ~T0 @X0 0 e@4009 ]
-"9612
-[v _EEDATA `Vuc ~T0 @X0 0 e@4008 ]
-"9534
-[s S543 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
-[n S543 . RD WR WREN WRERR FREE . CFGS EEPGD ]
-"9544
-[s S544 :6 `uc 1 :1 `uc 1 ]
-[n S544 . . EEFS ]
-"9533
-[u S542 `S543 1 `S544 1 ]
-[n S542 . . . ]
-"9549
-[v _EECON1bits `VS542 ~T0 @X0 0 e@4006 ]
-"9593
-[v _EECON2 `Vuc ~T0 @X0 0 e@4007 ]
+"10695
+[v _SPBRG1 `Vuc ~T0 @X0 0 e@4015 ]
+"9715
+[s S553 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S553 . RX9D OERR FERR ADDEN CREN SREN RX9 SPEN ]
+"9725
+[s S554 :3 `uc 1 :1 `uc 1 ]
+[n S554 . . ADEN ]
+"9729
+[s S555 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S555 . RX9D1 OERR1 FERR1 ADDEN1 CREN1 SREN1 RX91 SPEN1 ]
+"9739
+[s S556 :6 `uc 1 :1 `uc 1 ]
+[n S556 . . RC8_9 ]
+"9743
+[s S557 :6 `uc 1 :1 `uc 1 ]
+[n S557 . . RC9 ]
+"9747
+[s S558 :1 `uc 1 ]
+[n S558 . RCD8 ]
+"9750
+[s S559 :5 `uc 1 :1 `uc 1 ]
+[n S559 . . SRENA ]
+"9714
+[u S552 `S553 1 `S554 1 `S555 1 `S556 1 `S557 1 `S558 1 `S559 1 ]
+[n S552 . . . . . . . . ]
+"9755
+[v _RCSTA1bits `VS552 ~T0 @X0 0 e@4011 ]
+"10618
+[v _RCREG1 `Vuc ~T0 @X0 0 e@4014 ]
+"35 UART.c
+[v _CheckCRCUART `(uc ~T0 @X0 0 ef ]
+"42
+[v _CRC16 `(us ~T0 @X0 0 ef2`*uc`us ]
+"43 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18.h
+[v ___nop `(v ~T0 @X0 0 ef ]
+[p i ___nop ]
+"29 UART.c
+[v _UART_Write `(v ~T0 @X0 0 ef1`uc ]
+"10541 C:\Program Files (x86)\Microchip\xc8\v1.36\include\pic18f25k22.h
+[v _TXREG1 `Vuc ~T0 @X0 0 e@4013 ]
 [; ;htc.h: 26: extern const char __xc8_OPTIM_SPEED;
 [; ;htc.h: 28: extern double __fpnormalize(double);
 [; ;xc8debug.h: 14: extern void __builtin_software_breakpoint(void);
@@ -7607,7 +7066,7 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pic18.h: 156: extern __nonreentrant void _delay(unsigned long);
 [; ;pic18.h: 158: extern __nonreentrant void _delaywdt(unsigned long);
 [; ;pic18.h: 160: extern __nonreentrant void _delay3(unsigned char);
-"22 Released IBC-1 Code - 03-06-2016/main.h
+"22 main.h
 [p x FOSC=INTIO67 ]
 "23
 [p x PLLCFG=OFF ]
@@ -7683,3880 +7142,729 @@ Version 3.2 HI-TECH Software Intermediate Code
 [p x EBTR3=OFF ]
 "80
 [p x EBTRB=OFF ]
-"25 Released IBC-1 Code - 03-06-2016/main.c
-[v _ReceivedPLMBufferIndexIG `i ~T0 @X0 1 e ]
-[i _ReceivedPLMBufferIndexIG
--> 0 `i
-]
-[; ;main.c: 25: int ReceivedPLMBufferIndexIG = 0;
-"26
-[v _TransmitPLMBufferIG `i ~T0 @X0 1 e ]
-[i _TransmitPLMBufferIG
--> 0 `i
-]
-[; ;main.c: 26: int TransmitPLMBufferIG = 0;
-"27
-[v _ReceivedPLMBufferCG `uc ~T0 @X0 -> 71 `i e ]
-[; ;main.c: 27: char ReceivedPLMBufferCG[71];
-"28
-[v _TransmitPLMBufferCG `uc ~T0 @X0 -> 71 `i e ]
-[; ;main.c: 28: char TransmitPLMBufferCG[71];
-"29
-[v _PiDefaultData `uc ~T0 @X0 -> 2 `i e ]
-[; ;main.c: 29: char PiDefaultData[2];
-[v F7355 `uc ~T0 @X0 -> 60 `i t ]
-"31
-[v _boosterCommsData `F7355 ~T0 @X0 -> 6 `i e ]
-[; ;main.c: 31: unsigned char boosterCommsData[6][60];
-"32
-[v _boosterCommsDataReverse `uc ~T0 @X0 -> 60 `i e ]
-[; ;main.c: 32: unsigned char boosterCommsDataReverse[60];
-"33
-[v _test `uc ~T0 @X0 1 e ]
-[; ;main.c: 33: unsigned char test;
-"35
-[v _routerData `uc ~T0 @X0 -> 60 `i e ]
-[; ;main.c: 35: unsigned char routerData[60];
-"37
-[v _ISC_SN_ArrayUIG `us ~T0 @X0 -> 30 `i e ]
-[; ;main.c: 37: unsigned short ISC_SN_ArrayUIG[30];
-"38
-[v _ISC_SN_ArrayUIG_Missing `us ~T0 @X0 -> 30 `i e ]
-[; ;main.c: 38: unsigned short ISC_SN_ArrayUIG_Missing[30];
-"39
-[v _ISC_SN_Array_ReverseUSG `uc ~T0 @X0 * -> 30 `i -> 2 `i e ]
-[; ;main.c: 39: unsigned char ISC_SN_Array_ReverseUSG[30 * 2];
-"40
-[v _ISC_SN_Array_Missing_ReverseUSG `uc ~T0 @X0 * -> 30 `i -> 2 `i e ]
-[; ;main.c: 40: unsigned char ISC_SN_Array_Missing_ReverseUSG[30 * 2];
-"41
-[v _ISC_Switch_TempUSG `us ~T0 @X0 1 e ]
-[; ;main.c: 41: unsigned short ISC_Switch_TempUSG;
-"42
-[v _ISC_PARENT_SNArrayUIG `ui ~T0 @X0 -> 30 `i e ]
-[; ;main.c: 42: unsigned int ISC_PARENT_SNArrayUIG[30];
-"43
-[v _ISC_SN_ArrayIndexUCG `uc ~T0 @X0 1 e ]
-[i _ISC_SN_ArrayIndexUCG
+"12 UART.c
+[v _flagUART `uc ~T0 @X0 1 e ]
+[i _flagUART
 -> -> 0 `i `uc
 ]
-[; ;main.c: 43: unsigned char ISC_SN_ArrayIndexUCG = 0;
-"44
-[v _ISC_SN_Array_SizeUCG `uc ~T0 @X0 1 e ]
-[i _ISC_SN_Array_SizeUCG
+[; ;UART.c: 12: unsigned char flagUART = 0;
+"13
+[v _flagUARTRead `uc ~T0 @X0 1 e ]
+[i _flagUARTRead
 -> -> 0 `i `uc
 ]
-[; ;main.c: 44: unsigned char ISC_SN_Array_SizeUCG = 0;
+[; ;UART.c: 13: unsigned char flagUARTRead = 0;
+"14
+[v _ReceivedPiBufferIndexIG `i ~T0 @X0 1 e ]
+[i _ReceivedPiBufferIndexIG
+-> 0 `i
+]
+[; ;UART.c: 14: int ReceivedPiBufferIndexIG = 0;
+"15
+[v _TransmitPiBufferIG `i ~T0 @X0 1 e ]
+[i _TransmitPiBufferIG
+-> 0 `i
+]
+[; ;UART.c: 15: int TransmitPiBufferIG = 0;
+"16
+[v _PiBufferTXLenUCA `uc ~T0 @X0 1 e ]
+[i _PiBufferTXLenUCA
+-> -> 0 `i `uc
+]
+[; ;UART.c: 16: unsigned char PiBufferTXLenUCA = 0;
+"17
+[v _PiBufferTXNEXTUCA `uc ~T0 @X0 1 e ]
+[i _PiBufferTXNEXTUCA
+-> -> 0 `i `uc
+]
+[; ;UART.c: 17: unsigned char PiBufferTXNEXTUCA = 0;
+"18
+[v _PiBufferRXNEXTUCA `uc ~T0 @X0 1 e ]
+[i _PiBufferRXNEXTUCA
+-> -> 0 `i `uc
+]
+[; ;UART.c: 18: unsigned char PiBufferRXNEXTUCA = 0;
+"19
+[v _ReceivedPiBufferCG `uc ~T0 @X0 -> 7 `i e ]
+[; ;UART.c: 19: char ReceivedPiBufferCG[7];
+"20
+[v _TransmitPiBufferCG `uc ~T0 @X0 -> 80 `i e ]
+[; ;UART.c: 20: char TransmitPiBufferCG[80];
+[; ;UART.c: 27: char UART_Init(const long int baudrate);
+[; ;UART.c: 28: char UART_Read(void);
+[; ;UART.c: 29: void UART_Write(char data);
+[; ;UART.c: 30: void UART_TX_ISRHandler(void);
+[; ;UART.c: 31: void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf);
+[; ;UART.c: 32: void SendUARTPacket(void);
+[; ;UART.c: 33: unsigned char DataReadyUART(void);
+[; ;UART.c: 34: unsigned short PacketReadParamUART(unsigned char paramName);
+[; ;UART.c: 35: unsigned char CheckCRCUART(void);
+[; ;UART.c: 36: void ClearDataReady(void);
+[; ;UART.c: 37: void CreateMessageUARTTest(unsigned char Command);
+[; ;UART.c: 38: void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
+[; ;UART.c: 39: void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf);
+[; ;UART.c: 42: extern unsigned short CRC16(char *, unsigned short);
 "45
-[v _ISC_SN_Array_MissingUCG `uc ~T0 @X0 1 e ]
-[i _ISC_SN_Array_MissingUCG
--> -> 0 `i `uc
-]
-[; ;main.c: 45: unsigned char ISC_SN_Array_MissingUCG = 0;
+[v _UART_Init `(uc ~T0 @X0 1 ef1`Cl ]
 "46
-[v _HighSpeedTickUIG `ui ~T0 @X0 1 e ]
-[; ;main.c: 46: unsigned int HighSpeedTickUIG;
-"47
-[v _HighSpeedTickPAUIG `ui ~T0 @X0 1 e ]
-[; ;main.c: 47: unsigned int HighSpeedTickPAUIG;
-"48
-[v _BTHighSpeedTickUIG `ui ~T0 @X0 1 e ]
-[; ;main.c: 48: unsigned int BTHighSpeedTickUIG;
-"49
-[v _CFLEDFlashTickUIG `ui ~T0 @X0 1 e ]
-[i _CFLEDFlashTickUIG
--> -> 0 `i `ui
-]
-[; ;main.c: 49: unsigned int CFLEDFlashTickUIG = 0;
-"50
-[v _IdleTimerUIG `ui ~T0 @X0 1 e ]
-[i _IdleTimerUIG
--> -> 0 `i `ui
-]
-[; ;main.c: 50: unsigned int IdleTimerUIG = 0;
-"51
-[v _CF_STAUTS_TimerUIG `ui ~T0 @X0 1 e ]
-[i _CF_STAUTS_TimerUIG
--> -> 0 `i `ui
-]
-[; ;main.c: 51: unsigned int CF_STAUTS_TimerUIG = 0;
-"52
-[v _ELT_Counter `ui ~T0 @X0 1 e ]
-[i _ELT_Counter
--> -> 0 `i `ui
-]
-[; ;main.c: 52: unsigned int ELT_Counter = 0;
-"53
-[v _CheckISCTimerUIG `ui ~T0 @X0 1 e ]
-[i _CheckISCTimerUIG
--> -> 0 `i `ui
-]
-[; ;main.c: 53: unsigned int CheckISCTimerUIG = 0;
-"54
-[v _IBC_ComsCrashTimer `ui ~T0 @X0 1 e ]
-[i _IBC_ComsCrashTimer
--> -> 0 `i `ui
-]
-[; ;main.c: 54: unsigned int IBC_ComsCrashTimer = 0;
-"55
-[v _LowSpeedTickCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 55: char LowSpeedTickCG;
-"56
-[v _HighSpeedTickPBTUIG `ui ~T0 @X0 1 e ]
-[; ;main.c: 56: unsigned int HighSpeedTickPBTUIG;
-"57
-[v _DeArmTickCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 57: char DeArmTickCG;
-"58
-[v _DeArmHighTickUIG `ui ~T0 @X0 1 e ]
-[; ;main.c: 58: unsigned int DeArmHighTickUIG;
-"59
-[v _LowSpeedTickPBTCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 59: char LowSpeedTickPBTCG;
-"60
-[v _PBTEnabled `uc ~T0 @X0 1 e ]
-[; ;main.c: 60: char PBTEnabled;
-"61
-[v _DeArmTimerEnabled `uc ~T0 @X0 1 e ]
-[; ;main.c: 61: char DeArmTimerEnabled;
-"62
-[v _LowSpeedTickBTCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 62: char LowSpeedTickBTCG;
-"63
-[v _BTEnabled `uc ~T0 @X0 1 e ]
-[; ;main.c: 63: char BTEnabled;
-"64
-[v _ClearToFire `uc ~T0 @X0 1 e ]
-[; ;main.c: 64: unsigned char ClearToFire;
-"65
-[v _CFLEDFlashEnable `uc ~T0 @X0 1 e ]
-[; ;main.c: 65: unsigned char CFLEDFlashEnable;
-"67
-[v _LowSpeedTickPATCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 67: char LowSpeedTickPATCG;
-"68
-[v _PATEnabled `uc ~T0 @X0 1 e ]
-[; ;main.c: 68: char PATEnabled;
-"70
-[v _HalfCycleCounterCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 70: char HalfCycleCounterCG;
-"71
-[v _MissingPulseCounterCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 71: char MissingPulseCounterCG;
-"72
-[v _ModeCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 72: char ModeCG;
-"73
-[v _ToggleRelay `uc ~T0 @X0 1 e ]
-[i _ToggleRelay
--> -> 0 `i `uc
-]
-[; ;main.c: 73: char ToggleRelay = 0;
-"74
-[v _RelayStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 74: unsigned char RelayStatusUCG;
-"75
-[v _KeySwitchStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 75: unsigned char KeySwitchStatusUCG;
-"76
-[v _FireButtonStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 76: unsigned char FireButtonStatusUCG;
-"77
-[v _CableFaultStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 77: unsigned char CableFaultStatusUCG;
-"78
-[v _FiringStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 78: unsigned char FiringStatusUCG;
-"79
-[v _ResetStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 79: unsigned char ResetStatusUCG;
-"80
-[v _NewCFStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 80: unsigned char NewCFStatusUCG;
-"81
-[v _AlarmStatusUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 81: unsigned char AlarmStatusUCG;
-"82
-[v _CFLEDFlashState `uc ~T0 @X0 1 e ]
-[; ;main.c: 82: unsigned char CFLEDFlashState;
-"83
-[v _PacketForPiIdentifier `uc ~T0 @X0 1 e ]
-[i _PacketForPiIdentifier
--> -> 255 `i `uc
-]
-[; ;main.c: 83: unsigned char PacketForPiIdentifier = 0b11111111;
-"84
-[v _ISC_Transmit_Packet_Ready `uc ~T0 @X0 1 e ]
-[i _ISC_Transmit_Packet_Ready
--> -> 0 `i `uc
-]
-[; ;main.c: 84: unsigned char ISC_Transmit_Packet_Ready = 0;
-"85
-[v _Pi_Status_Update `uc ~T0 @X0 1 e ]
-[i _Pi_Status_Update
--> -> 0 `i `uc
-]
-[; ;main.c: 85: unsigned char Pi_Status_Update = 0;
-"86
-[v _New_ISC_SN `uc ~T0 @X0 1 e ]
-[i _New_ISC_SN
--> -> 0 `i `uc
-]
-[; ;main.c: 86: unsigned char New_ISC_SN = 0;
-"87
-[v _BroadcastCheckUC `uc ~T0 @X0 1 e ]
-[i _BroadcastCheckUC
--> -> 0 `i `uc
-]
-[; ;main.c: 87: unsigned char BroadcastCheckUC = 0;
-"88
-[v _Discover_ISC_ModeUCG `uc ~T0 @X0 1 e ]
-[i _Discover_ISC_ModeUCG
--> -> 0 `i `uc
-]
-[; ;main.c: 88: unsigned char Discover_ISC_ModeUCG = 0;
-"89
-[v _Show_Missing_ISC `uc ~T0 @X0 1 e ]
-[i _Show_Missing_ISC
--> -> 0 `i `uc
-]
-[; ;main.c: 89: unsigned char Show_Missing_ISC = 0;
-"90
-[v _Discovered_New_ISC `uc ~T0 @X0 1 e ]
-[i _Discovered_New_ISC
--> -> 0 `i `uc
-]
-[; ;main.c: 90: unsigned char Discovered_New_ISC = 0;
-"95
-[v _HighPulseCountCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 95: char HighPulseCountCG;
-"97
-[v _KeySwitchStateUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 97: unsigned char KeySwitchStateUCG;
-"99
-[v _earthLeakageProblemUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 99: unsigned char earthLeakageProblemUCG;
-"100
-[v _cableFaultProblemUCG `uc ~T0 @X0 1 e ]
-[; ;main.c: 100: unsigned char cableFaultProblemUCG;
-"101
-[v _cableFaultCounter `us ~T0 @X0 1 e ]
-[; ;main.c: 101: unsigned short cableFaultCounter;
-"102
-[v _earthLeakageCounter `us ~T0 @X0 1 e ]
-[; ;main.c: 102: unsigned short earthLeakageCounter;
-"103
-[v _earthLeakageStart `us ~T0 @X0 1 e ]
-[; ;main.c: 103: unsigned short earthLeakageStart;
-"109
-[v _mainsZero_CrossingValueUSG `us ~T0 @X0 1 e ]
-[; ;main.c: 109: unsigned short mainsZero_CrossingValueUSG;
-"110
-[v _fireOutValueSLG `m ~T0 @X0 1 e ]
-[; ;main.c: 110: short long fireOutValueSLG;
-"111
-[v _FireOutFloat `f ~T0 @X0 1 e ]
-[; ;main.c: 111: float FireOutFloat;
-"112
-[v _ISC_Packet_Index `ui ~T0 @X0 1 e ]
-[i _ISC_Packet_Index
--> -> 0 `i `ui
-]
-[; ;main.c: 112: unsigned int ISC_Packet_Index = 0;
-"113
-[v _ISC_CF_Index `ui ~T0 @X0 1 e ]
-[i _ISC_CF_Index
--> -> 0 `i `ui
-]
-[; ;main.c: 113: unsigned int ISC_CF_Index = 0;
-"114
-[v _IBC_Default_Data `ui ~T0 @X0 1 e ]
-[; ;main.c: 114: unsigned int IBC_Default_Data;
-"115
-[v _IBC_Faults_Data `ui ~T0 @X0 1 e ]
-[; ;main.c: 115: unsigned int IBC_Faults_Data;
-"118
-[v _statusFlagsUSG `us ~T0 @X0 1 e ]
-[; ;main.c: 118: unsigned short statusFlagsUSG;
-"120
-[v _temp `us ~T0 @X0 1 e ]
-[; ;main.c: 120: unsigned short temp;
-"122
-[v _EEPWrite `uc ~T0 @X0 -> 5 `i e ]
-[v _EEPRead `uc ~T0 @X0 -> 5 `i e ]
-[; ;main.c: 122: unsigned char EEPWrite[5], EEPRead[5];
-"123
-[v _Production_ISC_SN_Counter `uc ~T0 @X0 -> 2 `i e ]
-[; ;main.c: 123: unsigned char Production_ISC_SN_Counter[2];
-[; ;main.c: 125: void InitSystem(void);
-[; ;main.c: 126: void InitReset(void);
-[; ;main.c: 127: inline void WaitNewTick(void);
-[; ;main.c: 128: void WaitTickCount(unsigned short);
-[; ;main.c: 129: void ReadKeySwitch(void);
-[; ;main.c: 130: unsigned short ReadAnalogVoltage(unsigned char);
-[; ;main.c: 131: void ReadEarthLeakage(void);
-[; ;main.c: 132: void ReadCableFault(void);
-[; ;main.c: 133: unsigned char ReadMAINS_ZeroCrossing(void);
-[; ;main.c: 134: void ReadFireOut(void);
-[; ;main.c: 135: void TurnRelayOn(void);
-[; ;main.c: 136: void TurnRelayOff(void);
-[; ;main.c: 137: void TurnSSR1On(void);
-[; ;main.c: 138: void TurnSSR1Off(void);
-[; ;main.c: 139: void TurnCableFaultDetectOn(void);
-[; ;main.c: 140: void TurnCableFaultDetectOff(void);
-[; ;main.c: 141: void TurnBuzzer_AlarmOn(void);
-[; ;main.c: 142: void TurnBuzzer_AlarmOff(void);
-[; ;main.c: 143: unsigned char getKeySwitchState(void);
-[; ;main.c: 144: unsigned char getFireButtonState(void);
-[; ;main.c: 145: unsigned char getResetButtonState(void);
-[; ;main.c: 146: void GenerateMissingPulse(void);
-[; ;main.c: 147: void checkCableFaults(void);
-[; ;main.c: 148: void FIRE(void);
-[; ;main.c: 149: void ResetDeArmedTimer(void);
-[; ;main.c: 150: void StartDeArmedTimer(void);
-[; ;main.c: 151: void StartPostFireTimer(void);
-[; ;main.c: 152: void StopPostFireTimer(void);
-[; ;main.c: 153: void StartBlastTimer(void);
-[; ;main.c: 154: void StopBlastTimer(void);
-[; ;main.c: 155: void StartPreArmedTimer(void);
-[; ;main.c: 156: void StopPreArmedTimer(void);
-[; ;main.c: 157: void Receive_ISC_Packet(void);
-[; ;main.c: 158: void Receive_Pi_Packet(void);
-[; ;main.c: 159: unsigned short getISC_SN(unsigned char ISC_Index);
-[; ;main.c: 160: void Reverse_ISC_SN_List(void);
-[; ;main.c: 161: void BroadcastGetISC_SNumbers(void);
-[; ;main.c: 162: void GetIB651_SNumbers(unsigned short ISC_SN);
-[; ;main.c: 163: void Add_ISC_SN(unsigned short ISC_SN);
-[; ;main.c: 164: unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN);
-[; ;main.c: 165: void Update_Open_Relay(unsigned short ISC_SN);
-[; ;main.c: 166: void Update_Close_Relay(unsigned short ISC_SN);
-[; ;main.c: 167: void Update_Ping_Command(unsigned short ISC_SN);
-[; ;main.c: 168: void Update_ARM_ISC(unsigned short ISC_SN);
-[; ;main.c: 169: void Update_DISARM_ISC(unsigned short ISC_SN);
-[; ;main.c: 170: void Update_ISC_Cable_Fault(unsigned short ISC_SN);
-[; ;main.c: 171: void Update_Default_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-[; ;main.c: 172: void Update_DC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-[; ;main.c: 173: void Update_AC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-[; ;main.c: 174: void Update_Blast_Loop_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-[; ;main.c: 175: void Update_Serial_Number(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-[; ;main.c: 176: unsigned char getISC_Index(unsigned short ISC_SN);
-[; ;main.c: 177: void Inspect_Default_Data_Packet(unsigned short Data_Length);
-[; ;main.c: 178: unsigned short getIBCDefaultData(void);
-[; ;main.c: 179: void Transmit_Pi_Default_Data(void);
-[; ;main.c: 180: unsigned short getParentForISC(unsigned short ISC_SN);
-[; ;main.c: 181: void AddParentForISC(unsigned short ISC_SN, unsigned short ISC_PARENT_SN);
-[; ;main.c: 182: void DEBUG_Print_Packet(void);
-[; ;main.c: 183: void Check_ALL_ISC(void);
-[; ;main.c: 184: void EEPROMTest(void);
-[; ;main.c: 185: void EEPROMWrite(void);
-[; ;main.c: 186: void EEPROMClearReset(void);
-[; ;main.c: 187: void EEPROMSetReset(void);
-[; ;main.c: 188: void EEPROMRead(void);
-[; ;main.c: 189: void Assign_ISC_New_SN(void);
-[; ;main.c: 190: void CheckBroadcastPacket(unsigned char Command);
-[; ;main.c: 191: void Transmit_NULL_Packet(void);
-[; ;main.c: 192: void Transmit_BLAST_Command_Packet(void);
-[; ;main.c: 195: void Write_b_eep( unsigned int badd,unsigned char bdat );
-[; ;main.c: 196: unsigned char Read_b_eep( unsigned int badd );
-[; ;main.c: 197: void Busy_eep ( void );
-[; ;main.c: 201: extern char UART_Init(const long int baudrate);
-[; ;main.c: 202: extern char UART_Read(void);
-[; ;main.c: 203: extern void UART_Write(char data);
-[; ;main.c: 204: extern void UART_TX_ISRHandler(void);
-[; ;main.c: 205: extern void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf);
-[; ;main.c: 206: extern void SendUARTPacket(void);
-[; ;main.c: 207: extern short PacketReadParamUART(unsigned char paramName);
-[; ;main.c: 208: extern char CheckCRCUART(void);
-[; ;main.c: 209: extern void resetUARTPointers(void);
-[; ;main.c: 211: extern unsigned char InitST7540(void);
-[; ;main.c: 212: extern void SPIISRHandlerST7540(void);
-[; ;main.c: 213: extern void CreateMessageST7540(unsigned short, unsigned short, unsigned char, unsigned char, char *);
-[; ;main.c: 214: extern void StartTransmitST7540(void);
-[; ;main.c: 215: extern unsigned char TransmitBusyST7540(void);
-[; ;main.c: 216: extern void RXReadyISRHandlerST7540(void);
-[; ;main.c: 217: extern void ReceiveNewDataST7540(void);
-[; ;main.c: 218: extern unsigned char DataReadyST7540(void);
-[; ;main.c: 219: extern unsigned short PacketReadParamST7540(unsigned char);
-[; ;main.c: 220: extern unsigned char CheckCRCST7540(void);
-[; ;main.c: 221: extern unsigned short CRC16(char *, unsigned short);
-[; ;main.c: 222: extern void ClearDataReady(void);
-[; ;main.c: 224: extern void CreateMessageUARTTest(unsigned char Command);
-[; ;main.c: 225: extern void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
-[; ;main.c: 226: extern void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf);
-[v F7649 `(v ~T0 @X0 1 tf ]
-"228
-[v _isr `IF7649 ~T0 @X0 1 e ]
 {
-[; ;main.c: 228: void interrupt isr(void){
-[e :U _isr ]
+[; ;UART.c: 45: char UART_Init(const long int baudrate)
+[; ;UART.c: 46: {
+[e :U _UART_Init ]
+"45
+[v _baudrate `Cl ~T0 @X0 1 r1 ]
+"46
 [f ]
-[; ;main.c: 230: if(PIR1bits.TMR2IF != 0){
-"230
-[e $ ! != -> . . _PIR1bits 0 1 `i -> 0 `i 1082  ]
+"47
+[v _x `ui ~T0 @X0 1 a ]
+[; ;UART.c: 47: unsigned int x;
+[; ;UART.c: 48: x = (16000000*4 - baudrate*64)/(baudrate*64);
+"48
+[e = _x -> / - * -> 16000000 `l -> -> 4 `i `l * _baudrate -> -> 64 `i `l * _baudrate -> -> 64 `i `l `ui ]
+[; ;UART.c: 49: if(x>255)
+"49
+[e $ ! > _x -> -> 255 `i `ui 1082  ]
+[; ;UART.c: 50: {
+"50
 {
-[; ;main.c: 231: PIR1bits.TMR2IF = 0;
-"231
-[e = . . _PIR1bits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 232: statusFlagsUSG |= 0b0000000000000001;
-"232
-[e =| _statusFlagsUSG -> -> 1 `i `us ]
-[; ;main.c: 233: UART_TX_ISRHandler();
-"233
-[e ( _UART_TX_ISRHandler ..  ]
-[; ;main.c: 235: ELT_Counter++;
-"235
-[e ++ _ELT_Counter -> -> 1 `i `ui ]
-[; ;main.c: 237: if (DataReadyST7540()){
-"237
-[e $ ! != -> ( _DataReadyST7540 ..  `i -> -> -> 0 `i `uc `i 1083  ]
-{
-[; ;main.c: 238: Receive_ISC_Packet();
-"238
-[e ( _Receive_ISC_Packet ..  ]
-[; ;main.c: 239: if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0010){
-"239
-[e $ ! && != -> ( _PacketReadParamST7540 (1 -> -> 5 `i `uc `ui -> -> -> 0 `i `us `ui == -> ( _PacketReadParamST7540 (1 -> -> 2 `i `uc `ui -> -> 16 `i `ui 1084  ]
-{
-[; ;main.c: 240: IdleTimerUIG = 0;
-"240
-[e = _IdleTimerUIG -> -> 0 `i `ui ]
-"241
-}
-[e :U 1084 ]
-[; ;main.c: 241: }
-[; ;main.c: 242: ReceiveNewDataST7540();
-"242
-[e ( _ReceiveNewDataST7540 ..  ]
-"243
-}
-[e :U 1083 ]
-[; ;main.c: 243: }
-[; ;main.c: 244: if (CF_STAUTS_TimerUIG < (20000)){
-"244
-[e $ ! < _CF_STAUTS_TimerUIG -> -> 20000 `i `ui 1085  ]
-{
-[; ;main.c: 245: CF_STAUTS_TimerUIG++;
-"245
-[e ++ _CF_STAUTS_TimerUIG -> -> 1 `i `ui ]
-"246
-}
-[e :U 1085 ]
-[; ;main.c: 246: }
-[; ;main.c: 248: if (DeArmHighTickUIG < 2000){
-"248
-[e $ ! < _DeArmHighTickUIG -> -> 2000 `i `ui 1086  ]
-{
-[; ;main.c: 249: DeArmHighTickUIG++;
-"249
-[e ++ _DeArmHighTickUIG -> -> 1 `i `ui ]
-"250
-}
-[; ;main.c: 250: }
-[e $U 1087  ]
-"251
-[e :U 1086 ]
-[; ;main.c: 251: else{
-{
-[; ;main.c: 252: DeArmHighTickUIG = 0;
-"252
-[e = _DeArmHighTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 253: if (DeArmTimerEnabled){
-"253
-[e $ ! != -> _DeArmTimerEnabled `i -> -> -> 0 `i `uc `i 1088  ]
-{
-[; ;main.c: 254: DeArmTickCG++;
-"254
-[e ++ _DeArmTickCG -> -> 1 `i `uc ]
-"255
-}
-[e :U 1088 ]
-"256
-}
-[e :U 1087 ]
-[; ;main.c: 255: }
-[; ;main.c: 256: }
-[; ;main.c: 257: if (CFLEDFlashTickUIG < 1000)
-"257
-[e $ ! < _CFLEDFlashTickUIG -> -> 1000 `i `ui 1089  ]
-[; ;main.c: 258: CFLEDFlashTickUIG++;
-"258
-[e ++ _CFLEDFlashTickUIG -> -> 1 `i `ui ]
-[e $U 1090  ]
-"259
-[e :U 1089 ]
-[; ;main.c: 259: else{
-{
-[; ;main.c: 260: CFLEDFlashTickUIG = 0;
-"260
-[e = _CFLEDFlashTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 261: if (CFLEDFlashEnable)
-"261
-[e $ ! != -> _CFLEDFlashEnable `i -> -> -> 0 `i `uc `i 1091  ]
-[; ;main.c: 262: CFLEDFlashState = !CFLEDFlashState;
-"262
-[e = _CFLEDFlashState -> -> ! != -> _CFLEDFlashState `i -> -> -> 0 `i `uc `i `i `uc ]
-[e :U 1091 ]
-"263
-}
-[e :U 1090 ]
-[; ;main.c: 263: }
-[; ;main.c: 266: if (BTEnabled){
-"266
-[e $ ! != -> _BTEnabled `i -> -> -> 0 `i `uc `i 1092  ]
-{
-[; ;main.c: 267: BTHighSpeedTickUIG++;
-"267
-[e ++ _BTHighSpeedTickUIG -> -> 1 `i `ui ]
-"268
-}
-[; ;main.c: 268: }
-[e $U 1093  ]
-"269
-[e :U 1092 ]
-[; ;main.c: 269: else{
-{
-[; ;main.c: 270: BTHighSpeedTickUIG = 0;
-"270
-[e = _BTHighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 272: if (IdleTimerUIG > 2000){
-"272
-[e $ ! > _IdleTimerUIG -> -> 2000 `i `ui 1094  ]
-{
-[; ;main.c: 274: Transmit_NULL_Packet();
-"274
-[e ( _Transmit_NULL_Packet ..  ]
-[; ;main.c: 275: IdleTimerUIG = 0;
-"275
-[e = _IdleTimerUIG -> -> 0 `i `ui ]
-[; ;main.c: 276: IBC_ComsCrashTimer++;
-"276
-[e ++ _IBC_ComsCrashTimer -> -> 1 `i `ui ]
-"277
-}
-[; ;main.c: 277: }
-[e $U 1095  ]
-"278
-[e :U 1094 ]
-[; ;main.c: 278: else
-[; ;main.c: 279: IdleTimerUIG++;
-"279
-[e ++ _IdleTimerUIG -> -> 1 `i `ui ]
-[e :U 1095 ]
-[; ;main.c: 290: CheckISCTimerUIG++;
-"290
-[e ++ _CheckISCTimerUIG -> -> 1 `i `ui ]
-"291
-}
-[e :U 1093 ]
-[; ;main.c: 291: }
-[; ;main.c: 293: if (PATEnabled){
-"293
-[e $ ! != -> _PATEnabled `i -> -> -> 0 `i `uc `i 1096  ]
-{
-[; ;main.c: 294: if (HighSpeedTickPAUIG < 2000){
-"294
-[e $ ! < _HighSpeedTickPAUIG -> -> 2000 `i `ui 1097  ]
-{
-[; ;main.c: 295: HighSpeedTickPAUIG++;
-"295
-[e ++ _HighSpeedTickPAUIG -> -> 1 `i `ui ]
-"296
-}
-[; ;main.c: 296: }
-[e $U 1098  ]
-"297
-[e :U 1097 ]
-[; ;main.c: 297: else{
-{
-[; ;main.c: 298: HighSpeedTickPAUIG = 0;
-"298
-[e = _HighSpeedTickPAUIG -> -> 0 `i `ui ]
-[; ;main.c: 299: LowSpeedTickPATCG++;
-"299
-[e ++ _LowSpeedTickPATCG -> -> 1 `i `uc ]
-"300
-}
-[e :U 1098 ]
-"301
-}
-[e :U 1096 ]
-[; ;main.c: 300: }
-[; ;main.c: 301: }
-[; ;main.c: 303: if (HighSpeedTickUIG < 2000){
-"303
-[e $ ! < _HighSpeedTickUIG -> -> 2000 `i `ui 1099  ]
-{
-[; ;main.c: 304: HighSpeedTickUIG++;
-"304
-[e ++ _HighSpeedTickUIG -> -> 1 `i `ui ]
-"305
-}
-[; ;main.c: 305: }
-[e $U 1100  ]
-"306
-[e :U 1099 ]
-[; ;main.c: 306: else{
-{
-[; ;main.c: 307: HighSpeedTickUIG = 0;
-"307
-[e = _HighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 308: LowSpeedTickCG++;
-"308
-[e ++ _LowSpeedTickCG -> -> 1 `i `uc ]
-[; ;main.c: 310: if (PBTEnabled){
-"310
-[e $ ! != -> _PBTEnabled `i -> -> -> 0 `i `uc `i 1101  ]
-{
-[; ;main.c: 311: LowSpeedTickPBTCG++;
-"311
-[e ++ _LowSpeedTickPBTCG -> -> 1 `i `uc ]
-"312
-}
-[e :U 1101 ]
-"315
-}
-[e :U 1100 ]
-[; ;main.c: 312: }
-[; ;main.c: 315: }
-[; ;main.c: 317: if (LowSpeedTickPBTCG >= 60){
-"317
-[e $ ! >= -> _LowSpeedTickPBTCG `i -> 60 `i 1102  ]
-{
-[; ;main.c: 318: AlarmStatusUCG = 1;
-"318
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 319: CFLEDFlashEnable = 1;
-"319
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-"320
-}
-[e :U 1102 ]
-[; ;main.c: 320: }
-[; ;main.c: 321: if (LowSpeedTickPATCG >= 120){
-"321
-[e $ ! >= -> _LowSpeedTickPATCG `i -> 120 `i 1103  ]
-{
-[; ;main.c: 322: AlarmStatusUCG = 1;
-"322
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 323: CFLEDFlashEnable = 1;
-"323
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-"324
-}
-[e :U 1103 ]
-[; ;main.c: 324: }
-[; ;main.c: 325: if (DeArmTickCG >= 7){
-"325
-[e $ ! >= -> _DeArmTickCG `i -> 7 `i 1104  ]
-{
-[; ;main.c: 326: ClearToFire = 1;
-"326
-[e = _ClearToFire -> -> 1 `i `uc ]
-"327
-}
-[; ;main.c: 327: }
-[e $U 1105  ]
-"328
-[e :U 1104 ]
-[; ;main.c: 328: else
-[; ;main.c: 329: __nop();
-"329
-[e ( ___nop ..  ]
-[e :U 1105 ]
-[; ;main.c: 331: if (LowSpeedTickCG >= 60)
-"331
-[e $ ! >= -> _LowSpeedTickCG `i -> 60 `i 1106  ]
-[; ;main.c: 332: LowSpeedTickCG = 0;
-"332
-[e = _LowSpeedTickCG -> -> 0 `i `uc ]
-[e :U 1106 ]
-"333
+[; ;UART.c: 51: x = (16000000*4 - baudrate*16)/(baudrate*16);
+"51
+[e = _x -> / - * -> 16000000 `l -> -> 4 `i `l * _baudrate -> -> 16 `i `l * _baudrate -> -> 16 `i `l `ui ]
+[; ;UART.c: 52: TXSTA1bits.BRGH = 1;
+"52
+[e = . . _TXSTA1bits 0 2 -> -> 1 `i `uc ]
+"53
 }
 [e :U 1082 ]
-[; ;main.c: 333: }
-[; ;main.c: 335: if(PIR3bits.SSP2IF){
-"335
-[e $ ! != -> . . _PIR3bits 0 7 `i -> -> -> 0 `i `Vuc `i 1107  ]
+[; ;UART.c: 53: }
+[; ;UART.c: 54: if(x<256)
+"54
+[e $ ! < _x -> -> 256 `i `ui 1083  ]
+[; ;UART.c: 55: {
+"55
 {
-[; ;main.c: 336: SPIISRHandlerST7540();
-"336
-[e ( _SPIISRHandlerST7540 ..  ]
-"337
+[; ;UART.c: 56: x=25;
+"56
+[e = _x -> -> 25 `i `ui ]
+[; ;UART.c: 57: SPBRG1 = x;
+"57
+[e = _SPBRG1 -> _x `uc ]
+[; ;UART.c: 58: TXSTA1bits.SYNC = 0;
+"58
+[e = . . _TXSTA1bits 0 4 -> -> 0 `i `uc ]
+[; ;UART.c: 59: RCSTA1bits.SPEN = 1;
+"59
+[e = . . _RCSTA1bits 0 7 -> -> 1 `i `uc ]
+[; ;UART.c: 60: RCSTA1bits.CREN = 1;
+"60
+[e = . . _RCSTA1bits 0 4 -> -> 1 `i `uc ]
+[; ;UART.c: 61: TXSTA1bits.TXEN = 1;
+"61
+[e = . . _TXSTA1bits 0 5 -> -> 1 `i `uc ]
+[; ;UART.c: 62: return 1;
+"62
+[e ) -> -> 1 `i `uc ]
+[e $UE 1081  ]
+"63
 }
-[e :U 1107 ]
-[; ;main.c: 337: }
-[; ;main.c: 338: if (PIR1bits.RC1IF){
-"338
-[e $ ! != -> . . _PIR1bits 0 5 `i -> -> -> 0 `i `Vuc `i 1108  ]
-{
-[; ;main.c: 339: UART_Read();
-"339
-[e ( _UART_Read ..  ]
-[; ;main.c: 340: PIR1bits.RC1IF = 0;
-"340
-[e = . . _PIR1bits 0 5 -> -> 0 `i `uc ]
-"341
-}
-[e :U 1108 ]
-[; ;main.c: 341: }
-[; ;main.c: 342: if (INTCONbits.RBIF){
-"342
-[e $ ! != -> . . _INTCONbits 0 0 `i -> -> -> 0 `i `Vuc `i 1109  ]
-{
-[; ;main.c: 343: INTCONbits.RBIF = 0;
-"343
-[e = . . _INTCONbits 0 0 -> -> 0 `i `uc ]
-[; ;main.c: 344: RXReadyISRHandlerST7540();
-"344
-[e ( _RXReadyISRHandlerST7540 ..  ]
-"345
-}
-[e :U 1109 ]
-[; ;main.c: 345: }
-[; ;main.c: 346: }
-"346
+[e :U 1083 ]
+[; ;UART.c: 63: }
+[; ;UART.c: 64: return 0;
+"64
+[e ) -> -> 0 `i `uc ]
+[e $UE 1081  ]
+[; ;UART.c: 65: }
+"65
 [e :UE 1081 ]
 }
-"348
-[v _main `(v ~T0 @X0 1 ef ]
+"67
+[v _UART_Read `(uc ~T0 @X0 1 ef ]
+"68
 {
-[; ;main.c: 348: void main(void){
-[e :U _main ]
+[; ;UART.c: 67: char UART_Read(void)
+[; ;UART.c: 68: {
+[e :U _UART_Read ]
 [f ]
-[; ;main.c: 350: InitSystem();
-"350
-[e ( _InitSystem ..  ]
-[; ;main.c: 351: Pi_Status_Update = 0x00;
-"351
-[e = _Pi_Status_Update -> -> 0 `i `uc ]
-[; ;main.c: 352: LATAbits.LATA5 = 0;
-"352
-[e = . . _LATAbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 353: WDTCONbits.SWDTEN = 1;
-"353
-[e = . . _WDTCONbits 0 0 -> -> 1 `i `uc ]
-[; ;main.c: 355: while(1){
-"355
-[e :U 1112 ]
+"69
+[v _charRS232 `uc ~T0 @X0 1 a ]
+[; ;UART.c: 69: char charRS232;
+[; ;UART.c: 70: charRS232 = RCREG1;
+"70
+[e = _charRS232 _RCREG1 ]
+[; ;UART.c: 71: if((7 - 1) == PiBufferRXNEXTUCA){
+"71
+[e $ ! == - -> 7 `i -> 1 `i -> _PiBufferRXNEXTUCA `i 1085  ]
 {
-[; ;main.c: 356: asm(" clrwdt");
-"356
-[; <"  clrwdt ;# ">
-[; ;main.c: 357: if (DataReadyUART()){
-"357
-[e $ ! != ( _DataReadyUART ..  -> 0 `i 1114  ]
+[; ;UART.c: 73: flagUARTRead = 1;
+"73
+[e = _flagUARTRead -> -> 1 `i `uc ]
+[; ;UART.c: 74: ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
+"74
+[e = *U + &U _ReceivedPiBufferCG * -> _PiBufferRXNEXTUCA `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux _charRS232 ]
+[; ;UART.c: 75: PiBufferRXNEXTUCA = 0;
+"75
+[e = _PiBufferRXNEXTUCA -> -> 0 `i `uc ]
+[; ;UART.c: 76: return;
+"76
+[e $UE 1084  ]
+"77
+}
+[; ;UART.c: 77: }
+[e $U 1086  ]
+"78
+[e :U 1085 ]
+[; ;UART.c: 78: else if (PiBufferRXNEXTUCA > 7 || flagUARTRead == 1){
+[e $ ! || > -> _PiBufferRXNEXTUCA `i -> 7 `i == -> _flagUARTRead `i -> 1 `i 1087  ]
 {
-[; ;main.c: 358: ClearDataReady();
-"358
-[e ( _ClearDataReady ..  ]
-[; ;main.c: 359: IBC_ComsCrashTimer =0;
-"359
-[e = _IBC_ComsCrashTimer -> -> 0 `i `ui ]
-[; ;main.c: 360: if(PacketReadParamUART(3)){
-"360
-[e $ ! != -> ( _PacketReadParamUART (1 -> -> 3 `i `uc `i -> -> -> 0 `i `s `i 1115  ]
+[; ;UART.c: 79: PiBufferRXNEXTUCA = 0;
+"79
+[e = _PiBufferRXNEXTUCA -> -> 0 `i `uc ]
+"80
+}
+[; ;UART.c: 80: }
+[e $U 1088  ]
+"81
+[e :U 1087 ]
+[; ;UART.c: 81: else{
 {
-[; ;main.c: 361: Receive_Pi_Packet();
-"361
-[e ( _Receive_Pi_Packet ..  ]
-"362
+[; ;UART.c: 82: flagUARTRead = 0;
+"82
+[e = _flagUARTRead -> -> 0 `i `uc ]
+[; ;UART.c: 83: ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
+"83
+[e = *U + &U _ReceivedPiBufferCG * -> _PiBufferRXNEXTUCA `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux _charRS232 ]
+[; ;UART.c: 84: PiBufferRXNEXTUCA++;
+"84
+[e ++ _PiBufferRXNEXTUCA -> -> 1 `i `uc ]
+[; ;UART.c: 85: return;
+"85
+[e $UE 1084  ]
+"86
 }
-[e :U 1115 ]
-"363
+[e :U 1088 ]
+[e :U 1086 ]
+[; ;UART.c: 86: }
+[; ;UART.c: 87: }
+"87
+[e :UE 1084 ]
 }
-[e :U 1114 ]
-[; ;main.c: 362: }
-[; ;main.c: 363: }
-[; ;main.c: 365: if (ISC_Transmit_Packet_Ready == 1){
-"365
-[e $ ! == -> _ISC_Transmit_Packet_Ready `i -> 1 `i 1116  ]
+"89
+[v _resetUARTPointers `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 367: if (!TransmitBusyST7540() && LineIdleST7540()){
-"367
-[e $ ! && ! != -> ( _TransmitBusyST7540 ..  `i -> -> -> 0 `i `uc `i != ( _LineIdleST7540 ..  -> 0 `i 1117  ]
-{
-[; ;main.c: 369: StartTransmitST7540();
-"369
-[e ( _StartTransmitST7540 ..  ]
-[; ;main.c: 370: ISC_Transmit_Packet_Ready = 0;
-"370
-[e = _ISC_Transmit_Packet_Ready -> -> 0 `i `uc ]
-[; ;main.c: 371: IdleTimerUIG = 0;
-"371
-[e = _IdleTimerUIG -> -> 0 `i `ui ]
-"372
-}
-[e :U 1117 ]
-"373
-}
-[e :U 1116 ]
-[; ;main.c: 372: }
-[; ;main.c: 373: }
-[; ;main.c: 375: checkCableFaults();
-"375
-[e ( _checkCableFaults ..  ]
-[; ;main.c: 378: if (CableFaultStatusUCG == 1 || CableFaultStatusUCG == 2){
-"378
-[e $ ! || == -> _CableFaultStatusUCG `i -> 1 `i == -> _CableFaultStatusUCG `i -> 2 `i 1118  ]
-{
-[; ;main.c: 379: if (NewCFStatusUCG == 1){
-"379
-[e $ ! == -> _NewCFStatusUCG `i -> 1 `i 1119  ]
-{
-[; ;main.c: 380: NewCFStatusUCG = 0;
-"380
-[e = _NewCFStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 381: Pi_Status_Update = 0x01;
-"381
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[; ;main.c: 382: AlarmStatusUCG = 1;
-"382
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-"383
-}
-[e :U 1119 ]
-[; ;main.c: 383: }
-[; ;main.c: 384: LATAbits.LATA5 = 1;
-"384
-[e = . . _LATAbits 0 5 -> -> 1 `i `uc ]
-"385
-}
-[; ;main.c: 385: }
-[e $U 1120  ]
-"386
-[e :U 1118 ]
-[; ;main.c: 386: else{
-{
-[; ;main.c: 387: if (CFLEDFlashEnable == 0 && AlarmStatusUCG == 0){
-"387
-[e $ ! && == -> _CFLEDFlashEnable `i -> 0 `i == -> _AlarmStatusUCG `i -> 0 `i 1121  ]
-{
-[; ;main.c: 388: LATAbits.LATA5 = 0;
-"388
-[e = . . _LATAbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 389: TurnRelayOff();
-"389
-[e ( _TurnRelayOff ..  ]
-[; ;main.c: 390: CF_STAUTS_TimerUIG = 0;
-"390
-[e = _CF_STAUTS_TimerUIG -> -> 0 `i `ui ]
-[; ;main.c: 391: if (NewCFStatusUCG == 0){
-"391
-[e $ ! == -> _NewCFStatusUCG `i -> 0 `i 1122  ]
-{
-[; ;main.c: 392: NewCFStatusUCG = 1;
-"392
-[e = _NewCFStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 393: Pi_Status_Update = 0x01;
-"393
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-"394
-}
-[e :U 1122 ]
-"395
-}
-[e :U 1121 ]
-"396
-}
-[e :U 1120 ]
-[; ;main.c: 394: }
-[; ;main.c: 395: }
-[; ;main.c: 396: }
-[; ;main.c: 398: if (getResetButtonState() == 1){
-"398
-[e $ ! == -> ( _getResetButtonState ..  `i -> 1 `i 1123  ]
-{
-[; ;main.c: 399: if (getKeySwitchState() == 0){
-"399
-[e $ ! == -> ( _getKeySwitchState ..  `i -> 0 `i 1124  ]
-{
-[; ;main.c: 400: AlarmStatusUCG = 0;
-"400
-[e = _AlarmStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 401: if (CableFaultStatusUCG == 0){
-"401
-[e $ ! == -> _CableFaultStatusUCG `i -> 0 `i 1125  ]
-{
-[; ;main.c: 402: LATAbits.LATA5 = 0;
-"402
-[e = . . _LATAbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 403: TurnRelayOff();
-"403
-[e ( _TurnRelayOff ..  ]
-[; ;main.c: 404: CFLEDFlashEnable = 0;
-"404
-[e = _CFLEDFlashEnable -> -> 0 `i `uc ]
-[; ;main.c: 405: CFLEDFlashState = 0;
-"405
-[e = _CFLEDFlashState -> -> 0 `i `uc ]
-"406
-}
-[; ;main.c: 406: }
-[e $U 1126  ]
-"407
-[e :U 1125 ]
-[; ;main.c: 407: else
-[; ;main.c: 408: CF_STAUTS_TimerUIG = 20000;
-"408
-[e = _CF_STAUTS_TimerUIG -> -> 20000 `i `ui ]
-[e :U 1126 ]
-"409
-}
-[; ;main.c: 409: }
-[e $U 1127  ]
-"410
-[e :U 1124 ]
-[; ;main.c: 410: else{
-{
-[; ;main.c: 411: AlarmStatusUCG = 1;
-"411
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 412: CFLEDFlashEnable = 1;
-"412
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-"413
-}
-[e :U 1127 ]
-"414
-}
-[e :U 1123 ]
-[; ;main.c: 413: }
-[; ;main.c: 414: }
-[; ;main.c: 415: if (getKeySwitchState() == 0){
-"415
-[e $ ! == -> ( _getKeySwitchState ..  `i -> 0 `i 1128  ]
-{
-[; ;main.c: 416: if(KeySwitchStatusUCG == 1)
-"416
-[e $ ! == -> _KeySwitchStatusUCG `i -> 1 `i 1129  ]
-[; ;main.c: 417: Pi_Status_Update = 0x01;
-"417
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1129 ]
-[; ;main.c: 419: KeySwitchStatusUCG = 0;
-"419
-[e = _KeySwitchStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 420: StopPostFireTimer();
-"420
-[e ( _StopPostFireTimer ..  ]
-[; ;main.c: 421: StopPreArmedTimer();
-"421
-[e ( _StopPreArmedTimer ..  ]
-"422
-}
-[; ;main.c: 422: }
-[e $U 1130  ]
-"423
-[e :U 1128 ]
-[; ;main.c: 423: else{
-{
-[; ;main.c: 424: if(KeySwitchStatusUCG == 0)
-"424
-[e $ ! == -> _KeySwitchStatusUCG `i -> 0 `i 1131  ]
-[; ;main.c: 425: Pi_Status_Update = 0x01;
-"425
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1131 ]
-[; ;main.c: 427: KeySwitchStatusUCG = 1;
-"427
-[e = _KeySwitchStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 429: if (PATEnabled == 0)
-"429
-[e $ ! == -> _PATEnabled `i -> 0 `i 1132  ]
-[; ;main.c: 430: StartPreArmedTimer();
-"430
-[e ( _StartPreArmedTimer ..  ]
-[e :U 1132 ]
-[; ;main.c: 432: ClearToFire = 1;
-"432
-[e = _ClearToFire -> -> 1 `i `uc ]
-"433
-}
-[e :U 1130 ]
-[; ;main.c: 433: }
-[; ;main.c: 436: if(IBC_ComsCrashTimer > 240){
-"436
-[e $ ! > _IBC_ComsCrashTimer -> -> 240 `i `ui 1133  ]
-{
-[; ;main.c: 438: EEPROMSetReset();
-"438
-[e ( _EEPROMSetReset ..  ]
-[; ;main.c: 441: resetUARTPointers();
-"441
-[e ( _resetUARTPointers ..  ]
-[; ;main.c: 442: ResetStatusUCG = 1;
-"442
-[e = _ResetStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 443: Pi_Status_Update = 0x01;
-"443
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[; ;main.c: 444: IBC_ComsCrashTimer= (240-10);
-"444
-[e = _IBC_ComsCrashTimer -> - -> 240 `i -> 10 `i `ui ]
-"445
-}
-[e :U 1133 ]
-[; ;main.c: 445: }
-[; ;main.c: 447: if (Pi_Status_Update == 0x01){
-"447
-[e $ ! == -> _Pi_Status_Update `i -> 1 `i 1134  ]
-{
-[; ;main.c: 448: Pi_Status_Update = 0x00;
-"448
-[e = _Pi_Status_Update -> -> 0 `i `uc ]
-[; ;main.c: 449: getIBCDefaultData();
-"449
-[e ( _getIBCDefaultData ..  ]
-[; ;main.c: 450: Transmit_Pi_Default_Data();
-"450
-[e ( _Transmit_Pi_Default_Data ..  ]
-"451
-}
-[e :U 1134 ]
-[; ;main.c: 451: }
-[; ;main.c: 453: if (Pi_Status_Update == 0x02){
-"453
-[e $ ! == -> _Pi_Status_Update `i -> 2 `i 1135  ]
-{
-[; ;main.c: 455: Pi_Status_Update = 0x00;
-"455
-[e = _Pi_Status_Update -> -> 0 `i `uc ]
-"456
-}
-[e :U 1135 ]
-[; ;main.c: 456: }
-[; ;main.c: 458: if (getFireButtonState() == 1){
-"458
-[e $ ! == -> ( _getFireButtonState ..  `i -> 1 `i 1136  ]
-{
-[; ;main.c: 459: if (FireButtonStatusUCG == 0)
-"459
-[e $ ! == -> _FireButtonStatusUCG `i -> 0 `i 1137  ]
-[; ;main.c: 460: Pi_Status_Update = 0x01;
-"460
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1137 ]
-[; ;main.c: 461: FireButtonStatusUCG = 1;
-"461
-[e = _FireButtonStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 463: if (CableFaultStatusUCG == 1){
-"463
-[e $ ! == -> _CableFaultStatusUCG `i -> 1 `i 1138  ]
-{
-[; ;main.c: 464: AlarmStatusUCG = 1;
-"464
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-"465
-}
-[; ;main.c: 465: }
-[e $U 1139  ]
-"467
-[e :U 1138 ]
-[; ;main.c: 467: else if (getKeySwitchState() == 0){
-[e $ ! == -> ( _getKeySwitchState ..  `i -> 0 `i 1140  ]
-{
-[; ;main.c: 468: AlarmStatusUCG = 1;
-"468
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 469: CFLEDFlashEnable = 1;
-"469
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-"470
-}
-[; ;main.c: 470: }
-[e $U 1141  ]
-"471
-[e :U 1140 ]
-[; ;main.c: 471: else if (ClearToFire == 0){
-[e $ ! == -> _ClearToFire `i -> 0 `i 1142  ]
-{
-[; ;main.c: 472: AlarmStatusUCG = 1;
-"472
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 473: CFLEDFlashEnable = 1;
-"473
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-"474
-}
-[; ;main.c: 474: }
-[e $U 1143  ]
-"476
-[e :U 1142 ]
-[; ;main.c: 476: else if (AlarmStatusUCG == 0 && ClearToFire == 1){
-[e $ ! && == -> _AlarmStatusUCG `i -> 0 `i == -> _ClearToFire `i -> 1 `i 1144  ]
-{
-[; ;main.c: 477: FiringStatusUCG=1;
-"477
-[e = _FiringStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 478: getIBCDefaultData();
-"478
-[e ( _getIBCDefaultData ..  ]
-[; ;main.c: 479: Transmit_Pi_Default_Data();
-"479
-[e ( _Transmit_Pi_Default_Data ..  ]
-[; ;main.c: 480: SendUARTPacket();
-"480
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 482: ClearToFire = 0;
-"482
-[e = _ClearToFire -> -> 0 `i `uc ]
-[; ;main.c: 484: StopPreArmedTimer();
-"484
-[e ( _StopPreArmedTimer ..  ]
-[; ;main.c: 486: TurnRelayOn();
-"486
-[e ( _TurnRelayOn ..  ]
-[; ;main.c: 488: WaitTickCount(100);
-"488
-[e ( _WaitTickCount (1 -> -> 100 `i `us ]
-[; ;main.c: 489: TurnSSR1On();
-"489
-[e ( _TurnSSR1On ..  ]
-[; ;main.c: 490: WaitTickCount(100);
-"490
-[e ( _WaitTickCount (1 -> -> 100 `i `us ]
-[; ;main.c: 491: FireOutFloat = 0;
-"491
-[e = _FireOutFloat -> -> 0 `i `f ]
-[; ;main.c: 492: ReadFireOut();
-"492
-[e ( _ReadFireOut ..  ]
-[; ;main.c: 493: FireOutFloat = 1000.0;
-"493
-[e = _FireOutFloat -> .1000.0 `f ]
-[; ;main.c: 494: TurnSSR1Off();
-"494
-[e ( _TurnSSR1Off ..  ]
-[; ;main.c: 496: if (FireOutFloat > 815.0){
-"496
-[e $ ! > -> _FireOutFloat `d .815.0 1145  ]
-{
-[; ;main.c: 499: Transmit_BLAST_Command_Packet();
-"499
-[e ( _Transmit_BLAST_Command_Packet ..  ]
-[; ;main.c: 500: asm(" clrwdt");
-"500
-[; <"  clrwdt ;# ">
-[; ;main.c: 501: WaitTickCount(2000*4);
-"501
-[e ( _WaitTickCount (1 -> * -> 2000 `i -> 4 `i `us ]
-[; ;main.c: 502: asm(" clrwdt");
-"502
-[; <"  clrwdt ;# ">
-[; ;main.c: 504: BTEnabled = 1;
-"504
-[e = _BTEnabled -> -> 1 `i `uc ]
-[; ;main.c: 505: FIRE();
-"505
-[e ( _FIRE ..  ]
-[; ;main.c: 507: WaitTickCount(1000);
-"507
-[e ( _WaitTickCount (1 -> -> 1000 `i `us ]
-[; ;main.c: 508: BTEnabled = 0;
-"508
-[e = _BTEnabled -> -> 0 `i `uc ]
-[; ;main.c: 509: IBC_ComsCrashTimer = 240-60;
-"509
-[e = _IBC_ComsCrashTimer -> - -> 240 `i -> 60 `i `ui ]
-"510
-}
-[; ;main.c: 510: }
-[e $U 1146  ]
-"511
-[e :U 1145 ]
-[; ;main.c: 511: else{
-{
-[; ;main.c: 512: AlarmStatusUCG = 1;
-"512
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-"513
-}
-[e :U 1146 ]
-[; ;main.c: 513: }
-[; ;main.c: 516: FiringStatusUCG=0;
-"516
-[e = _FiringStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 517: TurnSSR1Off();
-"517
-[e ( _TurnSSR1Off ..  ]
-[; ;main.c: 521: TurnRelayOff();
-"521
-[e ( _TurnRelayOff ..  ]
-"522
-}
-[e :U 1144 ]
-"523
-[e :U 1143 ]
-[e :U 1141 ]
-[e :U 1139 ]
-}
-[; ;main.c: 522: }
-[; ;main.c: 523: }
-[e $U 1147  ]
-"524
-[e :U 1136 ]
-[; ;main.c: 524: else{
-{
-[; ;main.c: 525: if (FireButtonStatusUCG == 1)
-"525
-[e $ ! == -> _FireButtonStatusUCG `i -> 1 `i 1148  ]
-[; ;main.c: 526: Pi_Status_Update = 0x01;
-"526
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1148 ]
-[; ;main.c: 527: FireButtonStatusUCG = 0;
-"527
-[e = _FireButtonStatusUCG -> -> 0 `i `uc ]
-"528
-}
-[e :U 1147 ]
-[; ;main.c: 528: }
-[; ;main.c: 530: if (AlarmStatusUCG == 1){
-"530
-[e $ ! == -> _AlarmStatusUCG `i -> 1 `i 1149  ]
-{
-[; ;main.c: 532: if (CFLEDFlashEnable == 1){
-"532
-[e $ ! == -> _CFLEDFlashEnable `i -> 1 `i 1150  ]
-{
-[; ;main.c: 533: if (CFLEDFlashState == 1)
-"533
-[e $ ! == -> _CFLEDFlashState `i -> 1 `i 1151  ]
-[; ;main.c: 534: TurnBuzzer_AlarmOn();
-"534
-[e ( _TurnBuzzer_AlarmOn ..  ]
-[e :U 1151 ]
-[; ;main.c: 535: if (CFLEDFlashState == 0)
-"535
-[e $ ! == -> _CFLEDFlashState `i -> 0 `i 1152  ]
-[; ;main.c: 536: TurnBuzzer_AlarmOff();
-"536
-[e ( _TurnBuzzer_AlarmOff ..  ]
-[e :U 1152 ]
-"537
-}
-[; ;main.c: 537: }
-[e $U 1153  ]
-"538
-[e :U 1150 ]
-[; ;main.c: 538: else
-[; ;main.c: 539: TurnBuzzer_AlarmOn();
-"539
-[e ( _TurnBuzzer_AlarmOn ..  ]
-[e :U 1153 ]
-"540
-}
-[; ;main.c: 540: }
-[e $U 1154  ]
-"541
-[e :U 1149 ]
-[; ;main.c: 541: else{
-{
-[; ;main.c: 542: TurnBuzzer_AlarmOff();
-"542
-[e ( _TurnBuzzer_AlarmOff ..  ]
-"543
-}
-[e :U 1154 ]
-"544
-}
-[e :U 1111 ]
-"355
-[e $U 1112  ]
-[e :U 1113 ]
-[; ;main.c: 543: }
-[; ;main.c: 544: }
-[; ;main.c: 545: }
-"545
-[e :UE 1110 ]
-}
-"547
-[v _Receive_ISC_Packet `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 547: void Receive_ISC_Packet(void){
-[e :U _Receive_ISC_Packet ]
+[; ;UART.c: 89: void resetUARTPointers(void){
+[e :U _resetUARTPointers ]
 [f ]
-"548
-[v _tempIscSerial `us ~T0 @X0 1 a ]
-[; ;main.c: 548: unsigned short tempIscSerial = PacketReadParamST7540(1);
-[e = _tempIscSerial ( _PacketReadParamST7540 (1 -> -> 1 `i `uc ]
-[; ;main.c: 549: LATCbits.LATC0 = !LATCbits.LATC0;
-"549
-[e = . . _LATCbits 0 0 -> -> ! != -> . . _LATCbits 0 0 `i -> -> -> 0 `i `Vuc `i `i `uc ]
-[; ;main.c: 550: if(PacketReadParamST7540(5) && PacketReadParamST7540(2)==0x0010){
-"550
-[e $ ! && != -> ( _PacketReadParamST7540 (1 -> -> 5 `i `uc `ui -> -> -> 0 `i `us `ui == -> ( _PacketReadParamST7540 (1 -> -> 2 `i `uc `ui -> -> 16 `i `ui 1156  ]
-{
-[; ;main.c: 551: ReceiveNewDataST7540();
-"551
-[e ( _ReceiveNewDataST7540 ..  ]
-[; ;main.c: 552: CheckBroadcastPacket(PacketReadParamST7540(4));
-"552
-[e ( _CheckBroadcastPacket (1 -> ( _PacketReadParamST7540 (1 -> -> 4 `i `uc `uc ]
-[; ;main.c: 553: if (BroadcastCheckUC == 0){
-"553
-[e $ ! == -> _BroadcastCheckUC `i -> 0 `i 1157  ]
-{
-[; ;main.c: 555: switch(PacketReadParamST7540(4)){
-"555
-[e $U 1159  ]
-{
-[; ;main.c: 556: case 0b00000111 :
-"556
-[e :U 1160 ]
-[; ;main.c: 557: CreateMessageUART(PacketReadParamST7540(1), 0b00000010, PacketReadParamST7540(0), PacketDataST7540());
-"557
-[e ( _CreateMessageUART (4 , , , ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 2 `i `uc -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `uc -> ( _PacketDataST7540 ..  `*uc ]
-[; ;main.c: 558: SendUARTPacket();
-"558
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 559: return;
-"559
-[e $UE 1155  ]
-[; ;main.c: 561: case 0b00000000 :
-"561
-[e :U 1161 ]
-[; ;main.c: 562: CreateMessageUART(PacketReadParamST7540(1), 0b00000011, PacketReadParamST7540(0), PacketDataST7540());
-"562
-[e ( _CreateMessageUART (4 , , , ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 3 `i `uc -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `uc -> ( _PacketDataST7540 ..  `*uc ]
-[; ;main.c: 563: SendUARTPacket();
-"563
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 564: return;
-"564
-[e $UE 1155  ]
-[; ;main.c: 566: case 0b01000000 :
-"566
-[e :U 1162 ]
-[; ;main.c: 567: CreateMessageUART(PacketReadParamST7540(1), 0b00000011, PacketReadParamST7540(0), PacketDataST7540());
-"567
-[e ( _CreateMessageUART (4 , , , ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 3 `i `uc -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `uc -> ( _PacketDataST7540 ..  `*uc ]
-[; ;main.c: 568: SendUARTPacket();
-"568
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 569: return;
-"569
-[e $UE 1155  ]
-[; ;main.c: 571: case 0b00001010 :
-"571
-[e :U 1163 ]
-[; ;main.c: 572: CreateMessageUART(PacketReadParamST7540(1), 0b00000100, PacketReadParamST7540(0), PacketDataST7540());
-"572
-[e ( _CreateMessageUART (4 , , , ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 4 `i `uc -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `uc -> ( _PacketDataST7540 ..  `*uc ]
-[; ;main.c: 573: SendUARTPacket();
-"573
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 574: CreateMessageST7540(0x0010, PacketReadParamST7540(1), 0b00001010, 0, "");
-"574
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 10 `i `uc -> -> 0 `i `uc -> :s 1C `*uc ]
-[; ;main.c: 575: ISC_Transmit_Packet_Ready = 1;
-"575
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 576: return;
-"576
-[e $UE 1155  ]
-[; ;main.c: 578: case 0b00001011 :
-"578
-[e :U 1164 ]
-[; ;main.c: 579: CreateMessageUART(PacketReadParamST7540(1), 0b00000101, PacketReadParamST7540(0), PacketDataST7540());
-"579
-[e ( _CreateMessageUART (4 , , , ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 5 `i `uc -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `uc -> ( _PacketDataST7540 ..  `*uc ]
-[; ;main.c: 580: SendUARTPacket();
-"580
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 581: CreateMessageST7540(0x0010, PacketReadParamST7540(1), 0b00001011, 0, "");
-"581
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us ( _PacketReadParamST7540 (1 -> -> 1 `i `uc -> -> 11 `i `uc -> -> 0 `i `uc -> :s 2C `*uc ]
-[; ;main.c: 582: ISC_Transmit_Packet_Ready = 1;
-"582
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 583: return;
-"583
-[e $UE 1155  ]
-[; ;main.c: 585: case(0b00001001):
-"585
-[e :U 1165 ]
-[; ;main.c: 586: tempIscSerial = (tempIscSerial << 8) & 0XFF00;
-"586
-[e = _tempIscSerial -> & << -> _tempIscSerial `ui -> 8 `i -> 65280 `ui `us ]
-[; ;main.c: 587: tempIscSerial |= (PacketReadParamST7540(1) >> 8) & 0XFF;
-"587
-[e =| _tempIscSerial -> & >> -> ( _PacketReadParamST7540 (1 -> -> 1 `i `uc `ui -> 8 `i -> -> 255 `i `ui `us ]
-[; ;main.c: 588: CreateMessageUART(0x0010, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
-"588
-[e ( _CreateMessageUART (4 , , , -> -> 16 `i `us -> -> 1 `i `uc -> + -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `ui -> -> 2 `i `ui `uc -> &U _tempIscSerial `*uc ]
-[; ;main.c: 589: SendUARTPacket();
-"589
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 590: return;
-"590
-[e $UE 1155  ]
-[; ;main.c: 592: case(0b00101001):
-"592
-[e :U 1166 ]
-[; ;main.c: 593: tempIscSerial = (tempIscSerial << 8) & 0XFF00;
-"593
-[e = _tempIscSerial -> & << -> _tempIscSerial `ui -> 8 `i -> 65280 `ui `us ]
-[; ;main.c: 594: tempIscSerial |= (PacketReadParamST7540(1) >> 8) & 0XFF;
-"594
-[e =| _tempIscSerial -> & >> -> ( _PacketReadParamST7540 (1 -> -> 1 `i `uc `ui -> 8 `i -> -> 255 `i `ui `us ]
-[; ;main.c: 595: CreateMessageUART(0x0010, 0b00000001, PacketReadParamST7540(0) + 2, &tempIscSerial);
-"595
-[e ( _CreateMessageUART (4 , , , -> -> 16 `i `us -> -> 1 `i `uc -> + -> ( _PacketReadParamST7540 (1 -> -> 0 `i `uc `ui -> -> 2 `i `ui `uc -> &U _tempIscSerial `*uc ]
-[; ;main.c: 596: SendUARTPacket();
-"596
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 597: return;
-"597
-[e $UE 1155  ]
-"599
+[; ;UART.c: 90: flagUARTRead = 1;
+"90
+[e = _flagUARTRead -> -> 1 `i `uc ]
+[; ;UART.c: 91: PiBufferRXNEXTUCA = 0;
+"91
+[e = _PiBufferRXNEXTUCA -> -> 0 `i `uc ]
+[; ;UART.c: 92: }
+"92
+[e :UE 1089 ]
 }
-[; ;main.c: 599: }
-[e $U 1158  ]
-"555
-[e :U 1159 ]
-[e [\ ( _PacketReadParamST7540 (1 -> -> 4 `i `uc , $ -> -> 7 `i `us 1160
- , $ -> -> 0 `i `us 1161
- , $ -> -> 64 `i `us 1162
- , $ -> -> 10 `i `us 1163
- , $ -> -> 11 `i `us 1164
- , $ -> -> 9 `i `us 1165
- , $ -> -> 41 `i `us 1166
- 1158 ]
-"599
-[e :U 1158 ]
-"600
-}
-[; ;main.c: 600: }
-[e $U 1167  ]
-"601
-[e :U 1157 ]
-[; ;main.c: 601: else
-[; ;main.c: 602: ReceiveNewDataST7540();
-"602
-[e ( _ReceiveNewDataST7540 ..  ]
-[e :U 1167 ]
-"603
-}
-[e :U 1156 ]
-[; ;main.c: 603: }
-[; ;main.c: 605: }
-"605
-[e :UE 1155 ]
-}
-"607
-[v _Receive_Pi_Packet `(v ~T0 @X0 1 ef ]
+"94
+[v _PacketReadParamUART `(us ~T0 @X0 1 ef1`uc ]
 {
-[; ;main.c: 607: void Receive_Pi_Packet(void){
-[e :U _Receive_Pi_Packet ]
+[; ;UART.c: 94: unsigned short PacketReadParamUART(unsigned char paramName){
+[e :U _PacketReadParamUART ]
+[v _paramName `uc ~T0 @X0 1 r1 ]
 [f ]
-"609
-[v _BroadcastUC `uc ~T0 @X0 1 a ]
-[; ;main.c: 609: unsigned char BroadcastUC;
-[; ;main.c: 612: temp = PacketReadParamUART(0);
-"612
-[e = _temp -> ( _PacketReadParamUART (1 -> -> 0 `i `uc `us ]
-[; ;main.c: 614: CheckBroadcastPacket(PacketReadParamUART(1));
-"614
-[e ( _CheckBroadcastPacket (1 -> ( _PacketReadParamUART (1 -> -> 1 `i `uc `uc ]
-[; ;main.c: 615: switch(PacketReadParamUART(1)){
-"615
-[e $U 1170  ]
+"95
+[v _retValueUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 95: unsigned short retValueUS = 0;
+[e = _retValueUS -> -> 0 `i `us ]
+[; ;UART.c: 97: switch(paramName){
+"97
+[e $U 1092  ]
 {
-[; ;main.c: 616: case(0b00000011):
-"616
-[e :U 1171 ]
-[; ;main.c: 618: BroadcastUC = 0b00000000;
-"618
-[e = _BroadcastUC -> -> 0 `i `uc ]
-[; ;main.c: 619: if (BroadcastCheckUC)
-"619
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1172  ]
-[; ;main.c: 620: BroadcastUC |= 0b10000000;
-"620
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1172 ]
-[; ;main.c: 621: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"621
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 3C `*uc ]
-[; ;main.c: 622: ISC_Transmit_Packet_Ready = 1;
-"622
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 623: return;
-"623
-[e $UE 1168  ]
-[; ;main.c: 624: case(0b01000011):
-"624
-[e :U 1173 ]
-[; ;main.c: 626: BroadcastUC = 0b01000000;
-"626
-[e = _BroadcastUC -> -> 64 `i `uc ]
-[; ;main.c: 627: if (BroadcastCheckUC)
-"627
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1174  ]
-[; ;main.c: 628: BroadcastUC |= 0b10000000;
-"628
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1174 ]
-[; ;main.c: 629: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"629
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 4C `*uc ]
-[; ;main.c: 630: ISC_Transmit_Packet_Ready = 1;
-"630
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 631: return;
-"631
-[e $UE 1168  ]
-[; ;main.c: 632: case(0b00000010):
-"632
-[e :U 1175 ]
-[; ;main.c: 634: BroadcastUC = 0b00000111;
-"634
-[e = _BroadcastUC -> -> 7 `i `uc ]
-[; ;main.c: 635: if (BroadcastCheckUC)
-"635
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1176  ]
-[; ;main.c: 636: BroadcastUC |= 0b10000000;
-"636
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1176 ]
-[; ;main.c: 637: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"637
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 5C `*uc ]
-[; ;main.c: 638: ISC_Transmit_Packet_Ready = 1;
-"638
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 639: return;
-"639
-[e $UE 1168  ]
-[; ;main.c: 640: case(0b00000001):
-"640
-[e :U 1177 ]
-[; ;main.c: 642: Check_ALL_ISC();
-"642
-[e ( _Check_ALL_ISC ..  ]
-[; ;main.c: 643: return;
-"643
-[e $UE 1168  ]
-[; ;main.c: 644: case(0b00101001):
-"644
-[e :U 1178 ]
-[; ;main.c: 646: BroadcastUC = 0b00101001;
-"646
-[e = _BroadcastUC -> -> 41 `i `uc ]
-[; ;main.c: 647: if (BroadcastCheckUC)
-"647
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1179  ]
-[; ;main.c: 648: BroadcastUC |= 0b10000000;
-"648
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1179 ]
-[; ;main.c: 649: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"649
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 6C `*uc ]
-[; ;main.c: 650: ISC_Transmit_Packet_Ready = 1;
-"650
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 651: Discover_ISC_ModeUCG = 0;
-"651
-[e = _Discover_ISC_ModeUCG -> -> 0 `i `uc ]
-[; ;main.c: 652: CF_STAUTS_TimerUIG = 0;
-"652
-[e = _CF_STAUTS_TimerUIG -> -> 0 `i `ui ]
-[; ;main.c: 653: return;
-"653
-[e $UE 1168  ]
-[; ;main.c: 654: case(0b10101001):
-"654
-[e :U 1180 ]
-[; ;main.c: 656: BroadcastUC = 0b00101001;
-"656
-[e = _BroadcastUC -> -> 41 `i `uc ]
-[; ;main.c: 657: if (BroadcastCheckUC)
-"657
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1181  ]
-[; ;main.c: 658: BroadcastUC |= 0b10000000;
-"658
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1181 ]
-[; ;main.c: 659: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"659
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 7C `*uc ]
-[; ;main.c: 660: ISC_Transmit_Packet_Ready = 1;
-"660
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 661: return;
-"661
-[e $UE 1168  ]
-[; ;main.c: 662: case(0b10110001):
-"662
-[e :U 1182 ]
-[; ;main.c: 664: BroadcastUC = 0b00110001;
-"664
-[e = _BroadcastUC -> -> 49 `i `uc ]
-[; ;main.c: 665: if (BroadcastCheckUC)
-"665
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1183  ]
-[; ;main.c: 666: BroadcastUC |= 0b10000000;
-"666
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1183 ]
-[; ;main.c: 667: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"667
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 8C `*uc ]
-[; ;main.c: 668: ISC_Transmit_Packet_Ready = 1;
-"668
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 669: return;
-"669
-[e $UE 1168  ]
-[; ;main.c: 670: case(0b10110000):
-"670
-[e :U 1184 ]
-[; ;main.c: 672: BroadcastUC = 0b00110000;
-"672
-[e = _BroadcastUC -> -> 48 `i `uc ]
-[; ;main.c: 673: if (BroadcastCheckUC)
-"673
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1185  ]
-[; ;main.c: 674: BroadcastUC |= 0b10000000;
-"674
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1185 ]
-[; ;main.c: 675: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"675
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 9C `*uc ]
-[; ;main.c: 676: ISC_Transmit_Packet_Ready = 1;
-"676
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 677: return;
-"677
-[e $UE 1168  ]
-[; ;main.c: 678: case(0b00010010):
-"678
-[e :U 1186 ]
-[; ;main.c: 680: BroadcastUC = 0b00000110;
-"680
-[e = _BroadcastUC -> -> 6 `i `uc ]
-[; ;main.c: 681: if (BroadcastCheckUC)
-"681
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1187  ]
-[; ;main.c: 682: BroadcastUC |= 0b10000000;
-"682
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1187 ]
-[; ;main.c: 683: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"683
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 10C `*uc ]
-[; ;main.c: 684: ISC_Transmit_Packet_Ready = 1;
-"684
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 685: return;
-"685
-[e $UE 1168  ]
-[; ;main.c: 686: case(0b00010001):
-"686
-[e :U 1188 ]
-[; ;main.c: 688: BroadcastUC = 0b00001101;
-"688
-[e = _BroadcastUC -> -> 13 `i `uc ]
-[; ;main.c: 689: if (BroadcastCheckUC)
-"689
-[e $ ! != -> _BroadcastCheckUC `i -> -> -> 0 `i `uc `i 1189  ]
-[; ;main.c: 690: BroadcastUC |= 0b10000000;
-"690
-[e =| _BroadcastUC -> -> 128 `i `uc ]
-[e :U 1189 ]
-[; ;main.c: 691: CreateMessageST7540(0x0010, PacketReadParamUART(2), BroadcastUC, 0, "");
-"691
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> ( _PacketReadParamUART (1 -> -> 2 `i `uc `us _BroadcastUC -> -> 0 `i `uc -> :s 11C `*uc ]
-[; ;main.c: 692: ISC_Transmit_Packet_Ready = 1;
-"692
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 693: return;
-"693
-[e $UE 1168  ]
-[; ;main.c: 694: case(0b00010011):
-"694
-[e :U 1190 ]
-[; ;main.c: 696: for (int i = 0; i < ISC_SN_Array_SizeUCG; i++)
-"696
+[; ;UART.c: 98: case(0):
+"98
+[e :U 1093 ]
+[; ;UART.c: 99: retValueUS |= ((unsigned short) ReceivedPiBufferCG[0] << 8);
+"99
+[e =| _retValueUS -> << -> -> *U + &U _ReceivedPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us `ui -> 8 `i `us ]
+[; ;UART.c: 100: retValueUS |= ReceivedPiBufferCG[1];
+"100
+[e =| _retValueUS -> *U + &U _ReceivedPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us ]
+[; ;UART.c: 101: return retValueUS;
+"101
+[e ) _retValueUS ]
+[e $UE 1090  ]
+[; ;UART.c: 102: case(1):
+"102
+[e :U 1094 ]
+[; ;UART.c: 103: return ReceivedPiBufferCG[2];
+"103
+[e ) -> *U + &U _ReceivedPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us ]
+[e $UE 1090  ]
+[; ;UART.c: 104: case(2):
+"104
+[e :U 1095 ]
+[; ;UART.c: 105: retValueUS |= ((unsigned short) ReceivedPiBufferCG[3] << 8);
+"105
+[e =| _retValueUS -> << -> -> *U + &U _ReceivedPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us `ui -> 8 `i `us ]
+[; ;UART.c: 106: retValueUS |= ReceivedPiBufferCG[4];
+"106
+[e =| _retValueUS -> *U + &U _ReceivedPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us ]
+[; ;UART.c: 107: return retValueUS;
+"107
+[e ) _retValueUS ]
+[e $UE 1090  ]
+[; ;UART.c: 108: case(3):
+"108
+[e :U 1096 ]
+[; ;UART.c: 109: return CheckCRCUART();
+"109
+[e ) -> ( _CheckCRCUART ..  `us ]
+[e $UE 1090  ]
+"110
+}
+[; ;UART.c: 110: }
+[e $U 1091  ]
+"97
+[e :U 1092 ]
+[e [\ _paramName , $ -> -> 0 `i `uc 1093
+ , $ -> -> 1 `i `uc 1094
+ , $ -> -> 2 `i `uc 1095
+ , $ -> -> 3 `i `uc 1096
+ 1091 ]
+"110
+[e :U 1091 ]
+[; ;UART.c: 112: return 0;
+"112
+[e ) -> -> 0 `i `us ]
+[e $UE 1090  ]
+[; ;UART.c: 113: }
+"113
+[e :UE 1090 ]
+}
+"115
+[v _CheckCRCUART `(uc ~T0 @X0 1 ef ]
 {
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $U 1194  ]
-"697
-[e :U 1191 ]
-[; ;main.c: 697: ISC_SN_ArrayUIG[i] = 0;
-[e = *U + &U _ISC_SN_ArrayUIG * -> -> _i `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux -> -> 0 `i `us ]
-"696
-[e ++ _i -> 1 `i ]
-[e :U 1194 ]
-[e $ < _i -> _ISC_SN_Array_SizeUCG `i 1191  ]
-[e :U 1192 ]
-"697
-}
-[; ;main.c: 699: ISC_SN_Array_SizeUCG=0;
-"699
-[e = _ISC_SN_Array_SizeUCG -> -> 0 `i `uc ]
-[; ;main.c: 700: return;
-"700
-[e $UE 1168  ]
-[; ;main.c: 701: case(0b00010101):
-"701
-[e :U 1195 ]
-[; ;main.c: 703: AlarmStatusUCG = 0;
-"703
-[e = _AlarmStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 704: return;
-"704
-[e $UE 1168  ]
-[; ;main.c: 706: default :
-"706
-[e :U 1196 ]
-[; ;main.c: 707: return;
-"707
-[e $UE 1168  ]
-"709
-}
-[; ;main.c: 709: }
-[e $U 1169  ]
-"615
-[e :U 1170 ]
-[e [\ ( _PacketReadParamUART (1 -> -> 1 `i `uc , $ -> -> 3 `i `s 1171
- , $ -> -> 67 `i `s 1173
- , $ -> -> 2 `i `s 1175
- , $ -> -> 1 `i `s 1177
- , $ -> -> 41 `i `s 1178
- , $ -> -> 169 `i `s 1180
- , $ -> -> 177 `i `s 1182
- , $ -> -> 176 `i `s 1184
- , $ -> -> 18 `i `s 1186
- , $ -> -> 17 `i `s 1188
- , $ -> -> 19 `i `s 1190
- , $ -> -> 21 `i `s 1195
- 1196 ]
-"709
-[e :U 1169 ]
-[; ;main.c: 710: }
-"710
-[e :UE 1168 ]
-}
-"712
-[v _Transmit_BLAST_Command_Packet `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 712: void Transmit_BLAST_Command_Packet(void){
-[e :U _Transmit_BLAST_Command_Packet ]
+[; ;UART.c: 115: unsigned char CheckCRCUART(void){
+[e :U _CheckCRCUART ]
 [f ]
-[; ;main.c: 713: if (!TransmitBusyST7540() && LineIdleST7540()){
-"713
-[e $ ! && ! != -> ( _TransmitBusyST7540 ..  `i -> -> -> 0 `i `uc `i != ( _LineIdleST7540 ..  -> 0 `i 1198  ]
-{
-[; ;main.c: 714: CreateMessageST7540(0x0010, 0x00, 0b00100101, 0, "");
-"714
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> -> 0 `i `us -> -> 37 `i `uc -> -> 0 `i `uc -> :s 12C `*uc ]
-[; ;main.c: 715: StartTransmitST7540();
-"715
-[e ( _StartTransmitST7540 ..  ]
-[; ;main.c: 716: ISC_Transmit_Packet_Ready = 0;
-"716
-[e = _ISC_Transmit_Packet_Ready -> -> 0 `i `uc ]
-"717
+"116
+[v _expectedCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 116: unsigned short expectedCRCUS = 0;
+[e = _expectedCRCUS -> -> 0 `i `us ]
+"117
+[v _receivedCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 117: unsigned short receivedCRCUS = 0;
+[e = _receivedCRCUS -> -> 0 `i `us ]
+"118
+[v _packetLenUC `uc ~T0 @X0 1 a ]
+"119
+[v _packetCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 118: unsigned char packetLenUC;
+[; ;UART.c: 119: unsigned short packetCRCUS = 0;
+[e = _packetCRCUS -> -> 0 `i `us ]
+[; ;UART.c: 121: packetLenUC = 7-2;
+"121
+[e = _packetLenUC -> - -> 7 `i -> 2 `i `uc ]
+[; ;UART.c: 122: expectedCRCUS = CRC16(ReceivedPiBufferCG, packetLenUC);
+"122
+[e = _expectedCRCUS ( _CRC16 (2 , &U _ReceivedPiBufferCG -> _packetLenUC `us ]
+[; ;UART.c: 123: receivedCRCUS |= (((unsigned short) ReceivedPiBufferCG[5]) << 8);
+"123
+[e =| _receivedCRCUS -> << -> -> *U + &U _ReceivedPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us `ui -> 8 `i `us ]
+[; ;UART.c: 124: receivedCRCUS |= ReceivedPiBufferCG[5+1];
+"124
+[e =| _receivedCRCUS -> *U + &U _ReceivedPiBufferCG * -> -> + -> 5 `i -> 1 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux `us ]
+[; ;UART.c: 126: return (expectedCRCUS == receivedCRCUS);
+"126
+[e ) -> -> == -> _expectedCRCUS `ui -> _receivedCRCUS `ui `i `uc ]
+[e $UE 1097  ]
+[; ;UART.c: 127: }
+"127
+[e :UE 1097 ]
 }
-[e :U 1198 ]
-[; ;main.c: 717: }
-[; ;main.c: 718: }
-"718
-[e :UE 1197 ]
-}
-"720
-[v _Transmit_NULL_Packet `(v ~T0 @X0 1 ef ]
+"129
+[v _DataReadyUART `(uc ~T0 @X0 1 ef ]
 {
-[; ;main.c: 720: void Transmit_NULL_Packet(void){
-[e :U _Transmit_NULL_Packet ]
+[; ;UART.c: 129: unsigned char DataReadyUART(void){
+[e :U _DataReadyUART ]
 [f ]
-[; ;main.c: 721: CreateMessageST7540(0x0010, 0x3FFF, 0b00101001, 0, "");
-"721
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> -> 16383 `i `us -> -> 41 `i `uc -> -> 0 `i `uc -> :s 13C `*uc ]
-[; ;main.c: 722: ISC_Transmit_Packet_Ready = 1;
-"722
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 723: }
-"723
-[e :UE 1199 ]
+[; ;UART.c: 130: return flagUARTRead;
+"130
+[e ) _flagUARTRead ]
+[e $UE 1098  ]
+[; ;UART.c: 131: }
+"131
+[e :UE 1098 ]
 }
-"725
-[v _Check_ALL_ISC `(v ~T0 @X0 1 ef ]
+"133
+[v _ClearDataReady `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 725: void Check_ALL_ISC(void){
-[e :U _Check_ALL_ISC ]
+[; ;UART.c: 133: void ClearDataReady(void){
+[e :U _ClearDataReady ]
 [f ]
-[; ;main.c: 726: CreateMessageST7540(0x0010, 0x00, 0b00101001, 0, "");
-"726
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> -> 0 `i `us -> -> 41 `i `uc -> -> 0 `i `uc -> :s 14C `*uc ]
-[; ;main.c: 727: ISC_Transmit_Packet_Ready = 1;
-"727
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 728: }
-"728
-[e :UE 1200 ]
+[; ;UART.c: 134: flagUARTRead = 0;
+"134
+[e = _flagUARTRead -> -> 0 `i `uc ]
+[; ;UART.c: 135: }
+"135
+[e :UE 1099 ]
 }
-"730
-[v _Transmit_Pi_Default_Data `(v ~T0 @X0 1 ef ]
+"139
+[v _CreatePiToIBCUARTMessage `(v ~T0 @X0 1 ef2`uc`us ]
 {
-[; ;main.c: 730: void Transmit_Pi_Default_Data(void){
-[e :U _Transmit_Pi_Default_Data ]
+[; ;UART.c: 139: void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS){
+[e :U _CreatePiToIBCUARTMessage ]
+[v _Command `uc ~T0 @X0 1 r1 ]
+[v _packetSourceUS `us ~T0 @X0 1 r2 ]
 [f ]
-[; ;main.c: 731: CreateMessageUART(0x0010, 0b00001000, 2, PiDefaultData);
-"731
-[e ( _CreateMessageUART (4 , , , -> -> 16 `i `us -> -> 8 `i `uc -> -> 2 `i `uc &U _PiDefaultData ]
-[; ;main.c: 732: SendUARTPacket();
-"732
-[e ( _SendUARTPacket ..  ]
-[; ;main.c: 733: }
-"733
-[e :UE 1201 ]
+"140
+[v _packetCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 140: unsigned short packetCRCUS = 0;
+[e = _packetCRCUS -> -> 0 `i `us ]
+"141
+[v _packetCRCUStemp `us ~T0 @X0 1 a ]
+[; ;UART.c: 141: unsigned short packetCRCUStemp = 0;
+[e = _packetCRCUStemp -> -> 0 `i `us ]
+[; ;UART.c: 143: TransmitPiBufferCG[0] = 0xAA;
+"143
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 144: TransmitPiBufferCG[1] = 0xAA;
+"144
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 146: TransmitPiBufferCG[2] = Command;
+"146
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _Command ]
+[; ;UART.c: 148: TransmitPiBufferCG[3] = packetSourceUS >> 8;
+"148
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetSourceUS `ui -> 8 `i `uc ]
+[; ;UART.c: 149: TransmitPiBufferCG[4] = packetSourceUS;
+"149
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetSourceUS `uc ]
+[; ;UART.c: 151: packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)8 - 2));
+"151
+[e = _packetCRCUS ( _CRC16 (2 , &U _TransmitPiBufferCG -> - -> -> -> 8 `i `us `ui -> -> 2 `i `ui `us ]
+[; ;UART.c: 152: packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);
+"152
+[e = _packetCRCUStemp ( _CRC16 (2 , &U _TransmitPiBufferCG -> -> 5 `i `us ]
+[; ;UART.c: 153: TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
+"153
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetCRCUStemp `ui -> 8 `i `uc ]
+[; ;UART.c: 154: TransmitPiBufferCG[6] = packetCRCUStemp;
+"154
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 6 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetCRCUStemp `uc ]
+[; ;UART.c: 156: PiBufferTXLenUCA = 6;
+"156
+[e = _PiBufferTXLenUCA -> -> 6 `i `uc ]
+[; ;UART.c: 157: __nop();
+"157
+[e ( ___nop ..  ]
+[; ;UART.c: 158: }
+"158
+[e :UE 1100 ]
 }
-"735
-[v _Update_Ping_Command `(v ~T0 @X0 1 ef1`us ]
+"160
+[v _CreateMessageUARTTest `(v ~T0 @X0 1 ef1`uc ]
 {
-[; ;main.c: 735: void Update_Ping_Command(unsigned short ISC_SN){
-[e :U _Update_Ping_Command ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 736: ISC_Packet_Index = getISC_Index(ISC_SN);
-"736
-[e = _ISC_Packet_Index -> ( _getISC_Index (1 _ISC_SN `ui ]
-[; ;main.c: 737: }
-"737
-[e :UE 1202 ]
-}
-"739
-[v _CheckBroadcastPacket `(v ~T0 @X0 1 ef1`uc ]
-{
-[; ;main.c: 739: void CheckBroadcastPacket(unsigned char Command){
-[e :U _CheckBroadcastPacket ]
+[; ;UART.c: 160: void CreateMessageUARTTest(unsigned char Command){
+[e :U _CreateMessageUARTTest ]
 [v _Command `uc ~T0 @X0 1 r1 ]
 [f ]
-[; ;main.c: 741: BroadcastCheckUC = (Command & 0b10000000);
-"741
-[e = _BroadcastCheckUC -> & -> _Command `i -> 128 `i `uc ]
-[; ;main.c: 742: }
-"742
-[e :UE 1203 ]
-}
-"744
-[v _Reverse_ISC_SN_List `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 744: void Reverse_ISC_SN_List(void){
-[e :U _Reverse_ISC_SN_List ]
-[f ]
-"745
-[v _TempChar `uc ~T0 @X0 1 a ]
-"746
-[v _TempShort `us ~T0 @X0 1 a ]
-[; ;main.c: 745: unsigned char TempChar;
-[; ;main.c: 746: unsigned short TempShort;
-[; ;main.c: 748: for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
-"748
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $U 1208  ]
-[e :U 1205 ]
-{
-[; ;main.c: 749: TempShort = ISC_SN_ArrayUIG[i];
-"749
-[e = _TempShort *U + &U _ISC_SN_ArrayUIG * -> -> _i `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux ]
-[; ;main.c: 750: TempChar = (TempShort >> 8);
-"750
-[e = _TempChar -> >> -> _TempShort `ui -> 8 `i `uc ]
-[; ;main.c: 751: ISC_SN_Array_ReverseUSG[i*2] = TempChar;
-"751
-[e = *U + &U _ISC_SN_Array_ReverseUSG * -> -> * _i -> 2 `i `ui `ux -> -> # *U &U _ISC_SN_Array_ReverseUSG `ui `ux _TempChar ]
-[; ;main.c: 752: TempChar = TempShort & 0b11111111;
-"752
-[e = _TempChar -> & -> _TempShort `ui -> -> 255 `i `ui `uc ]
-[; ;main.c: 753: ISC_SN_Array_ReverseUSG[(i*2)+1] = TempChar;
-"753
-[e = *U + &U _ISC_SN_Array_ReverseUSG * -> -> + * _i -> 2 `i -> 1 `i `ui `ux -> -> # *U &U _ISC_SN_Array_ReverseUSG `ui `ux _TempChar ]
-"754
-}
-"748
-[e ++ _i -> 1 `i ]
-[e :U 1208 ]
-[e $ < _i -> _ISC_SN_Array_SizeUCG `i 1205  ]
-[e :U 1206 ]
-"754
-}
-[; ;main.c: 754: }
-[; ;main.c: 756: }
-"756
-[e :UE 1204 ]
-}
-"758
-[v _getISC_SN `(us ~T0 @X0 1 ef1`uc ]
-{
-[; ;main.c: 758: unsigned short getISC_SN(unsigned char ISC_Index){
-[e :U _getISC_SN ]
-[v _ISC_Index `uc ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 759: return ISC_SN_ArrayUIG[ISC_Index - 1];
-"759
-[e ) *U + &U _ISC_SN_ArrayUIG * -> -> - -> _ISC_Index `i -> 1 `i `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux ]
-[e $UE 1209  ]
-[; ;main.c: 760: }
-"760
-[e :UE 1209 ]
-}
-"762
-[v _getISC_Index `(uc ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 762: unsigned char getISC_Index(unsigned short ISC_SN){
-[e :U _getISC_Index ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-"763
-[v _index `i ~T0 @X0 1 a ]
-[; ;main.c: 763: int index = 0;
-[e = _index -> 0 `i ]
-[; ;main.c: 765: for (index = 0; index < ISC_SN_Array_SizeUCG; index++){
-"765
-{
-[e = _index -> 0 `i ]
-[e $U 1214  ]
-[e :U 1211 ]
-{
-[; ;main.c: 766: if (ISC_SN_ArrayUIG[index] == ISC_SN)
-"766
-[e $ ! == -> *U + &U _ISC_SN_ArrayUIG * -> -> _index `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux `ui -> _ISC_SN `ui 1215  ]
-[; ;main.c: 767: return index + 1;
-"767
-[e ) -> + _index -> 1 `i `uc ]
-[e $UE 1210  ]
-[e :U 1215 ]
-"768
-}
-"765
-[e ++ _index -> 1 `i ]
-[e :U 1214 ]
-[e $ < _index -> _ISC_SN_Array_SizeUCG `i 1211  ]
-[e :U 1212 ]
-"768
-}
-[; ;main.c: 768: }
-[; ;main.c: 770: if (index == 0)
-"770
-[e $ ! == _index -> 0 `i 1216  ]
-[; ;main.c: 771: Add_ISC_SN(ISC_SN);
-"771
-[e ( _Add_ISC_SN (1 _ISC_SN ]
-[e :U 1216 ]
-[; ;main.c: 772: return 1;
-"772
-[e ) -> -> 1 `i `uc ]
-[e $UE 1210  ]
-[; ;main.c: 773: }
-"773
-[e :UE 1210 ]
-}
-"775
-[v _Add_ISC_SN `(v ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 775: void Add_ISC_SN(unsigned short ISC_SN){
-[e :U _Add_ISC_SN ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 777: if (ISC_SN_Array_SizeUCG == 0){
-"777
-[e $ ! == -> _ISC_SN_Array_SizeUCG `i -> 0 `i 1218  ]
-{
-[; ;main.c: 778: ISC_SN_Array_SizeUCG++;
-"778
-[e ++ _ISC_SN_Array_SizeUCG -> -> 1 `i `uc ]
-[; ;main.c: 779: ISC_SN_ArrayUIG[0] = ISC_SN;
-"779
-[e = *U + &U _ISC_SN_ArrayUIG * -> -> -> 0 `i `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux _ISC_SN ]
-[; ;main.c: 780: New_ISC_SN = 1;
-"780
-[e = _New_ISC_SN -> -> 1 `i `uc ]
-"781
-}
-[; ;main.c: 781: }
-[e $U 1219  ]
-"782
-[e :U 1218 ]
-[; ;main.c: 782: else{
-{
-[; ;main.c: 783: if (Check_Clash_ISC_SN(ISC_SN) != 1){
-"783
-[e $ ! != -> ( _Check_Clash_ISC_SN (1 _ISC_SN `i -> 1 `i 1220  ]
-{
-[; ;main.c: 784: ISC_SN_ArrayUIG[ISC_SN_Array_SizeUCG] = ISC_SN;
-"784
-[e = *U + &U _ISC_SN_ArrayUIG * -> _ISC_SN_Array_SizeUCG `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux _ISC_SN ]
-[; ;main.c: 785: ISC_SN_Array_SizeUCG++;
-"785
-[e ++ _ISC_SN_Array_SizeUCG -> -> 1 `i `uc ]
-[; ;main.c: 786: New_ISC_SN = 1;
-"786
-[e = _New_ISC_SN -> -> 1 `i `uc ]
-"787
-}
-[e :U 1220 ]
-"788
-}
-[e :U 1219 ]
-[; ;main.c: 787: }
-[; ;main.c: 788: }
-[; ;main.c: 789: }
-"789
-[e :UE 1217 ]
-}
-"791
-[v _Check_Clash_ISC_SN `(uc ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 791: unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN){
-[e :U _Check_Clash_ISC_SN ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 792: for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
-"792
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $U 1225  ]
-[e :U 1222 ]
-{
-[; ;main.c: 793: if (ISC_SN_ArrayUIG[i] == ISC_SN){
-"793
-[e $ ! == -> *U + &U _ISC_SN_ArrayUIG * -> -> _i `ui `ux -> -> # *U &U _ISC_SN_ArrayUIG `ui `ux `ui -> _ISC_SN `ui 1226  ]
-{
-[; ;main.c: 795: return 1;
-"795
-[e ) -> -> 1 `i `uc ]
-[e $UE 1221  ]
-"796
-}
-[e :U 1226 ]
-"797
-}
-"792
-[e ++ _i -> 1 `i ]
-[e :U 1225 ]
-[e $ < _i -> _ISC_SN_Array_SizeUCG `i 1222  ]
-[e :U 1223 ]
-"797
-}
-[; ;main.c: 796: }
-[; ;main.c: 797: }
-[; ;main.c: 798: return 0;
-"798
-[e ) -> -> 0 `i `uc ]
-[e $UE 1221  ]
-[; ;main.c: 799: }
-"799
-[e :UE 1221 ]
-}
-"801
-[v _Assign_ISC_New_SN `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 801: void Assign_ISC_New_SN(void){
-[e :U _Assign_ISC_New_SN ]
-[f ]
-"802
-[v _ISC_NEW_SN `uc ~T0 @X0 -> 2 `i a ]
-[; ;main.c: 802: unsigned char ISC_NEW_SN[2];
-[; ;main.c: 804: EEPROMRead();
-"804
-[e ( _EEPROMRead ..  ]
-[; ;main.c: 805: ISC_NEW_SN[0] = EEPRead[0];
-"805
-[e = *U + &U _ISC_NEW_SN * -> -> -> 0 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux *U + &U _EEPRead * -> -> -> 0 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ]
-[; ;main.c: 806: ISC_NEW_SN[1] = EEPRead[1];
-"806
-[e = *U + &U _ISC_NEW_SN * -> -> -> 1 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux *U + &U _EEPRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ]
-[; ;main.c: 809: if (EEPRead[1] == 0xFF){
-"809
-[e $ ! == -> *U + &U _EEPRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux `i -> 255 `i 1228  ]
-{
-[; ;main.c: 810: ISC_NEW_SN[1] = EEPRead[1] + 1;
-"810
-[e = *U + &U _ISC_NEW_SN * -> -> -> 1 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux -> + -> *U + &U _EEPRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux `i -> 1 `i `uc ]
-[; ;main.c: 811: ISC_NEW_SN[0] = 0x00;
-"811
-[e = *U + &U _ISC_NEW_SN * -> -> -> 0 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux -> -> 0 `i `uc ]
-"812
-}
-[; ;main.c: 812: }
-[e $U 1229  ]
-"813
-[e :U 1228 ]
-[; ;main.c: 813: else{
-{
-[; ;main.c: 814: ISC_NEW_SN[0] = EEPRead[0];
-"814
-[e = *U + &U _ISC_NEW_SN * -> -> -> 0 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux *U + &U _EEPRead * -> -> -> 0 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ]
-[; ;main.c: 815: ISC_NEW_SN[1] = EEPRead[1] + 1;
-"815
-[e = *U + &U _ISC_NEW_SN * -> -> -> 1 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux -> + -> *U + &U _EEPRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux `i -> 1 `i `uc ]
-"816
-}
-[e :U 1229 ]
-[; ;main.c: 816: }
-[; ;main.c: 818: EEPWrite[0] = ISC_NEW_SN[0];
-"818
-[e = *U + &U _EEPWrite * -> -> -> 0 `i `ui `ux -> -> # *U &U _EEPWrite `ui `ux *U + &U _ISC_NEW_SN * -> -> -> 0 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux ]
-[; ;main.c: 819: EEPWrite[1] = ISC_NEW_SN[1];
-"819
-[e = *U + &U _EEPWrite * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPWrite `ui `ux *U + &U _ISC_NEW_SN * -> -> -> 1 `i `ui `ux -> -> # *U &U _ISC_NEW_SN `ui `ux ]
-[; ;main.c: 820: EEPROMWrite();
-"820
-[e ( _EEPROMWrite ..  ]
-[; ;main.c: 823: CreateMessageST7540(0x0010, 0x3FFE, 0b00001001, 2, ISC_NEW_SN);
-"823
-[e ( _CreateMessageST7540 (4 , , , , -> -> 16 `i `us -> -> 16382 `i `us -> -> 9 `i `uc -> -> 2 `i `uc &U _ISC_NEW_SN ]
-[; ;main.c: 824: ISC_Transmit_Packet_Ready = 1;
-"824
-[e = _ISC_Transmit_Packet_Ready -> -> 1 `i `uc ]
-[; ;main.c: 825: }
-"825
-[e :UE 1227 ]
-}
-"827
-[v _getIBCDefaultData `(us ~T0 @X0 1 ef ]
-{
-[; ;main.c: 827: unsigned short getIBCDefaultData(void){
-[e :U _getIBCDefaultData ]
-[f ]
-"828
-[v _returningData `us ~T0 @X0 1 a ]
-[; ;main.c: 828: unsigned short returningData = 0b00000000;
-[e = _returningData -> -> 0 `i `us ]
-[; ;main.c: 830: if (KeySwitchStatusUCG)
-"830
-[e $ ! != -> _KeySwitchStatusUCG `i -> -> -> 0 `i `uc `i 1231  ]
-[; ;main.c: 831: returningData |= 0b10000000;
-"831
-[e =| _returningData -> -> 128 `i `us ]
-[e :U 1231 ]
-[; ;main.c: 832: if (RelayStatusUCG)
-"832
-[e $ ! != -> _RelayStatusUCG `i -> -> -> 0 `i `uc `i 1232  ]
-[; ;main.c: 833: returningData |= 0b01000000;
-"833
-[e =| _returningData -> -> 64 `i `us ]
-[e :U 1232 ]
-[; ;main.c: 834: if (FireButtonStatusUCG)
-"834
-[e $ ! != -> _FireButtonStatusUCG `i -> -> -> 0 `i `uc `i 1233  ]
-[; ;main.c: 835: returningData |= 0b00100000;
-"835
-[e =| _returningData -> -> 32 `i `us ]
-[e :U 1233 ]
-[; ;main.c: 836: if (CableFaultStatusUCG == 1)
-"836
-[e $ ! == -> _CableFaultStatusUCG `i -> 1 `i 1234  ]
-[; ;main.c: 837: returningData |= 0b00010000;
-"837
-[e =| _returningData -> -> 16 `i `us ]
-[e :U 1234 ]
-[; ;main.c: 838: if (CableFaultStatusUCG == 2)
-"838
-[e $ ! == -> _CableFaultStatusUCG `i -> 2 `i 1235  ]
-[; ;main.c: 839: returningData |= 0b00001000;
-"839
-[e =| _returningData -> -> 8 `i `us ]
-[e :U 1235 ]
-[; ;main.c: 840: if (FiringStatusUCG)
-"840
-[e $ ! != -> _FiringStatusUCG `i -> -> -> 0 `i `uc `i 1236  ]
-[; ;main.c: 841: returningData |= 0b00000100;
-"841
-[e =| _returningData -> -> 4 `i `us ]
-[e :U 1236 ]
-[; ;main.c: 842: if (ResetStatusUCG)
-"842
-[e $ ! != -> _ResetStatusUCG `i -> -> -> 0 `i `uc `i 1237  ]
-[; ;main.c: 843: returningData |= 0b00000010;
-"843
-[e =| _returningData -> -> 2 `i `us ]
-[e :U 1237 ]
-[; ;main.c: 844: PiDefaultData[0] = 0b00000101;
-"844
-[e = *U + &U _PiDefaultData * -> -> -> 0 `i `ui `ux -> -> # *U &U _PiDefaultData `ui `ux -> -> 5 `i `uc ]
-[; ;main.c: 845: PiDefaultData[1] = returningData;
-"845
-[e = *U + &U _PiDefaultData * -> -> -> 1 `i `ui `ux -> -> # *U &U _PiDefaultData `ui `ux -> _returningData `uc ]
-[; ;main.c: 846: return returningData;
-"846
-[e ) _returningData ]
-[e $UE 1230  ]
-[; ;main.c: 847: }
-"847
-[e :UE 1230 ]
-}
-"849
-[v _Inspect_Default_Data_Packet `(v ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 849: void Inspect_Default_Data_Packet(unsigned short Data_Length){
-[e :U _Inspect_Default_Data_Packet ]
-[v _Data_Length `us ~T0 @X0 1 r1 ]
-[f ]
-"850
-[v _index `uc ~T0 @X0 1 a ]
-[; ;main.c: 850: unsigned char index = 0;
-[e = _index -> -> 0 `i `uc ]
-"851
-[v _data `uc ~T0 @X0 1 a ]
-"852
-[v _CF `uc ~T0 @X0 1 a ]
-"853
-[v _EL `uc ~T0 @X0 1 a ]
-"854
-[v _Fault `uc ~T0 @X0 1 a ]
-[; ;main.c: 851: unsigned char data;
-[; ;main.c: 852: unsigned char CF;
-[; ;main.c: 853: unsigned char EL;
-[; ;main.c: 854: unsigned char Fault;
-[; ;main.c: 858: for(index = 0; index < Data_Length / 2; index++){
-"858
-{
-[e = _index -> -> 0 `i `uc ]
-[e $U 1242  ]
-[e :U 1239 ]
-{
-[; ;main.c: 859: data = boosterCommsData[0][(index * 2) + 1];
-"859
-[e = _data *U + &U *U + &U _boosterCommsData * -> -> -> 0 `i `ui `ux -> * -> # *U &U *U &U _boosterCommsData `ui -> -> 60 `i `ui `ux * -> -> + * -> _index `i -> 2 `i -> 1 `i `ui `ux -> -> # *U &U *U + &U _boosterCommsData * -> -> -> 0 `i `ui `ux -> * -> # *U &U *U &U _boosterCommsData `ui -> -> 60 `i `ui `ux `ui `ux ]
-[; ;main.c: 860: EL = data & 0b0000100;
-"860
-[e = _EL -> & -> _data `i -> 4 `i `uc ]
-[; ;main.c: 861: EL = EL >> 2;
-"861
-[e = _EL -> >> -> _EL `i -> 2 `i `uc ]
-[; ;main.c: 862: CF = data & 0b0001000;
-"862
-[e = _CF -> & -> _data `i -> 8 `i `uc ]
-[; ;main.c: 863: CF = data >> 3;
-"863
-[e = _CF -> >> -> _data `i -> 3 `i `uc ]
-[; ;main.c: 864: if (EL == 1 || CF == 1)
-"864
-[e $ ! || == -> _EL `i -> 1 `i == -> _CF `i -> 1 `i 1243  ]
-[; ;main.c: 865: Fault = 1;
-"865
-[e = _Fault -> -> 1 `i `uc ]
-[e :U 1243 ]
-"866
-}
-"858
-[e ++ _index -> -> 1 `i `uc ]
-[e :U 1242 ]
-[e $ < -> _index `ui / -> _Data_Length `ui -> -> 2 `i `ui 1239  ]
-[e :U 1240 ]
-"866
-}
-[; ;main.c: 866: }
-[; ;main.c: 867: }
-"867
-[e :UE 1238 ]
-}
-"869
-[v _Update_Open_Relay `(v ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 869: void Update_Open_Relay(unsigned short ISC_SN){
-[e :U _Update_Open_Relay ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 870: ISC_Packet_Index = getISC_Index(ISC_SN);
-"870
-[e = _ISC_Packet_Index -> ( _getISC_Index (1 _ISC_SN `ui ]
-[; ;main.c: 871: PacketForPiIdentifier = 0b00000110;
-"871
-[e = _PacketForPiIdentifier -> -> 6 `i `uc ]
-[; ;main.c: 872: }
-"872
-[e :UE 1244 ]
-}
-"874
-[v _Update_Close_Relay `(v ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 874: void Update_Close_Relay(unsigned short ISC_SN){
-[e :U _Update_Close_Relay ]
-[v _ISC_SN `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 875: ISC_Packet_Index = getISC_Index(ISC_SN);
-"875
-[e = _ISC_Packet_Index -> ( _getISC_Index (1 _ISC_SN `ui ]
-[; ;main.c: 876: PacketForPiIdentifier = 0b00001101;
-"876
-[e = _PacketForPiIdentifier -> -> 13 `i `uc ]
-[; ;main.c: 877: }
-"877
-[e :UE 1245 ]
-}
-"879
-[v _ResetDeArmedTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 879: void ResetDeArmedTimer(void){
-[e :U _ResetDeArmedTimer ]
-[f ]
-[; ;main.c: 880: DeArmTimerEnabled = 0;
-"880
-[e = _DeArmTimerEnabled -> -> 0 `i `uc ]
-[; ;main.c: 881: ClearToFire = 0;
-"881
-[e = _ClearToFire -> -> 0 `i `uc ]
-[; ;main.c: 882: }
-"882
-[e :UE 1246 ]
-}
-"884
-[v _StartDeArmedTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 884: void StartDeArmedTimer(void){
-[e :U _StartDeArmedTimer ]
-[f ]
-[; ;main.c: 886: if (DeArmTimerEnabled == 0){
-"886
-[e $ ! == -> _DeArmTimerEnabled `i -> 0 `i 1248  ]
-{
-[; ;main.c: 887: DeArmHighTickUIG = 0;
-"887
-[e = _DeArmHighTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 888: DeArmTimerEnabled = 1;
-"888
-[e = _DeArmTimerEnabled -> -> 1 `i `uc ]
-[; ;main.c: 889: DeArmTickCG = 0;
-"889
-[e = _DeArmTickCG -> -> 0 `i `uc ]
-"890
-}
-[e :U 1248 ]
-[; ;main.c: 890: }
-[; ;main.c: 891: }
-"891
-[e :UE 1247 ]
-}
-"893
-[v _StartPreArmedTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 893: void StartPreArmedTimer(void){
-[e :U _StartPreArmedTimer ]
-[f ]
-[; ;main.c: 894: PATEnabled = 1;
-"894
-[e = _PATEnabled -> -> 1 `i `uc ]
-[; ;main.c: 895: HighSpeedTickPAUIG = 0;
-"895
-[e = _HighSpeedTickPAUIG -> -> 0 `i `ui ]
-[; ;main.c: 896: LowSpeedTickPATCG = 0;
-"896
-[e = _LowSpeedTickPATCG -> -> 0 `i `uc ]
-[; ;main.c: 897: }
-"897
-[e :UE 1249 ]
-}
-"899
-[v _StopPreArmedTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 899: void StopPreArmedTimer(void){
-[e :U _StopPreArmedTimer ]
-[f ]
-[; ;main.c: 900: PATEnabled = 0;
-"900
-[e = _PATEnabled -> -> 0 `i `uc ]
-[; ;main.c: 901: HighSpeedTickPAUIG = 0;
-"901
-[e = _HighSpeedTickPAUIG -> -> 0 `i `ui ]
-[; ;main.c: 902: LowSpeedTickPATCG = 0;
-"902
-[e = _LowSpeedTickPATCG -> -> 0 `i `uc ]
-[; ;main.c: 903: }
-"903
-[e :UE 1250 ]
-}
-"905
-[v _StartPostFireTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 905: void StartPostFireTimer(void){
-[e :U _StartPostFireTimer ]
-[f ]
-[; ;main.c: 906: PBTEnabled = 1;
-"906
-[e = _PBTEnabled -> -> 1 `i `uc ]
-[; ;main.c: 907: HighSpeedTickUIG = 0;
-"907
-[e = _HighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 908: LowSpeedTickPBTCG = 0;
-"908
-[e = _LowSpeedTickPBTCG -> -> 0 `i `uc ]
-[; ;main.c: 909: }
-"909
-[e :UE 1251 ]
-}
-"911
-[v _StopPostFireTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 911: void StopPostFireTimer(void){
-[e :U _StopPostFireTimer ]
-[f ]
-[; ;main.c: 912: PBTEnabled = 0;
-"912
-[e = _PBTEnabled -> -> 0 `i `uc ]
-[; ;main.c: 913: HighSpeedTickUIG = 0;
-"913
-[e = _HighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 914: LowSpeedTickPBTCG = 0;
-"914
-[e = _LowSpeedTickPBTCG -> -> 0 `i `uc ]
-[; ;main.c: 915: }
-"915
-[e :UE 1252 ]
-}
-"917
-[v _StartBlastTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 917: void StartBlastTimer(void){
-[e :U _StartBlastTimer ]
-[f ]
-[; ;main.c: 918: BTEnabled = 1;
-"918
-[e = _BTEnabled -> -> 1 `i `uc ]
-[; ;main.c: 919: LowSpeedTickBTCG = 0;
-"919
-[e = _LowSpeedTickBTCG -> -> 0 `i `uc ]
-[; ;main.c: 920: }
-"920
-[e :UE 1253 ]
-}
-"922
-[v _StopBlastTimer `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 922: void StopBlastTimer(void){
-[e :U _StopBlastTimer ]
-[f ]
-[; ;main.c: 923: BTEnabled = 0;
-"923
-[e = _BTEnabled -> -> 0 `i `uc ]
-[; ;main.c: 924: HighSpeedTickUIG = 0;
-"924
-[e = _HighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 925: LowSpeedTickBTCG = 0;
-"925
-[e = _LowSpeedTickBTCG -> -> 0 `i `uc ]
-[; ;main.c: 926: }
-"926
-[e :UE 1254 ]
-}
-"928
-[v _checkCableFaults `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 928: void checkCableFaults(void){
-[e :U _checkCableFaults ]
-[f ]
-[; ;main.c: 932: if(earthLeakageStart==1){
-"932
-[e $ ! == -> _earthLeakageStart `ui -> -> 1 `i `ui 1256  ]
-{
-[; ;main.c: 933: ReadEarthLeakage();
-"933
-[e ( _ReadEarthLeakage ..  ]
-[; ;main.c: 934: earthLeakageStart=0;
-"934
-[e = _earthLeakageStart -> -> 0 `i `us ]
-[; ;main.c: 935: ELT_Counter=0;
-"935
-[e = _ELT_Counter -> -> 0 `i `ui ]
-[; ;main.c: 936: TurnCableFaultDetectOff();
-"936
-[e ( _TurnCableFaultDetectOff ..  ]
-"938
-}
-[; ;main.c: 938: }
-[e $U 1257  ]
-"939
-[e :U 1256 ]
-[; ;main.c: 939: else{
-{
-[; ;main.c: 940: ReadCableFault();
-"940
-[e ( _ReadCableFault ..  ]
-"941
-}
-[e :U 1257 ]
-[; ;main.c: 941: }
-[; ;main.c: 943: if((ELT_Counter >= 500 && earthLeakageCounter > 0) || ELT_Counter >= 3000){
-"943
-[e $ ! || && >= _ELT_Counter -> -> 500 `i `ui > -> _earthLeakageCounter `ui -> -> 0 `i `ui >= _ELT_Counter -> -> 3000 `i `ui 1258  ]
-{
-[; ;main.c: 944: earthLeakageStart=1;
-"944
-[e = _earthLeakageStart -> -> 1 `i `us ]
-[; ;main.c: 945: TurnCableFaultDetectOn();
-"945
-[e ( _TurnCableFaultDetectOn ..  ]
-"946
-}
-[e :U 1258 ]
-[; ;main.c: 946: }
-[; ;main.c: 948: if (cableFaultProblemUCG == 1){
-"948
-[e $ ! == -> _cableFaultProblemUCG `i -> 1 `i 1259  ]
-{
-[; ;main.c: 949: CableFaultStatusUCG = 1;
-"949
-[e = _CableFaultStatusUCG -> -> 1 `i `uc ]
-"950
-}
-[; ;main.c: 950: }
-[e $U 1260  ]
-"951
-[e :U 1259 ]
-[; ;main.c: 951: else if (earthLeakageProblemUCG == 1){
-[e $ ! == -> _earthLeakageProblemUCG `i -> 1 `i 1261  ]
-{
-[; ;main.c: 952: CableFaultStatusUCG = 2;
-"952
-[e = _CableFaultStatusUCG -> -> 2 `i `uc ]
-"953
-}
-[; ;main.c: 953: }
-[e $U 1262  ]
-"954
-[e :U 1261 ]
-[; ;main.c: 954: else{
-{
-[; ;main.c: 955: CableFaultStatusUCG = 0;
-"955
-[e = _CableFaultStatusUCG -> -> 0 `i `uc ]
-"956
-}
-[e :U 1262 ]
-[e :U 1260 ]
-[; ;main.c: 956: }
-[; ;main.c: 957: }
-"957
-[e :UE 1255 ]
-}
-"959
-[v _FIRE `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 959: void FIRE(void){
-[e :U _FIRE ]
-[f ]
-[; ;main.c: 960: while(ReadMAINS_ZeroCrossing() == 1);
-"960
-[e $U 1264  ]
-[e :U 1265 ]
-[e :U 1264 ]
-[e $ == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 1 `i 1265  ]
-[e :U 1266 ]
-[; ;main.c: 962: StartBlastTimer();
-"962
-[e ( _StartBlastTimer ..  ]
-[; ;main.c: 963: for (int i = 0; i < 120; i++){
-"963
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $ < _i -> 120 `i 1267  ]
-[e $U 1268  ]
-[e :U 1267 ]
-{
-[; ;main.c: 964: asm(" clrwdt");
-"964
-[; <"  clrwdt ;# ">
-[; ;main.c: 965: while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160);
-"965
-[e $U 1270  ]
-[e :U 1271 ]
-[e :U 1270 ]
-[e $ && == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 0 `i < _BTHighSpeedTickUIG -> -> 160 `i `ui 1271  ]
-[e :U 1272 ]
-[; ;main.c: 966: GenerateMissingPulse();
-"966
-[e ( _GenerateMissingPulse ..  ]
-[; ;main.c: 967: if (BTHighSpeedTickUIG > 160){
-"967
-[e $ ! > _BTHighSpeedTickUIG -> -> 160 `i `ui 1273  ]
-{
-[; ;main.c: 968: AlarmStatusUCG = 1;
-"968
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 969: CFLEDFlashEnable = 1;
-"969
-[e = _CFLEDFlashEnable -> -> 1 `i `uc ]
-[; ;main.c: 970: break;
-"970
-[e $U 1268  ]
-"971
-}
-[e :U 1273 ]
-"972
-}
-"963
-[e ++ _i -> 1 `i ]
-[e $ < _i -> 120 `i 1267  ]
-[e :U 1268 ]
-"972
-}
-[; ;main.c: 971: }
-[; ;main.c: 972: }
-[; ;main.c: 974: StopBlastTimer();
-"974
-[e ( _StopBlastTimer ..  ]
-[; ;main.c: 975: StartPostFireTimer();
-"975
-[e ( _StartPostFireTimer ..  ]
-[; ;main.c: 976: }
-"976
-[e :UE 1263 ]
-}
-"978
-[v _GenerateMissingPulse `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 978: void GenerateMissingPulse(void){
-[e :U _GenerateMissingPulse ]
-[f ]
-[; ;main.c: 980: WaitTickCount(8);
-"980
-[e ( _WaitTickCount (1 -> -> 8 `i `us ]
-[; ;main.c: 981: TurnSSR1On();
-"981
-[e ( _TurnSSR1On ..  ]
-[; ;main.c: 983: for (HighPulseCountCG = 0; HighPulseCountCG < 25; HighPulseCountCG++){
-"983
-{
-[e = _HighPulseCountCG -> -> 0 `i `uc ]
-[e $ < -> _HighPulseCountCG `i -> 25 `i 1275  ]
-[e $U 1276  ]
-[e :U 1275 ]
-{
-[; ;main.c: 985: while(ReadMAINS_ZeroCrossing() == 1){
-"985
-[e $U 1278  ]
-[e :U 1279 ]
-{
-[; ;main.c: 987: BTHighSpeedTickUIG = 0;
-"987
-[e = _BTHighSpeedTickUIG -> -> 0 `i `ui ]
-[; ;main.c: 988: if (HighPulseCountCG == (25 - 1)){
-"988
-[e $ ! == -> _HighPulseCountCG `i - -> 25 `i -> 1 `i 1281  ]
-{
-[; ;main.c: 989: WaitTickCount(6);
-"989
-[e ( _WaitTickCount (1 -> -> 6 `i `us ]
-[; ;main.c: 990: TurnSSR1Off();
-"990
-[e ( _TurnSSR1Off ..  ]
-"991
-}
-[e :U 1281 ]
-"992
-}
-[e :U 1278 ]
-"985
-[e $ == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 1 `i 1279  ]
-[e :U 1280 ]
-[; ;main.c: 991: }
-[; ;main.c: 992: }
-[; ;main.c: 993: if (BTHighSpeedTickUIG < 160){
-"993
-[e $ ! < _BTHighSpeedTickUIG -> -> 160 `i `ui 1282  ]
-{
-[; ;main.c: 994: while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160){
-"994
-[e $U 1283  ]
-[e :U 1284 ]
-{
-"995
-}
-[e :U 1283 ]
-"994
-[e $ && == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 0 `i < _BTHighSpeedTickUIG -> -> 160 `i `ui 1284  ]
-[e :U 1285 ]
-"996
-}
-[e :U 1282 ]
-"997
-}
-"983
-[e ++ _HighPulseCountCG -> -> 1 `i `uc ]
-[e $ < -> _HighPulseCountCG `i -> 25 `i 1275  ]
-[e :U 1276 ]
-"997
-}
-[; ;main.c: 995: }
-[; ;main.c: 996: }
-[; ;main.c: 997: }
-[; ;main.c: 998: }
-"998
-[e :UE 1274 ]
-}
-[v F7436 `(v ~T0 @X0 1 tf ]
-"1000
-[v _WaitNewTick `TF7436 ~T0 @X0 1 e ]
-{
-[; ;main.c: 1000: inline void WaitNewTick(void){
-[e :U _WaitNewTick ]
-[f ]
-[; ;main.c: 1001: while(!(statusFlagsUSG & 0b0000000000000001));
-"1001
-[e $U 1287  ]
-[e :U 1288 ]
-[e :U 1287 ]
-[e $ ! != & -> _statusFlagsUSG `ui -> -> 1 `i `ui -> -> 0 `i `ui 1288  ]
-[e :U 1289 ]
-[; ;main.c: 1002: statusFlagsUSG &= ~0b0000000000000001;
-"1002
-[e =& _statusFlagsUSG -> ~ -> 1 `i `us ]
-[; ;main.c: 1003: }
-"1003
-[e :UE 1286 ]
-}
-"1005
-[v _WaitTickCount `(v ~T0 @X0 1 ef1`us ]
-{
-[; ;main.c: 1005: void WaitTickCount(unsigned short tickCountUS){
-[e :U _WaitTickCount ]
-[v _tickCountUS `us ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 1006: while(tickCountUS--)
-"1006
-[e $U 1291  ]
-[e :U 1292 ]
-[; ;main.c: 1007: WaitNewTick();
-"1007
-[e ( _WaitNewTick ..  ]
-[e :U 1291 ]
-"1006
-[e $ != -> -- _tickCountUS -> -> 1 `i `us `ui -> -> -> 0 `i `us `ui 1292  ]
-[e :U 1293 ]
-[; ;main.c: 1008: }
-"1008
-[e :UE 1290 ]
-}
-"1010
-[v _InitSystem `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1010: void InitSystem(void){
-[e :U _InitSystem ]
-[f ]
-[; ;main.c: 1012: OSCTUNEbits.PLLEN = 1;
-"1012
-[e = . . _OSCTUNEbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1013: OSCCONbits.IRCF = 0b111;
-"1013
-[e = . . _OSCCONbits 0 3 -> -> 7 `i `uc ]
-[; ;main.c: 1014: OSCCONbits.OSTS = 0;
-"1014
-[e = . . _OSCCONbits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1015: OSCCONbits.SCS = 0b11;
-"1015
-[e = . . _OSCCONbits 0 0 -> -> 3 `i `uc ]
-[; ;main.c: 1018: TRISAbits.TRISA0 = 1;
-"1018
-[e = . . _TRISAbits 0 0 -> -> 1 `i `uc ]
-[; ;main.c: 1019: TRISAbits.TRISA1 = 1;
-"1019
-[e = . . _TRISAbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1020: ANSELAbits.ANSA1 = 0;
-"1020
-[e = . . _ANSELAbits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1021: TRISCbits.TRISC2 = 1;
-"1021
-[e = . . _TRISCbits 0 2 -> -> 1 `i `uc ]
-[; ;main.c: 1022: TRISBbits.TRISB5 = 1;
-"1022
-[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
-[; ;main.c: 1025: TRISAbits.TRISA3 = 1;
-"1025
-[e = . . _TRISAbits 0 3 -> -> 1 `i `uc ]
-[; ;main.c: 1026: ANSELAbits.ANSA3 = 0;
-"1026
-[e = . . _ANSELAbits 0 3 -> -> 0 `i `uc ]
-[; ;main.c: 1027: TRISAbits.TRISA6 = 1;
-"1027
-[e = . . _TRISAbits 0 6 -> -> 1 `i `uc ]
-[; ;main.c: 1030: TRISAbits.TRISA2 = 0;
-"1030
-[e = . . _TRISAbits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1031: LATAbits.LATA2 = 0;
-"1031
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1032: TRISBbits.TRISB6 = 0;
-"1032
-[e = . . _TRISBbits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1033: LATBbits.LATB6 = 0;
-"1033
-[e = . . _LATBbits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1034: TRISBbits.TRISB7 = 0;
-"1034
-[e = . . _TRISBbits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1035: LATBbits.LATB7 = 0;
-"1035
-[e = . . _LATBbits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1036: TRISCbits.TRISC1 = 0;
-"1036
-[e = . . _TRISCbits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1037: LATCbits.LATC1 = 1;
-"1037
-[e = . . _LATCbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1040: TRISAbits.TRISA5 = 0;
-"1040
-[e = . . _TRISAbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 1041: LATAbits.LATA5 = 0;
-"1041
-[e = . . _LATAbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 1042: TRISCbits.TRISC0 = 0;
-"1042
-[e = . . _TRISCbits 0 0 -> -> 0 `i `uc ]
-[; ;main.c: 1043: LATCbits.LATC0 = 0;
-"1043
-[e = . . _LATCbits 0 0 -> -> 0 `i `uc ]
-[; ;main.c: 1044: TRISAbits.TRISA7 = 0;
-"1044
-[e = . . _TRISAbits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1045: LATAbits.LATA7 = 0;
-"1045
-[e = . . _LATAbits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1048: ANSELCbits.ANSC7 = 0;
-"1048
-[e = . . _ANSELCbits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1049: ANSELCbits.ANSC6 = 0;
-"1049
-[e = . . _ANSELCbits 0 5 -> -> 0 `i `uc ]
-[; ;main.c: 1050: TRISCbits.TRISC7 = 1;
-"1050
-[e = . . _TRISCbits 0 7 -> -> 1 `i `uc ]
-[; ;main.c: 1051: TRISCbits.TRISC6 = 1;
-"1051
-[e = . . _TRISCbits 0 6 -> -> 1 `i `uc ]
-[; ;main.c: 1060: PMD0bits.TMR2MD = 0;
-"1060
-[e = . . _PMD0bits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1061: T2CONbits.T2OUTPS = 0b0000;
-"1061
-[e = . . _T2CONbits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1062: T2CONbits.TMR2ON = 0;
-"1062
-[e = . . _T2CONbits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1063: T2CONbits.T2CKPS = 0b11;
-"1063
-[e = . . _T2CONbits 0 0 -> -> 3 `i `uc ]
-[; ;main.c: 1064: TMR2 = 0;
-"1064
-[e = _TMR2 -> -> 0 `i `uc ]
-[; ;main.c: 1077: PIE1bits.RC1IE = 1;
-"1077
-[e = . . _PIE1bits 0 5 -> -> 1 `i `uc ]
-[; ;main.c: 1078: INTCONbits.RBIE = 1;
-"1078
-[e = . . _INTCONbits 0 3 -> -> 1 `i `uc ]
-[; ;main.c: 1079: IOCBbits.IOCB4 = 1;
-"1079
-[e = . . _IOCBbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1081: TXSTA1bits.BRGH = 0;
-"1081
-[e = . . _TXSTA1bits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1082: BAUDCONbits.BRG16 = 0;
-"1082
-[e = . . _BAUDCONbits 0 3 -> -> 0 `i `uc ]
-[; ;main.c: 1083: UART_Init(9600);
-"1083
-[e ( _UART_Init (1 -> -> 9600 `i `l ]
-[; ;main.c: 1087: ADCON2bits.ADFM = 1;
-"1087
-[e = . . _ADCON2bits 0 3 -> -> 1 `i `uc ]
-[; ;main.c: 1088: ADCON2bits.ACQT = 0b010;
-"1088
-[e = . . _ADCON2bits 0 1 -> -> 2 `i `uc ]
-[; ;main.c: 1089: ADCON2bits.ADCS = 0b110;
-"1089
-[e = . . _ADCON2bits 0 0 -> -> 6 `i `uc ]
-[; ;main.c: 1090: ADCON0bits.ADON = 1;
-"1090
-[e = . . _ADCON0bits 1 0 -> -> 1 `i `uc ]
-[; ;main.c: 1092: INTCONbits.PEIE = 1;
-"1092
-[e = . . _INTCONbits 1 6 -> -> 1 `i `uc ]
-[; ;main.c: 1093: PIR1bits.TMR2IF = 0;
-"1093
-[e = . . _PIR1bits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1094: PIE1bits.TMR2IE = 1;
-"1094
-[e = . . _PIE1bits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1095: IPR1bits.TMR2IP = 0;
-"1095
-[e = . . _IPR1bits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1096: PR2 = 122;
-"1096
-[e = _PR2 -> -> 122 `i `uc ]
-[; ;main.c: 1097: T2CONbits.TMR2ON = 1;
-"1097
-[e = . . _T2CONbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1098: INTCONbits.GIEH = 1;
-"1098
-[e = . . _INTCONbits 2 2 -> -> 1 `i `uc ]
-[; ;main.c: 1101: TurnRelayOff();
-"1101
-[e ( _TurnRelayOff ..  ]
-[; ;main.c: 1102: TurnSSR1Off();
-"1102
-[e ( _TurnSSR1Off ..  ]
-[; ;main.c: 1104: FiringStatusUCG = 0;
-"1104
-[e = _FiringStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 1105: ResetStatusUCG = 0;
-"1105
-[e = _ResetStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 1107: EEPROMRead();
-"1107
-[e ( _EEPROMRead ..  ]
-[; ;main.c: 1108: if(EEPRead[2]!= 0xAA)
-"1108
-[e $ ! != -> *U + &U _EEPRead * -> -> -> 2 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux `i -> 170 `i 1295  ]
-[; ;main.c: 1109: {
-"1109
-{
-[; ;main.c: 1110: AlarmStatusUCG = 1;
-"1110
-[e = _AlarmStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 1111: checkCableFaults();
-"1111
-[e ( _checkCableFaults ..  ]
-"1112
-}
-[; ;main.c: 1112: }
-[e $U 1296  ]
-"1113
-[e :U 1295 ]
-[; ;main.c: 1113: else
-[; ;main.c: 1114: AlarmStatusUCG = 0;
-"1114
-[e = _AlarmStatusUCG -> -> 0 `i `uc ]
-[e :U 1296 ]
-[; ;main.c: 1116: EEPROMClearReset();
-"1116
-[e ( _EEPROMClearReset ..  ]
-[; ;main.c: 1118: NewCFStatusUCG = 0;
-"1118
-[e = _NewCFStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 1119: ClearToFire = 0;
-"1119
-[e = _ClearToFire -> -> 0 `i `uc ]
-[; ;main.c: 1120: CFLEDFlashEnable = 0;
-"1120
-[e = _CFLEDFlashEnable -> -> 0 `i `uc ]
-[; ;main.c: 1121: CFLEDFlashState = 0;
-"1121
-[e = _CFLEDFlashState -> -> 0 `i `uc ]
-[; ;main.c: 1123: DeArmTimerEnabled = 0;
-"1123
-[e = _DeArmTimerEnabled -> -> 0 `i `uc ]
-[; ;main.c: 1124: DeArmTickCG = 0;
-"1124
-[e = _DeArmTickCG -> -> 0 `i `uc ]
-[; ;main.c: 1126: if(InitST7540()){
-"1126
-[e $ ! != -> ( _InitST7540 ..  `i -> -> -> 0 `i `uc `i 1297  ]
-{
-[; ;main.c: 1127: ReceiveNewDataST7540();
-"1127
-[e ( _ReceiveNewDataST7540 ..  ]
-"1128
-}
-[e :U 1297 ]
-[; ;main.c: 1128: }
-[; ;main.c: 1129: }
-"1129
-[e :UE 1294 ]
-}
-"1131
-[v _ReadAnalogVoltage `(us ~T0 @X0 1 ef1`uc ]
-{
-[; ;main.c: 1131: unsigned short ReadAnalogVoltage(unsigned char channelC){
-[e :U _ReadAnalogVoltage ]
-[v _channelC `uc ~T0 @X0 1 r1 ]
-[f ]
-[; ;main.c: 1133: ADCON1bits.PVCFG = 0b00;
-"1133
-[e = . . _ADCON1bits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1135: switch(channelC){
-"1135
-[e $U 1300  ]
-{
-[; ;main.c: 1137: case(0):
-"1137
-[e :U 1301 ]
-[; ;main.c: 1138: ADCON0bits.CHS = 0b01110;
-"1138
-[e = . . _ADCON0bits 1 2 -> -> 14 `i `uc ]
-[; ;main.c: 1139: break;
-"1139
-[e $U 1299  ]
-[; ;main.c: 1140: case(1):
-"1140
-[e :U 1302 ]
-[; ;main.c: 1141: ADCON0bits.CHS = 0b00000;
-"1141
-[e = . . _ADCON0bits 1 2 -> -> 0 `i `uc ]
-[; ;main.c: 1142: break;
-"1142
-[e $U 1299  ]
-[; ;main.c: 1143: case(2):
-"1143
-[e :U 1303 ]
-[; ;main.c: 1144: ADCON0bits.CHS = 0b00001;
-"1144
-[e = . . _ADCON0bits 1 2 -> -> 1 `i `uc ]
-[; ;main.c: 1145: break;
-"1145
-[e $U 1299  ]
-[; ;main.c: 1146: case(3):
-"1146
-[e :U 1304 ]
-[; ;main.c: 1147: ADCON0bits.CHS = 0b01101;
-"1147
-[e = . . _ADCON0bits 1 2 -> -> 13 `i `uc ]
-[; ;main.c: 1148: break;
-"1148
-[e $U 1299  ]
-"1150
-}
-[; ;main.c: 1150: }
-[e $U 1299  ]
-"1135
-[e :U 1300 ]
-[e [\ _channelC , $ -> -> 0 `i `uc 1301
- , $ -> -> 1 `i `uc 1302
- , $ -> -> 2 `i `uc 1303
- , $ -> -> 3 `i `uc 1304
- 1299 ]
-"1150
-[e :U 1299 ]
-[; ;main.c: 1152: ADCON0bits.GO_nDONE = 1;
-"1152
-[e = . . _ADCON0bits 1 1 -> -> 1 `i `uc ]
-[; ;main.c: 1153: while(ADCON0bits.GO_nDONE);
-"1153
-[e $U 1305  ]
-[e :U 1306 ]
-[e :U 1305 ]
-[e $ != -> . . _ADCON0bits 1 1 `i -> -> -> 0 `i `Vuc `i 1306  ]
-[e :U 1307 ]
-[; ;main.c: 1155: return ADRES;
-"1155
-[e ) _ADRES ]
-[e $UE 1298  ]
-[; ;main.c: 1156: }
-"1156
-[e :UE 1298 ]
-}
-"1158
-[v _ReadEarthLeakage `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1158: void ReadEarthLeakage(void){
-[e :U _ReadEarthLeakage ]
-[f ]
-"1159
-[v _earthLeakageValueUS `us ~T0 @X0 1 a ]
-"1163
-[v _Failed `i ~T0 @X0 1 a ]
-[; ;main.c: 1159: unsigned short earthLeakageValueUS;
-[; ;main.c: 1163: int Failed=1;
-[e = _Failed -> 1 `i ]
-[; ;main.c: 1164: for(int i=0; i<40 ;i++){
-"1164
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $ < _i -> 40 `i 1309  ]
-[e $U 1310  ]
-[e :U 1309 ]
-{
-[; ;main.c: 1165: _delay((unsigned long)((10)*(16000000/4000000.0)));
-"1165
-[e ( __delay (1 -> * -> -> 10 `i `d / -> -> 16000000 `l `d .4000000.0 `ul ]
-[; ;main.c: 1166: earthLeakageValueUS = ReadAnalogVoltage(0);
-"1166
-[e = _earthLeakageValueUS ( _ReadAnalogVoltage (1 -> -> 0 `i `uc ]
-[; ;main.c: 1167: if(earthLeakageValueUS < 390){
-"1167
-[e $ ! < -> _earthLeakageValueUS `ui -> -> 390 `i `ui 1312  ]
-{
-[; ;main.c: 1168: Failed=0;
-"1168
-[e = _Failed -> 0 `i ]
-[; ;main.c: 1169: earthLeakageCounter =0;
-"1169
-[e = _earthLeakageCounter -> -> 0 `i `us ]
-"1170
-}
-[e :U 1312 ]
-"1171
-}
-"1164
-[e ++ _i -> 1 `i ]
-[e $ < _i -> 40 `i 1309  ]
-[e :U 1310 ]
-"1171
-}
-[; ;main.c: 1170: }
-[; ;main.c: 1171: }
-[; ;main.c: 1173: if(Failed){
-"1173
-[e $ ! != _Failed -> 0 `i 1313  ]
-{
-[; ;main.c: 1174: (earthLeakageCounter== 4)?0:earthLeakageCounter++;
-"1174
-[e ? == -> _earthLeakageCounter `ui -> -> 4 `i `ui : -> -> 0 `i `ui -> ++ _earthLeakageCounter -> -> 1 `i `us `ui ]
-"1176
-}
-[; ;main.c: 1176: }
-[e $U 1314  ]
-"1177
-[e :U 1313 ]
-[; ;main.c: 1177: else{
-{
-[; ;main.c: 1178: earthLeakageCounter=0;
-"1178
-[e = _earthLeakageCounter -> -> 0 `i `us ]
-"1179
-}
-[e :U 1314 ]
-[; ;main.c: 1179: }
-[; ;main.c: 1181: earthLeakageProblemUCG = (earthLeakageCounter == 4)?1:0;
-"1181
-[e = _earthLeakageProblemUCG -> ? == -> _earthLeakageCounter `ui -> -> 4 `i `ui : -> 1 `i -> 0 `i `uc ]
-[; ;main.c: 1199: }
-"1199
-[e :UE 1308 ]
-}
-"1201
-[v _ReadCableFault `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1201: void ReadCableFault(void){
-[e :U _ReadCableFault ]
-[f ]
-"1203
-[v _cableFaultValueUS `us ~T0 @X0 1 a ]
-[; ;main.c: 1203: unsigned short cableFaultValueUS;
-[; ;main.c: 1205: _delay((unsigned long)((24)*(16000000/4000000.0)));
-"1205
-[e ( __delay (1 -> * -> -> 24 `i `d / -> -> 16000000 `l `d .4000000.0 `ul ]
-[; ;main.c: 1206: cableFaultValueUS = ReadAnalogVoltage(1);
-"1206
-[e = _cableFaultValueUS ( _ReadAnalogVoltage (1 -> -> 1 `i `uc ]
-[; ;main.c: 1207: if(cableFaultValueUS > 375){
-"1207
-[e $ ! > -> _cableFaultValueUS `ui -> -> 375 `i `ui 1316  ]
-{
-[; ;main.c: 1208: (cableFaultCounter== 40)?0:cableFaultCounter++;
-"1208
-[e ? == -> _cableFaultCounter `ui -> -> 40 `i `ui : -> -> 0 `i `ui -> ++ _cableFaultCounter -> -> 1 `i `us `ui ]
-"1209
-}
-[; ;main.c: 1209: }
-[e $U 1317  ]
-"1210
-[e :U 1316 ]
-[; ;main.c: 1210: else{
-{
-[; ;main.c: 1211: cableFaultCounter =0;
-"1211
-[e = _cableFaultCounter -> -> 0 `i `us ]
-"1212
-}
-[e :U 1317 ]
-[; ;main.c: 1212: }
-[; ;main.c: 1213: cableFaultProblemUCG = (cableFaultCounter == 40)?1:0;
-"1213
-[e = _cableFaultProblemUCG -> ? == -> _cableFaultCounter `ui -> -> 40 `i `ui : -> 1 `i -> 0 `i `uc ]
-[; ;main.c: 1215: }
-"1215
-[e :UE 1315 ]
-}
-"1217
-[v _ReadMAINS_ZeroCrossing `(uc ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1217: unsigned char ReadMAINS_ZeroCrossing(void){
-[e :U _ReadMAINS_ZeroCrossing ]
-[f ]
-"1218
-[v _mainsZero_CrossingValueUSG2 `uc ~T0 @X0 1 a ]
-[; ;main.c: 1218: unsigned char mainsZero_CrossingValueUSG2;
-[; ;main.c: 1221: mainsZero_CrossingValueUSG = PORTAbits.RA1;;
-"1221
-[e = _mainsZero_CrossingValueUSG -> . . _PORTAbits 0 1 `us ]
-[; ;main.c: 1222: WaitTickCount(1);
-"1222
-[e ( _WaitTickCount (1 -> -> 1 `i `us ]
-[; ;main.c: 1223: mainsZero_CrossingValueUSG2 = PORTAbits.RA1;;
-"1223
-[e = _mainsZero_CrossingValueUSG2 . . _PORTAbits 0 1 ]
-[; ;main.c: 1224: if (mainsZero_CrossingValueUSG == mainsZero_CrossingValueUSG2)
-"1224
-[e $ ! == -> _mainsZero_CrossingValueUSG `ui -> _mainsZero_CrossingValueUSG2 `ui 1319  ]
-[; ;main.c: 1225: return mainsZero_CrossingValueUSG;
-"1225
-[e ) -> _mainsZero_CrossingValueUSG `uc ]
-[e $UE 1318  ]
-[e $U 1320  ]
-"1226
-[e :U 1319 ]
-[; ;main.c: 1226: else
-[; ;main.c: 1227: return 0;
-"1227
-[e ) -> -> 0 `i `uc ]
-[e $UE 1318  ]
-[e :U 1320 ]
-[; ;main.c: 1228: }
-"1228
-[e :UE 1318 ]
-}
-"1230
-[v _ReadFireOut `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1230: void ReadFireOut(void){
-[e :U _ReadFireOut ]
-[f ]
-[; ;main.c: 1232: for (int i = 0; i < 50; i++){
-"1232
-{
-[v _i `i ~T0 @X0 1 a ]
-[e = _i -> 0 `i ]
-[e $ < _i -> 50 `i 1322  ]
-[e $U 1323  ]
-[e :U 1322 ]
-{
-[; ;main.c: 1233: while(ReadMAINS_ZeroCrossing() == 0);
-"1233
-[e $U 1325  ]
-[e :U 1326 ]
-[e :U 1325 ]
-[e $ == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 0 `i 1326  ]
-[e :U 1327 ]
-[; ;main.c: 1234: FireOutFloat += (float)ReadAnalogVoltage(3);
-"1234
-[e =+ _FireOutFloat -> ( _ReadAnalogVoltage (1 -> -> 3 `i `uc `f ]
-[; ;main.c: 1235: while(ReadMAINS_ZeroCrossing() == 1);
-"1235
-[e $U 1328  ]
-[e :U 1329 ]
-[e :U 1328 ]
-[e $ == -> ( _ReadMAINS_ZeroCrossing ..  `i -> 1 `i 1329  ]
-[e :U 1330 ]
-"1236
-}
-"1232
-[e ++ _i -> 1 `i ]
-[e $ < _i -> 50 `i 1322  ]
-[e :U 1323 ]
-"1236
-}
-[; ;main.c: 1236: }
-[; ;main.c: 1237: FireOutFloat = FireOutFloat/50.0;
-"1237
-[e = _FireOutFloat -> / -> _FireOutFloat `d .50.0 `f ]
-[; ;main.c: 1238: }
-"1238
-[e :UE 1321 ]
-}
-"1240
-[v _TurnRelayOff `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1240: void TurnRelayOff(void){
-[e :U _TurnRelayOff ]
-[f ]
-[; ;main.c: 1241: LATCbits.LATC1 = 0;
-"1241
-[e = . . _LATCbits 0 1 -> -> 0 `i `uc ]
-[; ;main.c: 1242: if (RelayStatusUCG == 0)
-"1242
-[e $ ! == -> _RelayStatusUCG `i -> 0 `i 1332  ]
-[; ;main.c: 1243: Pi_Status_Update = 0x01;
-"1243
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1332 ]
-[; ;main.c: 1244: RelayStatusUCG = 1;
-"1244
-[e = _RelayStatusUCG -> -> 1 `i `uc ]
-[; ;main.c: 1245: }
-"1245
-[e :UE 1331 ]
-}
-"1247
-[v _TurnRelayOn `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1247: void TurnRelayOn(void){
-[e :U _TurnRelayOn ]
-[f ]
-[; ;main.c: 1248: LATCbits.LATC1 = 1;
-"1248
-[e = . . _LATCbits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1249: if (RelayStatusUCG == 1)
-"1249
-[e $ ! == -> _RelayStatusUCG `i -> 1 `i 1334  ]
-[; ;main.c: 1250: Pi_Status_Update = 0x01;
-"1250
-[e = _Pi_Status_Update -> -> 1 `i `uc ]
-[e :U 1334 ]
-[; ;main.c: 1251: RelayStatusUCG = 0;
-"1251
-[e = _RelayStatusUCG -> -> 0 `i `uc ]
-[; ;main.c: 1252: }
-"1252
-[e :UE 1333 ]
-}
-"1254
-[v _TurnSSR1On `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1254: void TurnSSR1On(void){
-[e :U _TurnSSR1On ]
-[f ]
-[; ;main.c: 1255: LATBbits.LATB6 = 1;
-"1255
-[e = . . _LATBbits 0 6 -> -> 1 `i `uc ]
-[; ;main.c: 1256: }
-"1256
-[e :UE 1335 ]
-}
-"1258
-[v _TurnSSR1Off `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1258: void TurnSSR1Off(void){
-[e :U _TurnSSR1Off ]
-[f ]
-[; ;main.c: 1259: LATBbits.LATB6 = 0;
-"1259
-[e = . . _LATBbits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1260: }
-"1260
-[e :UE 1336 ]
-}
-"1262
-[v _TurnCableFaultDetectOn `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1262: void TurnCableFaultDetectOn(void){
-[e :U _TurnCableFaultDetectOn ]
-[f ]
-[; ;main.c: 1263: LATBbits.LATB7 = 1;
-"1263
-[e = . . _LATBbits 0 7 -> -> 1 `i `uc ]
-[; ;main.c: 1264: }
-"1264
-[e :UE 1337 ]
-}
-"1266
-[v _TurnCableFaultDetectOff `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1266: void TurnCableFaultDetectOff(void){
-[e :U _TurnCableFaultDetectOff ]
-[f ]
-[; ;main.c: 1267: LATBbits.LATB7 = 0;
-"1267
-[e = . . _LATBbits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1268: }
-"1268
-[e :UE 1338 ]
-}
-"1270
-[v _TurnBuzzer_AlarmOn `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1270: void TurnBuzzer_AlarmOn(void){
-[e :U _TurnBuzzer_AlarmOn ]
-[f ]
-[; ;main.c: 1271: LATAbits.LATA2 = 1;
-"1271
-[e = . . _LATAbits 0 2 -> -> 1 `i `uc ]
-[; ;main.c: 1272: }
-"1272
-[e :UE 1339 ]
-}
-"1274
-[v _TurnBuzzer_AlarmOff `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1274: void TurnBuzzer_AlarmOff(void){
-[e :U _TurnBuzzer_AlarmOff ]
-[f ]
-[; ;main.c: 1275: LATAbits.LATA2 = 0;
-"1275
-[e = . . _LATAbits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1276: }
-"1276
-[e :UE 1340 ]
-}
-"1278
-[v _getKeySwitchState `(uc ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1278: unsigned char getKeySwitchState(void){
-[e :U _getKeySwitchState ]
-[f ]
-[; ;main.c: 1281: ReadMAINS_ZeroCrossing();
-"1281
-[e ( _ReadMAINS_ZeroCrossing ..  ]
-[; ;main.c: 1282: if (mainsZero_CrossingValueUSG == 1){
-"1282
-[e $ ! == -> _mainsZero_CrossingValueUSG `ui -> -> 1 `i `ui 1342  ]
-{
-[; ;main.c: 1283: KeySwitchStateUCG = 1;
-"1283
-[e = _KeySwitchStateUCG -> -> 1 `i `uc ]
-"1284
-}
-[; ;main.c: 1284: }
-[e $U 1343  ]
-"1285
-[e :U 1342 ]
-[; ;main.c: 1285: else {
-{
-[; ;main.c: 1286: WaitTickCount(15);
-"1286
-[e ( _WaitTickCount (1 -> -> 15 `i `us ]
-[; ;main.c: 1287: ReadMAINS_ZeroCrossing();
-"1287
-[e ( _ReadMAINS_ZeroCrossing ..  ]
-[; ;main.c: 1288: if (mainsZero_CrossingValueUSG == 1){
-"1288
-[e $ ! == -> _mainsZero_CrossingValueUSG `ui -> -> 1 `i `ui 1344  ]
-{
-[; ;main.c: 1289: KeySwitchStateUCG = 1;
-"1289
-[e = _KeySwitchStateUCG -> -> 1 `i `uc ]
-"1290
-}
-[; ;main.c: 1290: }
-[e $U 1345  ]
-"1291
-[e :U 1344 ]
-[; ;main.c: 1291: else{
-{
-[; ;main.c: 1292: WaitTickCount(10);
-"1292
-[e ( _WaitTickCount (1 -> -> 10 `i `us ]
-[; ;main.c: 1293: ReadMAINS_ZeroCrossing();
-"1293
-[e ( _ReadMAINS_ZeroCrossing ..  ]
-[; ;main.c: 1294: if (mainsZero_CrossingValueUSG == 1){
-"1294
-[e $ ! == -> _mainsZero_CrossingValueUSG `ui -> -> 1 `i `ui 1346  ]
-{
-[; ;main.c: 1295: KeySwitchStateUCG = 1;
-"1295
-[e = _KeySwitchStateUCG -> -> 1 `i `uc ]
-"1296
-}
-[; ;main.c: 1296: }
-[e $U 1347  ]
-"1297
-[e :U 1346 ]
-[; ;main.c: 1297: else
-[; ;main.c: 1298: KeySwitchStateUCG = 0;
-"1298
-[e = _KeySwitchStateUCG -> -> 0 `i `uc ]
-[e :U 1347 ]
-"1300
-}
-[e :U 1345 ]
-"1301
-}
-[e :U 1343 ]
-[; ;main.c: 1300: }
-[; ;main.c: 1301: }
-[; ;main.c: 1303: return KeySwitchStateUCG;
-"1303
-[e ) _KeySwitchStateUCG ]
-[e $UE 1341  ]
-[; ;main.c: 1304: }
-"1304
-[e :UE 1341 ]
-}
-"1306
-[v _getFireButtonState `(uc ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1306: unsigned char getFireButtonState(void){
-[e :U _getFireButtonState ]
-[f ]
-"1307
-[v _FireButtonStatusfirstUC `uc ~T0 @X0 1 a ]
-"1308
-[v _FireButtonStatussecondUC `uc ~T0 @X0 1 a ]
-[; ;main.c: 1307: unsigned char FireButtonStatusfirstUC;
-[; ;main.c: 1308: unsigned char FireButtonStatussecondUC;
-[; ;main.c: 1311: FireButtonStatusfirstUC = PORTAbits.RA3;
-"1311
-[e = _FireButtonStatusfirstUC . . _PORTAbits 0 3 ]
-[; ;main.c: 1312: WaitTickCount(20);
-"1312
-[e ( _WaitTickCount (1 -> -> 20 `i `us ]
-[; ;main.c: 1313: FireButtonStatussecondUC = PORTAbits.RA3;
-"1313
-[e = _FireButtonStatussecondUC . . _PORTAbits 0 3 ]
-[; ;main.c: 1315: if (FireButtonStatusfirstUC != FireButtonStatussecondUC)
-"1315
-[e $ ! != -> _FireButtonStatusfirstUC `i -> _FireButtonStatussecondUC `i 1349  ]
-[; ;main.c: 1316: return 0;
-"1316
-[e ) -> -> 0 `i `uc ]
-[e $UE 1348  ]
-[e $U 1350  ]
-"1317
-[e :U 1349 ]
-[; ;main.c: 1317: else{
-{
-[; ;main.c: 1318: if (FireButtonStatussecondUC == 1)
-"1318
-[e $ ! == -> _FireButtonStatussecondUC `i -> 1 `i 1351  ]
-[; ;main.c: 1319: return 0;
-"1319
-[e ) -> -> 0 `i `uc ]
-[e $UE 1348  ]
-[e $U 1352  ]
-"1320
-[e :U 1351 ]
-[; ;main.c: 1320: else
-[; ;main.c: 1321: return 1;
-"1321
-[e ) -> -> 1 `i `uc ]
-[e $UE 1348  ]
-[e :U 1352 ]
-"1322
-}
-[e :U 1350 ]
-[; ;main.c: 1322: }
-[; ;main.c: 1323: }
-"1323
-[e :UE 1348 ]
-}
-"1325
-[v _getResetButtonState `(uc ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1325: unsigned char getResetButtonState(void){
-[e :U _getResetButtonState ]
-[f ]
-"1326
-[v _ResetButtonStatusfirstUC `uc ~T0 @X0 1 a ]
-"1327
-[v _ResetButtonStatussecondUC `uc ~T0 @X0 1 a ]
-[; ;main.c: 1326: unsigned char ResetButtonStatusfirstUC;
-[; ;main.c: 1327: unsigned char ResetButtonStatussecondUC;
-[; ;main.c: 1329: ResetButtonStatusfirstUC = PORTAbits.RA6;
-"1329
-[e = _ResetButtonStatusfirstUC . . _PORTAbits 0 6 ]
-[; ;main.c: 1330: WaitTickCount(50);
-"1330
-[e ( _WaitTickCount (1 -> -> 50 `i `us ]
-[; ;main.c: 1331: ResetButtonStatussecondUC = PORTAbits.RA6;
-"1331
-[e = _ResetButtonStatussecondUC . . _PORTAbits 0 6 ]
-[; ;main.c: 1333: if (ResetButtonStatusfirstUC != ResetButtonStatussecondUC)
-"1333
-[e $ ! != -> _ResetButtonStatusfirstUC `i -> _ResetButtonStatussecondUC `i 1354  ]
-[; ;main.c: 1334: return 0;
-"1334
-[e ) -> -> 0 `i `uc ]
-[e $UE 1353  ]
-[e $U 1355  ]
-"1335
-[e :U 1354 ]
-[; ;main.c: 1335: else{
-{
-[; ;main.c: 1336: if (ResetButtonStatussecondUC == 1)
-"1336
-[e $ ! == -> _ResetButtonStatussecondUC `i -> 1 `i 1356  ]
-[; ;main.c: 1337: return 0;
-"1337
-[e ) -> -> 0 `i `uc ]
-[e $UE 1353  ]
-[e $U 1357  ]
-"1338
-[e :U 1356 ]
-[; ;main.c: 1338: else
-[; ;main.c: 1339: return 1;
-"1339
-[e ) -> -> 1 `i `uc ]
-[e $UE 1353  ]
-[e :U 1357 ]
-"1340
-}
-[e :U 1355 ]
-[; ;main.c: 1340: }
-[; ;main.c: 1341: }
-"1341
-[e :UE 1353 ]
-}
-"1343
-[v _EEPROMWrite `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1343: void EEPROMWrite(){
-[e :U _EEPROMWrite ]
-[f ]
-"1344
-[v _address `ui ~T0 @X0 1 a ]
-"1345
-[v _q `uc ~T0 @X0 1 a ]
-[; ;main.c: 1344: unsigned int address;
-[; ;main.c: 1345: unsigned char q=0;
-[e = _q -> -> 0 `i `uc ]
-[; ;main.c: 1346: address = 0x0200;
-"1346
-[e = _address -> -> 512 `i `ui ]
-[; ;main.c: 1347: INTCONbits.GIEH = 0;
-"1347
-[e = . . _INTCONbits 2 2 -> -> 0 `i `uc ]
-[; ;main.c: 1348: Write_b_eep (address, EEPWrite[q]);
-"1348
-[e ( _Write_b_eep (2 , _address *U + &U _EEPWrite * -> _q `ux -> -> # *U &U _EEPWrite `ui `ux ]
-[; ;main.c: 1350: address++;
-"1350
-[e ++ _address -> -> 1 `i `ui ]
-[; ;main.c: 1352: Busy_eep();
-"1352
-[e ( _Busy_eep ..  ]
-[; ;main.c: 1353: q++;
-"1353
-[e ++ _q -> -> 1 `i `uc ]
-[; ;main.c: 1354: Write_b_eep (address, EEPWrite[q]);
-"1354
-[e ( _Write_b_eep (2 , _address *U + &U _EEPWrite * -> _q `ux -> -> # *U &U _EEPWrite `ui `ux ]
-[; ;main.c: 1355: address++;
-"1355
-[e ++ _address -> -> 1 `i `ui ]
-[; ;main.c: 1357: Busy_eep();
-"1357
-[e ( _Busy_eep ..  ]
-[; ;main.c: 1358: INTCONbits.GIEH = 1;
-"1358
-[e = . . _INTCONbits 2 2 -> -> 1 `i `uc ]
-[; ;main.c: 1360: }
-"1360
-[e :UE 1358 ]
-}
-"1362
-[v _EEPROMClearReset `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1362: void EEPROMClearReset(){
-[e :U _EEPROMClearReset ]
-[f ]
-"1363
-[v _address `ui ~T0 @X0 1 a ]
-[; ;main.c: 1363: unsigned int address;
-[; ;main.c: 1364: address = 0x0202;
-"1364
-[e = _address -> -> 514 `i `ui ]
-[; ;main.c: 1365: INTCONbits.GIEH = 0;
-"1365
-[e = . . _INTCONbits 2 2 -> -> 0 `i `uc ]
-[; ;main.c: 1366: Write_b_eep (address, 0x00);
-"1366
-[e ( _Write_b_eep (2 , _address -> -> 0 `i `uc ]
-[; ;main.c: 1369: Busy_eep();
-"1369
-[e ( _Busy_eep ..  ]
-[; ;main.c: 1370: INTCONbits.GIEH = 1;
-"1370
-[e = . . _INTCONbits 2 2 -> -> 1 `i `uc ]
-[; ;main.c: 1371: }
-"1371
-[e :UE 1359 ]
-}
-"1373
-[v _EEPROMSetReset `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1373: void EEPROMSetReset(){
-[e :U _EEPROMSetReset ]
-[f ]
-"1374
-[v _address `ui ~T0 @X0 1 a ]
-[; ;main.c: 1374: unsigned int address;
-[; ;main.c: 1375: address = 0x0202;
-"1375
-[e = _address -> -> 514 `i `ui ]
-[; ;main.c: 1376: INTCONbits.GIEH = 0;
-"1376
-[e = . . _INTCONbits 2 2 -> -> 0 `i `uc ]
-[; ;main.c: 1377: Write_b_eep (address, 0xAA);
-"1377
-[e ( _Write_b_eep (2 , _address -> -> 170 `i `uc ]
-[; ;main.c: 1380: Busy_eep();
-"1380
-[e ( _Busy_eep ..  ]
-[; ;main.c: 1381: INTCONbits.GIEH = 1;
-"1381
-[e = . . _INTCONbits 2 2 -> -> 1 `i `uc ]
-[; ;main.c: 1382: }
-"1382
-[e :UE 1360 ]
-}
-"1384
-[v _EEPROMRead `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 1384: void EEPROMRead(void){
-[e :U _EEPROMRead ]
-[f ]
-"1385
-[v _address `ui ~T0 @X0 1 a ]
-[; ;main.c: 1385: unsigned int address;
-[; ;main.c: 1386: address = 0x0200;
-"1386
-[e = _address -> -> 512 `i `ui ]
-[; ;main.c: 1387: EEPRead[0] = Read_b_eep (address);
-"1387
-[e = *U + &U _EEPRead * -> -> -> 0 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ( _Read_b_eep (1 _address ]
-[; ;main.c: 1388: address++;
-"1388
-[e ++ _address -> -> 1 `i `ui ]
-[; ;main.c: 1389: EEPRead[1] = Read_b_eep (address);
-"1389
-[e = *U + &U _EEPRead * -> -> -> 1 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ( _Read_b_eep (1 _address ]
-[; ;main.c: 1390: address++;
-"1390
-[e ++ _address -> -> 1 `i `ui ]
-[; ;main.c: 1391: EEPRead[2] = Read_b_eep (address);
-"1391
-[e = *U + &U _EEPRead * -> -> -> 2 `i `ui `ux -> -> # *U &U _EEPRead `ui `ux ( _Read_b_eep (1 _address ]
-[; ;main.c: 1392: address++;
-"1392
-[e ++ _address -> -> 1 `i `ui ]
-[; ;main.c: 1393: }
-"1393
-[e :UE 1361 ]
-}
-"1395
-[v _Write_b_eep `(v ~T0 @X0 1 ef2`ui`uc ]
-"1396
-{
-[; ;main.c: 1395: void Write_b_eep( unsigned int badd,unsigned char bdat )
-[; ;main.c: 1396: {
-[e :U _Write_b_eep ]
-"1395
-[v _badd `ui ~T0 @X0 1 r1 ]
-[v _bdat `uc ~T0 @X0 1 r2 ]
-"1396
-[f ]
-"1397
-[v _GIE_BIT_VAL `uc ~T0 @X0 1 a ]
-[; ;main.c: 1397: char GIE_BIT_VAL = 0;
-[e = _GIE_BIT_VAL -> -> 0 `i `uc ]
-[; ;main.c: 1398: EEADR = (badd & 0x0ff);
-"1398
-[e = _EEADR -> & _badd -> -> 255 `i `ui `uc ]
-[; ;main.c: 1399: EEDATA = bdat;
-"1399
-[e = _EEDATA _bdat ]
-[; ;main.c: 1400: EECON1bits.EEPGD = 0;
-"1400
-[e = . . _EECON1bits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1401: EECON1bits.CFGS = 0;
-"1401
-[e = . . _EECON1bits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1402: EECON1bits.WREN = 1;
-"1402
-[e = . . _EECON1bits 0 2 -> -> 1 `i `uc ]
-[; ;main.c: 1403: GIE_BIT_VAL = INTCONbits.GIE;
-"1403
-[e = _GIE_BIT_VAL . . _INTCONbits 1 7 ]
-[; ;main.c: 1404: INTCONbits.GIE = 0;
-"1404
-[e = . . _INTCONbits 1 7 -> -> 0 `i `uc ]
-[; ;main.c: 1405: EECON2 = 0x55;
-"1405
-[e = _EECON2 -> -> 85 `i `uc ]
-[; ;main.c: 1406: EECON2 = 0xAA;
-"1406
-[e = _EECON2 -> -> 170 `i `uc ]
-[; ;main.c: 1407: EECON1bits.WR = 1;
-"1407
-[e = . . _EECON1bits 0 1 -> -> 1 `i `uc ]
-[; ;main.c: 1408: while(EECON1bits.WR);
-"1408
-[e $U 1363  ]
-[e :U 1364 ]
-[e :U 1363 ]
-[e $ != -> . . _EECON1bits 0 1 `i -> -> -> 0 `i `Vuc `i 1364  ]
-[e :U 1365 ]
-[; ;main.c: 1409: INTCONbits.GIE = GIE_BIT_VAL;
-"1409
-[e = . . _INTCONbits 1 7 _GIE_BIT_VAL ]
-[; ;main.c: 1410: EECON1bits.WREN = 0;
-"1410
-[e = . . _EECON1bits 0 2 -> -> 0 `i `uc ]
-[; ;main.c: 1411: }
-"1411
-[e :UE 1362 ]
-}
-"1413
-[v _Busy_eep `(v ~T0 @X0 1 ef ]
-"1414
-{
-[; ;main.c: 1413: void Busy_eep ( void )
-[; ;main.c: 1414: {
-[e :U _Busy_eep ]
-[f ]
-[; ;main.c: 1415: while(EECON1bits.WR);
-"1415
-[e $U 1367  ]
-[e :U 1368 ]
-[e :U 1367 ]
-[e $ != -> . . _EECON1bits 0 1 `i -> -> -> 0 `i `Vuc `i 1368  ]
-[e :U 1369 ]
-[; ;main.c: 1416: }
-"1416
-[e :UE 1366 ]
-}
-"1418
-[v _Read_b_eep `(uc ~T0 @X0 1 ef1`ui ]
-"1419
-{
-[; ;main.c: 1418: unsigned char Read_b_eep( unsigned int badd )
-[; ;main.c: 1419: {
-[e :U _Read_b_eep ]
-"1418
-[v _badd `ui ~T0 @X0 1 r1 ]
-"1419
-[f ]
-[; ;main.c: 1420: EEADR = (badd & 0x0ff);
-"1420
-[e = _EEADR -> & _badd -> -> 255 `i `ui `uc ]
-[; ;main.c: 1421: EECON1bits.CFGS = 0;
-"1421
-[e = . . _EECON1bits 0 6 -> -> 0 `i `uc ]
-[; ;main.c: 1422: EECON1bits.EEPGD = 0;
-"1422
-[e = . . _EECON1bits 0 7 -> -> 0 `i `uc ]
-[; ;main.c: 1423: EECON1bits.RD = 1;
-"1423
-[e = . . _EECON1bits 0 0 -> -> 1 `i `uc ]
-[; ;main.c: 1424: __nop();
-"1424
+"162
+[v _packetCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 162: unsigned short packetCRCUS = 0;
+[e = _packetCRCUS -> -> 0 `i `us ]
+"163
+[v _packetCRCUStemp `us ~T0 @X0 1 a ]
+[; ;UART.c: 163: unsigned short packetCRCUStemp = 0;
+[e = _packetCRCUStemp -> -> 0 `i `us ]
+[; ;UART.c: 165: TransmitPiBufferCG[0] = 0xAA;
+"165
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 166: TransmitPiBufferCG[1] = 0xAA;
+"166
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 168: TransmitPiBufferCG[2] = Command;
+"168
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _Command ]
+[; ;UART.c: 170: TransmitPiBufferCG[3] = 0x31;
+"170
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 49 `i `uc ]
+[; ;UART.c: 171: TransmitPiBufferCG[4] = 0x30;
+"171
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 48 `i `uc ]
+[; ;UART.c: 173: packetCRCUS = CRC16(TransmitPiBufferCG, ((unsigned short)8 - 2));
+"173
+[e = _packetCRCUS ( _CRC16 (2 , &U _TransmitPiBufferCG -> - -> -> -> 8 `i `us `ui -> -> 2 `i `ui `us ]
+[; ;UART.c: 174: packetCRCUStemp = CRC16(TransmitPiBufferCG, 5);
+"174
+[e = _packetCRCUStemp ( _CRC16 (2 , &U _TransmitPiBufferCG -> -> 5 `i `us ]
+[; ;UART.c: 175: TransmitPiBufferCG[5] = packetCRCUStemp >> 8;
+"175
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetCRCUStemp `ui -> 8 `i `uc ]
+[; ;UART.c: 176: TransmitPiBufferCG[6] = packetCRCUStemp;
+"176
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 6 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetCRCUStemp `uc ]
+[; ;UART.c: 180: PiBufferTXLenUCA = 6;
+"180
+[e = _PiBufferTXLenUCA -> -> 6 `i `uc ]
+[; ;UART.c: 181: __nop();
+"181
 [e ( ___nop ..  ]
-[; ;main.c: 1425: __nop();
-"1425
-[e ( ___nop ..  ]
-[; ;main.c: 1426: return ( EEDATA );
-"1426
-[e ) _EEDATA ]
-[e $UE 1370  ]
-[; ;main.c: 1427: }
-"1427
-[e :UE 1370 ]
+[; ;UART.c: 183: ReceivedPiBufferCG[0] = TransmitPiBufferCG[0];
+"183
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 184: ReceivedPiBufferCG[1] = TransmitPiBufferCG[1];
+"184
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 185: ReceivedPiBufferCG[2] = TransmitPiBufferCG[2];
+"185
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 186: ReceivedPiBufferCG[3] = TransmitPiBufferCG[3];
+"186
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 187: ReceivedPiBufferCG[4] = TransmitPiBufferCG[4];
+"187
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 188: ReceivedPiBufferCG[5] = TransmitPiBufferCG[5];
+"188
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 189: ReceivedPiBufferCG[6] = TransmitPiBufferCG[6];
+"189
+[e = *U + &U _ReceivedPiBufferCG * -> -> -> 6 `i `ui `ux -> -> # *U &U _ReceivedPiBufferCG `ui `ux *U + &U _TransmitPiBufferCG * -> -> -> 6 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 191: flagUARTRead = 1;
+"191
+[e = _flagUARTRead -> -> 1 `i `uc ]
+[; ;UART.c: 193: }
+"193
+[e :UE 1101 ]
 }
-[a 1C 0 ]
-[a 2C 0 ]
-[a 3C 0 ]
-[a 4C 0 ]
-[a 5C 0 ]
-[a 6C 0 ]
-[a 7C 0 ]
-[a 8C 0 ]
-[a 9C 0 ]
-[a 10C 0 ]
-[a 11C 0 ]
-[a 12C 0 ]
-[a 13C 0 ]
-[a 14C 0 ]
+"195
+[v _CreateMessageUARTDEBUG `(v ~T0 @X0 1 ef6`uc`us`us`uc`uc`*uc ]
+{
+[; ;UART.c: 195: void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf){
+[e :U _CreateMessageUARTDEBUG ]
+[v _dataLenUC `uc ~T0 @X0 1 r1 ]
+[v _packetSourceUS `us ~T0 @X0 1 r2 ]
+[v _packetDestUS `us ~T0 @X0 1 r3 ]
+[v _packetNOUC `uc ~T0 @X0 1 r4 ]
+[v _commandUC `uc ~T0 @X0 1 r5 ]
+[v _dataBuf `*uc ~T0 @X0 1 r6 ]
+[f ]
+"196
+[v _dataBufLocUC `uc ~T0 @X0 1 a ]
+"197
+[v _packetCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 196: unsigned char dataBufLocUC;
+[; ;UART.c: 197: unsigned short packetCRCUS;
+[; ;UART.c: 199: TransmitPiBufferCG[0] = 0xF3;
+"199
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 243 `i `uc ]
+[; ;UART.c: 200: TransmitPiBufferCG[1] = 0xCF;
+"200
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 207 `i `uc ]
+[; ;UART.c: 202: TransmitPiBufferCG[2] = dataLenUC;
+"202
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _dataLenUC ]
+[; ;UART.c: 204: TransmitPiBufferCG[3] = packetSourceUS >> 8;
+"204
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetSourceUS `ui -> 8 `i `uc ]
+[; ;UART.c: 205: TransmitPiBufferCG[4] = packetSourceUS;
+"205
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetSourceUS `uc ]
+[; ;UART.c: 209: TransmitPiBufferCG[5] = packetDestUS >> 8;
+"209
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetDestUS `ui -> 8 `i `uc ]
+[; ;UART.c: 210: TransmitPiBufferCG[6] = packetDestUS;
+"210
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 6 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetDestUS `uc ]
+[; ;UART.c: 212: TransmitPiBufferCG[7] = packetNOUC;
+"212
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 7 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _packetNOUC ]
+[; ;UART.c: 214: TransmitPiBufferCG[8] = commandUC;
+"214
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 8 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _commandUC ]
+[; ;UART.c: 216: TransmitPiBufferCG[9] = 0xFF;
+"216
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 9 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 255 `i `uc ]
+[; ;UART.c: 218: for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)
+"218
+{
+[e = _dataBufLocUC -> -> 0 `i `uc ]
+[e $U 1106  ]
+"219
+[e :U 1103 ]
+[; ;UART.c: 219: TransmitPiBufferCG[dataBufLocUC + 10] = dataBuf[dataBufLocUC];
+[e = *U + &U _TransmitPiBufferCG * -> -> + -> _dataBufLocUC `i -> 10 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux *U + _dataBuf * -> _dataBufLocUC `ux -> -> # *U _dataBuf `ui `ux ]
+"218
+[e ++ _dataBufLocUC -> -> 1 `i `uc ]
+[e :U 1106 ]
+[e $ < -> _dataBufLocUC `i -> _dataLenUC `i 1103  ]
+[e :U 1104 ]
+"219
+}
+[; ;UART.c: 220: dataBufLocUC += 10;
+"220
+[e =+ _dataBufLocUC -> -> 10 `i `uc ]
+[; ;UART.c: 222: packetCRCUS = CRC16(TransmitPiBufferCG, 10 + dataLenUC - 2);
+"222
+[e = _packetCRCUS ( _CRC16 (2 , &U _TransmitPiBufferCG -> - + -> 10 `i -> _dataLenUC `i -> 2 `i `us ]
+[; ;UART.c: 223: TransmitPiBufferCG[dataBufLocUC++] = packetCRCUS >> 8;
+"223
+[e = *U + &U _TransmitPiBufferCG * -> ++ _dataBufLocUC -> -> 1 `i `uc `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetCRCUS `ui -> 8 `i `uc ]
+[; ;UART.c: 224: TransmitPiBufferCG[dataBufLocUC] = packetCRCUS;
+"224
+[e = *U + &U _TransmitPiBufferCG * -> _dataBufLocUC `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetCRCUS `uc ]
+[; ;UART.c: 225: PiBufferTXLenUCA = dataBufLocUC++;
+"225
+[e = _PiBufferTXLenUCA ++ _dataBufLocUC -> -> 1 `i `uc ]
+[; ;UART.c: 229: }
+"229
+[e :UE 1102 ]
+}
+"231
+[v _CreateMessageUART `(v ~T0 @X0 1 ef4`us`uc`uc`*uc ]
+{
+[; ;UART.c: 231: void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf){
+[e :U _CreateMessageUART ]
+[v _packetSourceUS `us ~T0 @X0 1 r1 ]
+[v _commandUC `uc ~T0 @X0 1 r2 ]
+[v _dataLenUC `uc ~T0 @X0 1 r3 ]
+[v _dataBuf `*uc ~T0 @X0 1 r4 ]
+[f ]
+"232
+[v _dataBufLocUC `uc ~T0 @X0 1 a ]
+"233
+[v _packetCRCUS `us ~T0 @X0 1 a ]
+[; ;UART.c: 232: unsigned char dataBufLocUC;
+[; ;UART.c: 233: unsigned short packetCRCUS;
+[; ;UART.c: 235: TransmitPiBufferCG[0] = 0xAA;
+"235
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 236: TransmitPiBufferCG[1] = 0xAA;
+"236
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 1 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> -> 170 `i `uc ]
+[; ;UART.c: 238: TransmitPiBufferCG[2] = 8 + dataLenUC;
+"238
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 2 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> + -> 8 `i -> _dataLenUC `i `uc ]
+[; ;UART.c: 240: TransmitPiBufferCG[3] = commandUC;
+"240
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 3 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux _commandUC ]
+[; ;UART.c: 242: TransmitPiBufferCG[4] = packetSourceUS >> 8;
+"242
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 4 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetSourceUS `ui -> 8 `i `uc ]
+[; ;UART.c: 243: TransmitPiBufferCG[5] = packetSourceUS;
+"243
+[e = *U + &U _TransmitPiBufferCG * -> -> -> 5 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetSourceUS `uc ]
+[; ;UART.c: 245: for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)
+"245
+{
+[e = _dataBufLocUC -> -> 0 `i `uc ]
+[e $U 1111  ]
+"246
+[e :U 1108 ]
+[; ;UART.c: 246: TransmitPiBufferCG[dataBufLocUC + 6] = dataBuf[dataBufLocUC];
+[e = *U + &U _TransmitPiBufferCG * -> -> + -> _dataBufLocUC `i -> 6 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux *U + _dataBuf * -> _dataBufLocUC `ux -> -> # *U _dataBuf `ui `ux ]
+"245
+[e ++ _dataBufLocUC -> -> 1 `i `uc ]
+[e :U 1111 ]
+[e $ < -> _dataBufLocUC `i -> _dataLenUC `i 1108  ]
+[e :U 1109 ]
+"246
+}
+[; ;UART.c: 247: dataBufLocUC += 6;
+"247
+[e =+ _dataBufLocUC -> -> 6 `i `uc ]
+[; ;UART.c: 249: packetCRCUS = CRC16(TransmitPiBufferCG, 8 + dataLenUC - 2);
+"249
+[e = _packetCRCUS ( _CRC16 (2 , &U _TransmitPiBufferCG -> - + -> 8 `i -> _dataLenUC `i -> 2 `i `us ]
+[; ;UART.c: 250: TransmitPiBufferCG[dataBufLocUC++] = packetCRCUS >> 8;
+"250
+[e = *U + &U _TransmitPiBufferCG * -> ++ _dataBufLocUC -> -> 1 `i `uc `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> >> -> _packetCRCUS `ui -> 8 `i `uc ]
+[; ;UART.c: 251: TransmitPiBufferCG[dataBufLocUC] = packetCRCUS;
+"251
+[e = *U + &U _TransmitPiBufferCG * -> _dataBufLocUC `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux -> _packetCRCUS `uc ]
+[; ;UART.c: 252: PiBufferTXLenUCA = dataBufLocUC++;
+"252
+[e = _PiBufferTXLenUCA ++ _dataBufLocUC -> -> 1 `i `uc ]
+[; ;UART.c: 253: }
+"253
+[e :UE 1107 ]
+}
+"255
+[v _SendUARTPacket `(v ~T0 @X0 1 ef ]
+{
+[; ;UART.c: 255: void SendUARTPacket(void){
+[e :U _SendUARTPacket ]
+[f ]
+[; ;UART.c: 257: flagUART |= 1;
+"257
+[e =| _flagUART -> -> 1 `i `uc ]
+[; ;UART.c: 258: UART_Write(TransmitPiBufferCG[0]);
+"258
+[e ( _UART_Write (1 *U + &U _TransmitPiBufferCG * -> -> -> 0 `i `ui `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+[; ;UART.c: 259: PiBufferTXNEXTUCA = 1;
+"259
+[e = _PiBufferTXNEXTUCA -> -> 1 `i `uc ]
+[; ;UART.c: 260: }
+"260
+[e :UE 1112 ]
+}
+"262
+[v _UART_Write `(v ~T0 @X0 1 ef1`uc ]
+"263
+{
+[; ;UART.c: 262: void UART_Write(char data)
+[; ;UART.c: 263: {
+[e :U _UART_Write ]
+"262
+[v _data `uc ~T0 @X0 1 r1 ]
+"263
+[f ]
+[; ;UART.c: 264: while(!TXSTA1bits.TRMT);
+"264
+[e $U 1114  ]
+[e :U 1115 ]
+[e :U 1114 ]
+[e $ ! != -> . . _TXSTA1bits 0 1 `i -> -> -> 0 `i `Vuc `i 1115  ]
+[e :U 1116 ]
+[; ;UART.c: 265: TXREG1 = data;
+"265
+[e = _TXREG1 _data ]
+[; ;UART.c: 266: }
+"266
+[e :UE 1113 ]
+}
+"268
+[v _UART_TX_ISRHandler `(v ~T0 @X0 1 ef ]
+{
+[; ;UART.c: 268: void UART_TX_ISRHandler(void){
+[e :U _UART_TX_ISRHandler ]
+[f ]
+[; ;UART.c: 270: if(flagUART & 1){
+"270
+[e $ ! != & -> _flagUART `i -> 1 `i -> 0 `i 1118  ]
+{
+[; ;UART.c: 271: if(PiBufferTXNEXTUCA > PiBufferTXLenUCA){
+"271
+[e $ ! > -> _PiBufferTXNEXTUCA `i -> _PiBufferTXLenUCA `i 1119  ]
+{
+[; ;UART.c: 272: flagUART &= ~1;
+"272
+[e =& _flagUART -> ~ -> 1 `i `uc ]
+[; ;UART.c: 273: return;
+"273
+[e $UE 1117  ]
+"274
+}
+[e :U 1119 ]
+[; ;UART.c: 274: }
+[; ;UART.c: 275: UART_Write(TransmitPiBufferCG[PiBufferTXNEXTUCA++]);
+"275
+[e ( _UART_Write (1 *U + &U _TransmitPiBufferCG * -> ++ _PiBufferTXNEXTUCA -> -> 1 `i `uc `ux -> -> # *U &U _TransmitPiBufferCG `ui `ux ]
+"276
+}
+[e :U 1118 ]
+[; ;UART.c: 276: }
+[; ;UART.c: 278: }
+"278
+[e :UE 1117 ]
+}
