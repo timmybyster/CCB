@@ -960,7 +960,7 @@ void FIRE(void){
     while(ReadMAINS_ZeroCrossing() == 1);
                              //Burn off till first pulse edge comes through
     StartBlastTimer();
-    for (int i = 0; i < 120; i++){                                              //changed to 240 for 2min timeout was 120
+    for (int i = 0; i < 240; i++){                                              //changed to 240 for 2min timeout was 120
         CLRWDT();
         while(ReadMAINS_ZeroCrossing() == 0 && BTHighSpeedTickUIG < 160);       //4 whole cycles missed
           GenerateMissingPulse();
