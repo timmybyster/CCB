@@ -122,6 +122,9 @@ unsigned short temp;
 unsigned char EEPWrite[5], EEPRead[5];
 unsigned char Production_ISC_SN_Counter[2];
 
+unsigned char fireFlag = 0;
+unsigned char reFireFlag = 0;
+
 void InitSystem(void);
 void InitReset(void);
 inline void WaitNewTick(void);
@@ -196,7 +199,7 @@ void Write_b_eep( unsigned int badd,unsigned char bdat );
 unsigned char Read_b_eep( unsigned int badd );
 void Busy_eep ( void );
 
-
+void fireRoutine(void);
 
 extern char UART_Init(const long int baudrate);
 extern char UART_Read(void);
@@ -315,12 +318,11 @@ void interrupt isr(void){
         }
         
         if (LowSpeedTickPBTCG >= 60){                                           //Post Blast Timer
-            AlarmStatusUCG = FAULT;
-            CFLEDFlashEnable = 1;
+            if(fireFlag)
+                reFireFlag = 1;
         }
         if (LowSpeedTickPATCG >= 120){                                          //Pre Arm Timer adjusted to 2 minutes
-            AlarmStatusUCG = FAULT;
-            CFLEDFlashEnable = 1;
+            NOP();
         }
         if (DeArmTickCG >= 7){                                                  //Amount of seconds the keyswitch needs to be in the disarmed position before firing is enabled
             ClearToFire = 1;              
@@ -412,13 +414,15 @@ while(1){
              CFLEDFlashEnable = 1;
         }
     }
-    if (getKeySwitchState() == DISARMED){      
+    if (getKeySwitchState() == DISARMED){
+        fireFlag = 0;
         if(KeySwitchStatusUCG == ARMED)
             Pi_Status_Update = DEFAULT_UPDATE;
 
             KeySwitchStatusUCG = DISARMED;
             StopPostFireTimer();
             StopPreArmedTimer();
+            reFireFlag = 0;
         }
     else{ //Keyswitch is in the Armed State
         if(KeySwitchStatusUCG == DISARMED)
@@ -474,58 +478,24 @@ while(1){
         }
         //Else all faults are clear and we can fire
         else if (AlarmStatusUCG == CLEAR && ClearToFire == 1){
-            FiringStatusUCG=1;                                                  //firing has begun
-            getIBCDefaultData();
-            Transmit_Pi_Default_Data();
-            SendUARTPacket(); 
-            
-            ClearToFire = 0;
-            //Blasting and therefore stop the prearmed timer
-            StopPreArmedTimer();
-            //Change the relay over - ie OFF
-            TurnRelayOn(); //Patch Mains through
-            //Wait long enough for relay to close so we can read the mains voltage before firing
-            WaitTickCount(100);
-            TurnSSR1On();
-            WaitTickCount(100);
-            FireOutFloat = 0;
-            ReadFireOut();
-            FireOutFloat = 1000.0; //debug
-            TurnSSR1Off();
-
-            if (FireOutFloat > 815.0){                                          //confirm it is not currently firing.            
-                //Fire
-                
-                Transmit_BLAST_Command_Packet();
-                CLRWDT();
-                WaitTickCount(2000*4);                                          //Delay so that the booster comms line goes down
-                CLRWDT();
-                
-                BTEnabled = 1;                                                  // engage firing counter
-                FIRE();
-                
-                WaitTickCount(1000);
-                BTEnabled = 0;                                                  // engage communication mode counter
-                IBC_ComsCrashTimer = IBC_COMSCRASH_COUNT-60;                    // jump the counter to only allow a 1 min leeway before resetting must happen
-            }
-            else{
-                AlarmStatusUCG = FAULT;
-            }
-            //Always Turn SSR OFF as precautionary measure
-            
-            FiringStatusUCG=0;                                                  //firing is complete
-            TurnSSR1Off();
-            //We have fired and required Disarm prior to refiring
-
-            //After Firing turn the relay back
-            TurnRelayOff();                                                     //Keep Mains off of the output                
+            fireRoutine();                                                     //Keep Mains off of the output
+            fireFlag = 1;
         }
+    }
+    if(reFireFlag){
+        reFireFlag = 0;
+        StopPostFireTimer();
+        StopPreArmedTimer();
+        StartPreArmedTimer();                                               //If not, start the timer
+        fireRoutine();
     }
     else{
         if (FireButtonStatusUCG == PRESSED)
             Pi_Status_Update = DEFAULT_UPDATE;
         FireButtonStatusUCG = DEPRESSED;
     }
+    
+    
     
     if (AlarmStatusUCG == 1){
 
@@ -1428,3 +1398,51 @@ unsigned char Read_b_eep( unsigned int badd )
 
 
 
+void fireRoutine(void){
+    FiringStatusUCG=1;                                                  //firing has begun
+    getIBCDefaultData();
+    Transmit_Pi_Default_Data();
+    SendUARTPacket(); 
+
+    ClearToFire = 0;
+    //Blasting and therefore stop the prearmed timer
+    StopPreArmedTimer();
+    //Change the relay over - ie OFF
+    TurnRelayOn(); //Patch Mains through
+    //Wait long enough for relay to close so we can read the mains voltage before firing
+    WaitTickCount(100);
+    TurnSSR1On();
+    WaitTickCount(100);
+    FireOutFloat = 0;
+    ReadFireOut();
+    FireOutFloat = 1000.0; //debug
+    TurnSSR1Off();
+
+    if (FireOutFloat > 815.0){                                          //confirm it is not currently firing.            
+        //Fire
+
+        Transmit_BLAST_Command_Packet();
+        CLRWDT();
+        WaitTickCount(2000*4);                                          //Delay so that the booster comms line goes down
+        CLRWDT();
+
+        BTEnabled = 1;                                                  // engage firing counter
+        LAT_DIAG1_LED = !LAT_DIAG1_LED;
+        FIRE();
+
+        WaitTickCount(1000);
+        BTEnabled = 0;                                                  // engage communication mode counter
+        IBC_ComsCrashTimer = IBC_COMSCRASH_COUNT-60;                    // jump the counter to only allow a 1 min leeway before resetting must happen
+    }
+    else{
+        AlarmStatusUCG = FAULT;
+    }
+    //Always Turn SSR OFF as precautionary measure
+
+    FiringStatusUCG=0;                                                  //firing is complete
+    TurnSSR1Off();
+    //We have fired and required Disarm prior to refiring
+
+    //After Firing turn the relay back
+    TurnRelayOff();
+}
