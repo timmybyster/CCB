@@ -514,7 +514,6 @@ while(1){
 
 void Receive_ISC_Packet(void){
         unsigned short tempIscSerial = PacketReadParamST7540(ST7540_SOURCE);
-        LAT_DIAG1_LED = !LAT_DIAG1_LED;
         if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){                        //CRC passes and the data is valid
             ReceiveNewDataST7540();
             CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
