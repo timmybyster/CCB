@@ -1,10 +1,3 @@
-/*
- * File:   UART.c
- * Author: Steven Burford
- *
- * Created on 29 January 2015, 10:22 AM
- */
-
 #include "UART.h"
 #include "main.h"
 
@@ -18,9 +11,6 @@ unsigned char PiBufferTXNEXTUCA = 0;
 unsigned char PiBufferRXNEXTUCA = 0;
 char ReceivedPiBufferCG[PI_RECEIVE_BUFFER_LENGTH];                              //Character Buffer to receive packets from the Pi, Should be fixed length of 7
 char TransmitPiBufferCG[80];
-
-//extern unsigned char RX_ready_Global;
-//extern unsigned short RX_TimoutCounter;
 
 //Function prototypes
 
@@ -49,7 +39,7 @@ char UART_Init(const long int baudrate)
   if(x>255)                                                                     //If High Baud Rage Required
   {
     x = (_XTAL_FREQ*4 - baudrate*16)/(baudrate*16);                             //SPBRG for High Baud Rate
-    TXSTA1bits.BRGH = 1;                                                    //Setting High Baud Rate
+    TXSTA1bits.BRGH = 1;                                                        //Setting High Baud Rate
   }
   if(x<256)
   {
@@ -69,7 +59,6 @@ char UART_Read(void)
     char charRS232;   
     charRS232 = RCREG1; //get a single character off the USART line                  
         if((PI_RECEIVE_BUFFER_LENGTH - 1) == PiBufferRXNEXTUCA){                //Entire packet read?       
-//            RX_ready_Global=1;
             flagUARTRead = 1;
             ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
             PiBufferRXNEXTUCA = 0;                                              //Indicate we have received a full packet      
@@ -219,13 +208,10 @@ void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceU
         TransmitPiBufferCG[dataBufLocUC + 10] = dataBuf[dataBufLocUC];
     dataBufLocUC += 10;
 
-    packetCRCUS = CRC16(TransmitPiBufferCG, 10 + dataLenUC - 2);                                                    //Calcualte CRC
+    packetCRCUS = CRC16(TransmitPiBufferCG, 10 + dataLenUC - 2);                //Calcualte CRC
     TransmitPiBufferCG[dataBufLocUC++] = packetCRCUS >> 8;
     TransmitPiBufferCG[dataBufLocUC] = packetCRCUS;
     PiBufferTXLenUCA = dataBufLocUC++;
-
-    //PiBufferTXLenUCA = dataBufLocUC;
-
 }
 
 void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf){

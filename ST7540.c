@@ -192,7 +192,7 @@ void SPIISRHandlerST7540(void){
             return;
         }
     }
-    PIR3bits.SSP2IF = 0;                                                //Clear int flag
+    PIR3bits.SSP2IF = 0;                                                        //Clear int flag
 }
 
 void RXReadyISRHandlerST7540(void){
