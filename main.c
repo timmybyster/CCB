@@ -1,27 +1,8 @@
-/* 
- * File:   main.c
- * Author: Steven Burford
- *
- * Created on 28 January, 2015, 8:23 AM
- *
- * IBC-1 V1.00 Code
- *
- */
-
-/*
- 28/07/2016 - Changed IBC Default data from 55 to 05 to bring in line with documentation of IBC on default port of 
-            - Updated to trigger a pulsing fault if reset was pressed with key in the armed position
-            
- */
-
 #include "ST7540.h"
 #include <xc.h>
 #include "main.h"
 #include "UART.h"
 
-
-///////
-//PLM Comms
 int ReceivedPLMBufferIndexIG = 0;
 int TransmitPLMBufferIG = 0;
 char ReceivedPLMBufferCG[PLM_RECEIVE_BUFFER_LENGTH];
@@ -89,9 +70,6 @@ unsigned char Discover_ISC_ModeUCG = 0;
 unsigned char Show_Missing_ISC = 0;
 unsigned char Discovered_New_ISC = 0;
 
-
-//unsigned char RX_ready_Global;
-
 char HighPulseCountCG;
 
 unsigned char KeySwitchStateUCG;
@@ -102,10 +80,6 @@ unsigned short cableFaultCounter;
 unsigned short earthLeakageCounter;
 unsigned short earthLeakageStart;
 
-//unsigned short RX_TimoutCounter;
-//unsigned short RX_TimoutCounter2;
-
-
 unsigned short mainsZero_CrossingValueUSG;
 short long fireOutValueSLG;
 float FireOutFloat;
@@ -114,7 +88,6 @@ unsigned int ISC_CF_Index = 0;
 unsigned int IBC_Default_Data;
 unsigned int IBC_Faults_Data;
 
-///////
 unsigned short statusFlagsUSG;
 
 unsigned short temp;
@@ -232,7 +205,7 @@ void interrupt isr(void){
         statusFlagsUSG |= FLAG_TICK;        
         UART_TX_ISRHandler();        
 
-        ELT_Counter++;              //add 1 to the ELT counter, cleared by the ELT tester
+        ELT_Counter++;                                                          //add 1 to the ELT counter, cleared by the ELT tester
         
         if (DataReadyST7540()){
             Receive_ISC_Packet();
@@ -241,7 +214,7 @@ void interrupt isr(void){
             }
             ReceiveNewDataST7540();
         }
-        if (CF_STAUTS_TimerUIG < (20000)){   //10 seconds
+        if (CF_STAUTS_TimerUIG < (20000)){                                      //10 seconds
             CF_STAUTS_TimerUIG++;
             }
         
@@ -262,7 +235,6 @@ void interrupt isr(void){
                 CFLEDFlashState = !CFLEDFlashState;
         }
         
-        //////////////////////////////////////////////////////////////////////////////////
         if (BTEnabled){
             BTHighSpeedTickUIG++;
         }
@@ -278,16 +250,7 @@ void interrupt isr(void){
             else
                 IdleTimerUIG++;
                                         
-//            if (CheckISCTimerUIG > (2000*10)){                                  //10 seconds
-//                Discover_ISC_ModeUCG = 1;                                       // set to try discover ISC's
-//                Check_ALL_ISC();
-//                CheckISCTimerUIG = 0;
-//                IdleTimerUIG = 0;
-//                
-//                ISC_SN_Array_MissingUCG = 0;                                    // show that unit 
-//            }
-            //else
-                CheckISCTimerUIG++;
+            CheckISCTimerUIG++;
         }
 
         if (PATEnabled){
@@ -299,7 +262,6 @@ void interrupt isr(void){
             LowSpeedTickPATCG++;
             }
         }        
-        //////////////////////////////////////////////////////////////////////////////////
         if (HighSpeedTickUIG < 2000){                                           //2000 Ticks is 1 second: 500us per tick.
             HighSpeedTickUIG++;
         }
@@ -310,8 +272,6 @@ void interrupt isr(void){
             if (PBTEnabled){
                 LowSpeedTickPBTCG++;                
             }        
-//            if(RX_TimoutCounter2<RX_TIMEOUT)  //thus 1000 counts of 240
-//                RX_TimoutCounter2++;
         }
         
         if (LowSpeedTickPBTCG >= 60){                                           //Post Blast Timer
@@ -372,8 +332,8 @@ while(1){
         }
     }
     
-    checkCableFaults();             //check cable faults normally all the time, should it clear then clear the cable as soon as
-                                    //reset is pressed or past when reset is pressed but fault clears in the field
+    checkCableFaults();                                                         //check cable faults normally all the time, should it clear then clear the cable as soon as
+                                                                                //reset is pressed or past when reset is pressed but fault clears in the field
     
     if (CableFaultStatusUCG == CABLEFAULT || CableFaultStatusUCG == EARTHFAULT){  //We have a cable fault
         if (NewCFStatusUCG == 1){                                               //We have a new cable fault
@@ -386,10 +346,10 @@ while(1){
     else{                                                                       //We dont have a cable fault any more
         if (CFLEDFlashEnable == 0 && AlarmStatusUCG == CLEAR){
                 LAT_CABLE_FAULT_LED = OFF;
-                TurnRelayOff();                                                     //Fault Clear, turn relay back on
+                TurnRelayOff();                                                 //Fault Clear, turn relay back on
                 CF_STAUTS_TimerUIG = 0;
-                if (NewCFStatusUCG == 0){                                           //We no longer have cable fault
-                NewCFStatusUCG = 1;                                                 //Fault is cleared, hence next time a fault occurs, it is a new fault
+                if (NewCFStatusUCG == 0){                                       //We no longer have cable fault
+                NewCFStatusUCG = 1;                                             //Fault is cleared, hence next time a fault occurs, it is a new fault
                 Pi_Status_Update = DEFAULT_UPDATE;
             }
         }                        
@@ -436,8 +396,6 @@ while(1){
     if(IBC_ComsCrashTimer > IBC_COMSCRASH_COUNT){          
         //also need to make it reset not turn on the alarm
         EEPROMSetReset();                                                       //set the reset flags to ensure that it doesnt alarm.
-//        CreateMessageUART(IBC_SN, CMD_PI_IBC_ERRORS, 1, IBC_Faults_Data);
-//        PacketForPiIdentifier = CMD_PI_IBC_ERRORS;
         resetUARTPointers();
         ResetStatusUCG = 1;
         Pi_Status_Update = DEFAULT_UPDATE;
@@ -483,14 +441,14 @@ while(1){
             //Blasting and therefore stop the prearmed timer
             StopPreArmedTimer();
             //Change the relay over - ie OFF
-            TurnRelayOn(); //Patch Mains through
+            TurnRelayOn();                                                      //Patch Mains through
             //Wait long enough for relay to close so we can read the mains voltage before firing
             WaitTickCount(100);
             TurnSSR1On();
             WaitTickCount(100);
             FireOutFloat = 0;
             ReadFireOut();
-            FireOutFloat = 1000.0; //debug
+            FireOutFloat = 1000.0;
             TurnSSR1Off();
 
             if (FireOutFloat > 815.0){                                          //confirm it is not currently firing.            
@@ -547,12 +505,12 @@ while(1){
 void Receive_ISC_Packet(void){
         unsigned short tempIscSerial = PacketReadParamST7540(ST7540_SOURCE);
         LAT_DIAG1_LED = !LAT_DIAG1_LED;
-        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){                        //CRC passes and the data is valid
+        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){//CRC passes and the data is valid
             ReceiveNewDataST7540();
             CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
             if (BroadcastCheckUC == 0){
 
-            switch(PacketReadParamST7540(ST7540_CMD)){                      //Extract the command from the Packet
+            switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
                 case CMD_GET_SN :
                     CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_SN_IB651, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
                     SendUARTPacket();
@@ -589,7 +547,7 @@ void Receive_ISC_Packet(void){
                     SendUARTPacket();
                     return;
                     
-                case(PING_ISC):                                             //Receiving ACK for PING
+                case(PING_ISC):                                                 //Receiving ACK for PING
                     tempIscSerial = (tempIscSerial << 8) & 0XFF00;
                     tempIscSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
                     CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempIscSerial);
@@ -598,8 +556,8 @@ void Receive_ISC_Packet(void){
 
             }
         }
-        else                                                                //invalid CRC - How do we handle this?
-            ReceiveNewDataST7540();                                         //configure to recieve next data as this must be ignored.
+        else                                                                    //invalid CRC - How do we handle this?
+            ReceiveNewDataST7540();                                             //configure to recieve next data as this must be ignored.
     }
             
 }
@@ -608,10 +566,9 @@ void Receive_Pi_Packet(void){                                                   
     
     unsigned char BroadcastUC;
             
-//CreateMessageST7540(unsigned short packetSourceUS, unsigned short packetDestUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf)
-temp = PacketReadParamUART(UART_HEADER);
-//We have received a packet from the PI, now we need to extract the info and perform the relevant task
-CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
+    temp = PacketReadParamUART(UART_HEADER);
+    //We have received a packet from the PI, now we need to extract the info and perform the relevant task
+    CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
     switch(PacketReadParamUART(UART_CMD)){//Extract the command from the Packet
         case(CMD_PI_DEFAULT_DATA):
             //Get IB651 Default Values
@@ -710,7 +667,7 @@ CheckBroadcastPacket(PacketReadParamUART(UART_CMD));
 }
 
 void Transmit_BLAST_Command_Packet(void){
-    if (!TransmitBusyST7540() && LineIdleST7540()){  //Only allowed to transmit if the we are not already transmitting and not receiving
+    if (!TransmitBusyST7540() && LineIdleST7540()){                             //Only allowed to transmit if the we are not already transmitting and not receiving
         CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, CMD_BLAST_COMMAND, 0, "");
                 StartTransmitST7540();
                 ISC_Transmit_Packet_Ready = 0;
@@ -853,8 +810,6 @@ void Inspect_Default_Data_Packet(unsigned short Data_Length){
     unsigned char EL;
     unsigned char Fault;
 
-    //index = getISC_Index(ISC_SN);
-
     for(index = 0; index < Data_Length / 2; index++){                           //Packet payload
         data = boosterCommsData[DATA_STATUS][(index * 2) + 1];
         EL = data & 0b0000100;
@@ -930,18 +885,18 @@ void checkCableFaults(void){
     
     //if in ELT test mode then finish the test before anything else
     if(earthLeakageStart==1){
-        ReadEarthLeakage();         //then conduct the test
-        earthLeakageStart=0;        //and clear the start bit
-        ELT_Counter=0;              //clear the counter
-        TurnCableFaultDetectOff();  // turn off the test
+        ReadEarthLeakage();                                                     //then conduct the test
+        earthLeakageStart=0;                                                    //and clear the start bit
+        ELT_Counter=0;                                                          //clear the counter
+        TurnCableFaultDetectOff();                                              //turn off the test
         
     }
     else{
-        ReadCableFault();           //only do the test far away from ELT
+        ReadCableFault();                                                       //only do the test far away from ELT
     }
     
     if((ELT_Counter >= 500 && earthLeakageCounter > 0) || ELT_Counter >= 3000){
-        earthLeakageStart=1;        //start the test
+        earthLeakageStart=1;                                                    //start the test
         TurnCableFaultDetectOn();   
     }
     
@@ -958,7 +913,7 @@ void checkCableFaults(void){
 
 void FIRE(void){
     while(ReadMAINS_ZeroCrossing() == 1);
-                             //Burn off till first pulse edge comes through
+                                                                                //Burn off till first pulse edge comes through
     StartBlastTimer();
     for (int i = 0; i < 240; i++){                                              //changed to 240 for 2min timeout was 120
         CLRWDT();
@@ -1015,33 +970,33 @@ void InitSystem(void){
     OSCCONbits.SCS = 0b11;                                                      //Internal Oscillator block
     
     //Configure A2Ds
-    TRIS_CFAULT_READ = 1;               //Cable Fault Read
-    TRIS_MAINS_ZEROCROSSING = 1;        //Mains/Zero Crossing detect
+    TRIS_CFAULT_READ = 1;                                                       //Cable Fault Read
+    TRIS_MAINS_ZEROCROSSING = 1;                                                //Mains/Zero Crossing detect
     ANSEL_MAINS_ZEROCROSSING = 0;
-    TRIS_EARTH_LEAKAGE = 1;            //EARTH LEAKAGE
-    TRIS_FIRE_OUT = 1;                   //FIRE OUT
+    TRIS_EARTH_LEAKAGE = 1;                                                     //EARTH LEAKAGE
+    TRIS_FIRE_OUT = 1;                                                          //FIRE OUT
 
     //STANDARD INPUT Configuration
-    TRIS_FIRE_SWITCH = 1;                //FIRE SWITCH IN
+    TRIS_FIRE_SWITCH = 1;                                                       //FIRE SWITCH IN
     ANSEL_FIRE_SWITCH = 0;
-    TRIS_RESET_SWITCH = 1;               //RESET SWITCH IN - Cannot define as always an input
+    TRIS_RESET_SWITCH = 1;                                                      //RESET SWITCH IN - Cannot define as always an input
 
     //OUTPUTS
-    TRIS_BUZZER_ALARM_LED = 0;        //BUZZER/ALARM LED
+    TRIS_BUZZER_ALARM_LED = 0;                                                  //BUZZER/ALARM LED
     LAT_BUZZER_ALARM_LED = 0;
-    TRIS_SSR1 = 0;                        //SSR RELAY
+    TRIS_SSR1 = 0;                                                              //SSR RELAY
     LAT_SSR1 = 0;
-    TRIS_CABLE_FAULT = 0;                //CABLE FAULT
+    TRIS_CABLE_FAULT = 0;                                                       //CABLE FAULT
     LAT_CABLE_FAULT = 0;
-    TRIS_RELAY1 = 0;                     //RELAY 1
+    TRIS_RELAY1 = 0;                                                            //RELAY 1
     LAT_RELAY1 = 1; //0
 
     //LED definitions
-    TRIS_CABLE_FAULT_LED = 0;           //CABLE FAULT LED
+    TRIS_CABLE_FAULT_LED = 0;                                                   //CABLE FAULT LED
     LAT_CABLE_FAULT_LED = 0;
-    TRIS_DIAG1_LED = 0;                  //DIAGNOSTIC LED 1
+    TRIS_DIAG1_LED = 0;                                                         //DIAGNOSTIC LED 1
     LAT_DIAG1_LED = 0;
-    TRIS_DIAG2_LED = 0;                  //DIAGNOSTIC LED 2
+    TRIS_DIAG2_LED = 0;                                                         //DIAGNOSTIC LED 2
     LAT_DIAG2_LED = 0;
 
     //UART DEFINITIONS - Both TRIS bits set to '1' as per datasheet
@@ -1078,7 +1033,7 @@ void InitSystem(void){
     INTCONbits.RBIE = 1;                                                        //Enables the IOCx port change interrupt
     IOCBbits.IOCB4 = 1;                                                         //Enable RB4 as an IOC pin
     
-    TXSTA1bits.BRGH = 0;                                                    //Setting High Baud Rate
+    TXSTA1bits.BRGH = 0;                                                        //Setting High Baud Rate
     BAUDCONbits.BRG16 = 0;
     UART_Init(9600);
     //Read from UART to clear interrupt flag
@@ -1102,10 +1057,10 @@ void InitSystem(void){
     TurnSSR1Off();                                                              //Double check the relay is off
     
     FiringStatusUCG = 0;                                                        //indicate that there is no fault at the start
-    ResetStatusUCG = 0;                                                        //indicate that coms should be fine now
+    ResetStatusUCG = 0;                                                         //indicate that coms should be fine now
     
-    EEPROMRead();               //pull the coms data
-    if(EEPRead[2]!= 0xAA)       //if it is equal to AA then just clear.
+    EEPROMRead();                                                               //pull the coms data
+    if(EEPRead[2]!= 0xAA)                                                       //if it is equal to AA then just clear.
     {
         AlarmStatusUCG = FAULT;
         checkCableFaults();
@@ -1113,7 +1068,7 @@ void InitSystem(void){
     else
         AlarmStatusUCG = CLEAR;
     
-    EEPROMClearReset();          //ensure on start that it is always cleared
+    EEPROMClearReset();                                                         //ensure on start that it is always cleared
             
     NewCFStatusUCG = 0;
     ClearToFire = 0;
@@ -1160,41 +1115,24 @@ void ReadEarthLeakage(void){
 
     //we have now been in a test state for 50ms=+- thus start sampling
     
-    int Failed=1;                          //tracks if we have any passes
-    for(int i=0; i<40 ;i++){//conduct 40 samples
-        __delay_us(10);                                                           //wait between samples
-        earthLeakageValueUS = ReadAnalogVoltage(ADC_VOLT_EL);                       //Read the EL test pin    
-        if(earthLeakageValueUS < VOLT_EL_HIGH){              //if it is not a EL fault then clear it.
+    int Failed=1;                                                               //tracks if we have any passes
+    for(int i=0; i<40 ;i++){                                                    //conduct 40 samples
+        __delay_us(10);                                                         //wait between samples
+        earthLeakageValueUS = ReadAnalogVoltage(ADC_VOLT_EL);                   //Read the EL test pin    
+        if(earthLeakageValueUS < VOLT_EL_HIGH){                                 //if it is not a EL fault then clear it.
             Failed=0;           //clear the failed marker
             earthLeakageCounter =0;
         }
     }
     
-    if(Failed){         //if we fail then add 1 to the counter
+    if(Failed){                                                                 //if we fail then add 1 to the counter
         (earthLeakageCounter== COUNTER_EL)?0:earthLeakageCounter++;             //if counter <40 then ++ else leave counter cableFaultCounter = 
-        //earthLeakageCounter++;  
     }
     else{
         earthLeakageCounter=0;
     }
     
-    earthLeakageProblemUCG = (earthLeakageCounter == COUNTER_EL)?1:0;   //> VOLT_EL_HIGH)?1:0;      //if the counter has reached the trigger limit then trigger
-        
-    /* 
-    TurnCableFaultDetectOn();                                                   //Enable EL test
-    //__delay_us(1000);                                                           //Wait at least round trip delay for 5km (with Vfac of 0.6 is about 55uS)
-    __delay_ms(18);                                                           //Wait at least round trip delay for 5km (with Vfac of 0.6 is about 55uS)
-    earthLeakageValueUS = ReadAnalogVoltage(ADC_VOLT_EL);                       //Read the EL test pin
-    TurnCableFaultDetectOff();                                                  //Disable EL test
-
-    if(earthLeakageValueUS > VOLT_EL_HIGH){
-        (earthLeakageCounter== COUNTER_EL)?0:earthLeakageCounter++;             //if counter <40 then ++ else leave counter cableFaultCounter = 
-    }
-    else{                                                                       //if it ever is not a EL fault then clear it.
-        earthLeakageCounter =0;
-    }
-    earthLeakageProblemUCG = (earthLeakageCounter == COUNTER_EL)?1:0;   //> VOLT_EL_HIGH)?1:0;      //if the counter has reached the trigger limit then trigger
-*/
+    earthLeakageProblemUCG = (earthLeakageCounter == COUNTER_EL)?1:0;           //if the counter has reached the trigger limit then trigger
 
 }
 
@@ -1217,7 +1155,6 @@ void ReadCableFault(void){
 unsigned char ReadMAINS_ZeroCrossing(void){
     unsigned char mainsZero_CrossingValueUSG2;
     
-    //mainsZero_CrossingValueUSG = ReadAnalogVoltage(ADC_VOLT_ZC);
     mainsZero_CrossingValueUSG = PORT_MAINS_ZEROCROSSING;
     WaitTickCount(1);                                                           //Debounce
     mainsZero_CrossingValueUSG2 = PORT_MAINS_ZEROCROSSING;
@@ -1284,11 +1221,11 @@ unsigned char getKeySwitchState(void){                                          
     }
     else {                                                                      //Wait quarter of a cycle
         WaitTickCount(15);
-        ReadMAINS_ZeroCrossing();  //See if we have a signal       
+        ReadMAINS_ZeroCrossing();                                               //See if we have a signal       
         if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                   //Measured voltage above the threshold, therefore switch closed
             KeySwitchStateUCG = ARMED;           
         }
-        else{           //Wait half a cycle
+        else{                                                                   //Wait half a cycle
             WaitTickCount(10);
             ReadMAINS_ZeroCrossing();
             if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){               //Measured voltage above the threshold, therefore switch closed
@@ -1363,8 +1300,8 @@ void EEPROMClearReset(){
     unsigned int address;
     address = 0x0202;
     INTCONbits.GIEH = 0;                                                        //Disable all unmasked interrupts
-    Write_b_eep (address, 0x00);                                         // write into to EEPROM
-                                                           //increment the address of EEPROM to next location
+    Write_b_eep (address, 0x00);                                                //write into to EEPROM
+                                                                                //increment the address of EEPROM to next location
     /* Checks & waits the status of ER bit in EECON1 register */
         Busy_eep();
     INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
@@ -1374,8 +1311,8 @@ void EEPROMSetReset(){
     unsigned int address;
     address = 0x0202;
     INTCONbits.GIEH = 0;                                                        //Disable all unmasked interrupts
-    Write_b_eep (address, 0xAA);                                         // write into to EEPROM
-                                                           //increment the address of EEPROM to next location
+    Write_b_eep (address, 0xAA);                                                //write into to EEPROM
+                                                                                //increment the address of EEPROM to next location
     /* Checks & waits the status of ER bit in EECON1 register */
         Busy_eep();
     INTCONbits.GIEH = 1;                                                        //Enable all unmasked interrupts
@@ -1425,6 +1362,3 @@ unsigned char Read_b_eep( unsigned int badd )
 	Nop();                                                                      //Nop may be required for latency at high frequencies
 	return ( EEDATA );                                                          // return with read byte
 }
-
-
-
