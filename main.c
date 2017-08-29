@@ -381,9 +381,7 @@ while(1){
         if (NewCFStatusUCG == 1){                                               //We have a new cable fault
             NewCFStatusUCG = 0;
             Pi_Status_Update = DEFAULT_UPDATE;
-            AlarmStatusUCG = FAULT;                                             //Turn on general alarm
-        }
-        LAT_CABLE_FAULT_LED = ON;                                               //Have cable fault so turn LED on
+        }   
     }
     else{                                                                       //We dont have a cable fault any more
         if (CFLEDFlashEnable == 0 && AlarmStatusUCG == CLEAR){
