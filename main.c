@@ -170,14 +170,16 @@ unsigned char Read_b_eep( unsigned int badd );
 void Busy_eep ( void );
 
 
-
+extern unsigned char DataReadyUART(void);
+extern unsigned char LineIdleST7540(void);
+extern char *PacketDataST7540(void);
 extern char UART_Init(const long int baudrate);
 extern char UART_Read(void);
 extern void UART_Write(char data);
 extern void UART_TX_ISRHandler(void);
 extern void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf);
 extern void SendUARTPacket(void);
-extern short PacketReadParamUART(unsigned char paramName);
+extern unsigned short PacketReadParamUART(unsigned char paramName);
 extern char CheckCRCUART(void);
 extern void resetUARTPointers(void);
 
