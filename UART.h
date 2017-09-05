@@ -26,7 +26,7 @@
 #define UART_SN                 2
 #define UART_CRC_VALID          3
 
-
+#define RX_PACKET_TIMEOUT       100                                             //RX pointer will restart with 0xAA 0xAA just after timeout (each unit:500us & Max:200)
 
 #endif	/* UART_H */
 

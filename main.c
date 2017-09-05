@@ -301,6 +301,12 @@ void interrupt isr(void){
         UART_Read();    
         PIR1bits.RC1IF = 0;
     }
+    
+    if(RCSTA1bits.OERR){                                                        //Clear the Receive Overflow bit
+        RCSTA1bits.CREN = 0;                                                    //By clearing the Continuous Receive Enable Flag
+        RCSTA1bits.CREN = 1;                                                    //Re-enable it to allow for new reception
+    }
+    
     if (INTCONbits.RBIF){                                                       //else if(neg pin change on SSX){
         INTCONbits.RBIF = 0;
         RXReadyISRHandlerST7540();

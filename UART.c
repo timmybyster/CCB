@@ -11,6 +11,10 @@ unsigned char PiBufferTXNEXTUCA = 0;
 unsigned char PiBufferRXNEXTUCA = 0;
 char ReceivedPiBufferCG[PI_RECEIVE_BUFFER_LENGTH];                              //Character Buffer to receive packets from the Pi, Should be fixed length of 7
 char TransmitPiBufferCG[80];
+unsigned char rxPacketTimeout = 0;
+
+//extern unsigned char RX_ready_Global;
+//extern unsigned short RX_TimoutCounter;
 
 //Function prototypes
 
@@ -20,7 +24,7 @@ void UART_Write(char data);
 void UART_TX_ISRHandler(void);
 void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, unsigned char dataLenUC, char *dataBuf);
 void SendUARTPacket(void);
-unsigned char DataReadyUART(void);
+//unsigned char DataReadyUART(void);
 unsigned short PacketReadParamUART(unsigned char paramName);
 unsigned char CheckCRCUART(void);
 void ClearDataReady(void);
@@ -56,23 +60,37 @@ char UART_Init(const long int baudrate)
 
 char UART_Read(void)
 {
-    char charRS232;   
+    char charRS232;
+    static firstAAandTimeoutFlag = 0;
+
     charRS232 = RCREG1;                                                         //get a single character off the USART line                  
-        if((PI_RECEIVE_BUFFER_LENGTH - 1) == PiBufferRXNEXTUCA){                //Entire packet read?       
-            flagUARTRead = 1;
-            ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
-            PiBufferRXNEXTUCA = 0;                                              //Indicate we have received a full packet      
-            return;
-        }
-        else if (PiBufferRXNEXTUCA > PI_RECEIVE_BUFFER_LENGTH  || flagUARTRead == 1){
-            PiBufferRXNEXTUCA = 0;                                              //ensure it never gets stuck
-        }
-        else{            
-            flagUARTRead = 0;
-            ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
-            PiBufferRXNEXTUCA++;
-            return;
-        }    
+    
+    if((firstAAandTimeoutFlag = 1)&&(charRS232 == 0xAA)){                       //2nd 0xAA will reset the pointer just if 1st 0xAA was received after timeout
+        firstAAandTimeoutFlag = 0;  
+        rxPacketTimeout = 0;                                                    //Reset rx timeout
+        ReceivedPiBufferCG[0] = 0xAA;
+        ReceivedPiBufferCG[1] = 0xAA;
+        PiBufferRXNEXTUCA = 2;
+        flagUARTRead = 0;
+        return;
+    }
+    
+    firstAAandTimeoutFlag = 0;
+    if((rxPacketTimeout > RX_PACKET_TIMEOUT)&&(charRS232 == 0xAA)){             //set flag if 0xAA received after timeout
+        firstAAandTimeoutFlag = 1;
+    }
+    
+    rxPacketTimeout = 0;                                                        //Reset rx timeout
+    
+    if(flagUARTRead == 1) return;
+    
+    ReceivedPiBufferCG[PiBufferRXNEXTUCA] = charRS232;
+    
+    if(++PiBufferRXNEXTUCA >= PI_RECEIVE_BUFFER_LENGTH){                        //Entire packet read?
+        //RX_ready_Global=1;
+        flagUARTRead = 1;                                                       //Indicate we have received a full packet      
+        PiBufferRXNEXTUCA = 0;                                              
+    }
 }
 
 void resetUARTPointers(void){
@@ -254,8 +272,9 @@ void UART_Write(char data)
   TXREG1 = data;                                                                //Write character into buffer
 }
 
-void UART_TX_ISRHandler(void){
-
+void UART_TX_ISRHandler(void){                                                  //Runs every 500us
+    if(++rxPacketTimeout > 200) rxPacketTimeout == 200;                         //Max 100ms
+    
     if(flagUART & FLAG_UART_TX_ACTIVE){                                         //Are we in TX mode
         if(PiBufferTXNEXTUCA > PiBufferTXLenUCA){                               //Done transmitting buffer?
             flagUART &= ~FLAG_UART_TX_ACTIVE;                                   //Disable TX mode
