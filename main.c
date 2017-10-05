@@ -15,15 +15,15 @@ unsigned char test;
 
 unsigned char routerData[60];
 
-unsigned short ISC_SN_ArrayUIG[MAX_NO_ISC];
-unsigned short ISC_SN_ArrayUIG_Missing[MAX_NO_ISC];
-unsigned char ISC_SN_Array_ReverseUSG[MAX_NO_ISC * 2];
-unsigned char ISC_SN_Array_Missing_ReverseUSG[MAX_NO_ISC * 2];
-unsigned short ISC_Switch_TempUSG;
-unsigned int ISC_PARENT_SNArrayUIG[MAX_NO_ISC];
-unsigned char ISC_SN_ArrayIndexUCG = 0;
-unsigned char ISC_SN_Array_SizeUCG = 0;
-unsigned char ISC_SN_Array_MissingUCG = 0;
+unsigned short CBB_SN_ArrayUIG[MAX_NO_CBB];
+unsigned short CBB_SN_ArrayUIG_Missing[MAX_NO_CBB];
+unsigned char CBB_SN_Array_ReverseUSG[MAX_NO_CBB * 2];
+unsigned char CBB_SN_Array_Missing_ReverseUSG[MAX_NO_CBB * 2];
+unsigned short CBB_Switch_TempUSG;
+unsigned int CBB_PARENT_SNArrayUIG[MAX_NO_CBB];
+unsigned char CBB_SN_ArrayIndexUCG = 0;
+unsigned char CBB_SN_Array_SizeUCG = 0;
+unsigned char CBB_SN_Array_MissingUCG = 0;
 unsigned int HighSpeedTickUIG;
 unsigned int HighSpeedTickPAUIG;
 unsigned int BTHighSpeedTickUIG;
@@ -31,8 +31,8 @@ unsigned int CFLEDFlashTickUIG = 0;
 unsigned int IdleTimerUIG = 0;
 unsigned int CF_STAUTS_TimerUIG = 0;
 unsigned int ELT_Counter = 0;
-unsigned int CheckISCTimerUIG = 0;
-unsigned int IBC_ComsCrashTimer = 0;
+unsigned int CheckCBBTimerUIG = 0;
+unsigned int CCB_ComsCrashTimer = 0;
 char LowSpeedTickCG;
 unsigned int HighSpeedTickPBTUIG;
 char DeArmTickCG;
@@ -62,13 +62,13 @@ unsigned char NewCFStatusUCG;
 unsigned char AlarmStatusUCG;
 unsigned char CFLEDFlashState;
 unsigned char PacketForPiIdentifier = 0b11111111;
-unsigned char ISC_Transmit_Packet_Ready = 0;
+unsigned char CBB_Transmit_Packet_Ready = 0;
 unsigned char Pi_Status_Update = 0;
-unsigned char New_ISC_SN = 0;
+unsigned char New_CBB_SN = 0;
 unsigned char BroadcastCheckUC = 0;
-unsigned char Discover_ISC_ModeUCG = 0;
-unsigned char Show_Missing_ISC = 0;
-unsigned char Discovered_New_ISC = 0;
+unsigned char Discover_CBB_ModeUCG = 0;
+unsigned char Show_Missing_CBB = 0;
+unsigned char Discovered_New_CBB = 0;
 
 char HighPulseCountCG;
 
@@ -83,17 +83,17 @@ unsigned short earthLeakageStart;
 unsigned short mainsZero_CrossingValueUSG;
 short long fireOutValueSLG;
 float FireOutFloat;
-unsigned int ISC_Packet_Index = 0;
-unsigned int ISC_CF_Index = 0;
-unsigned int IBC_Default_Data;
-unsigned int IBC_Faults_Data;
+unsigned int CBB_Packet_Index = 0;
+unsigned int CBB_CF_Index = 0;
+unsigned int CCB_Default_Data;
+unsigned int CCB_Faults_Data;
 
 unsigned short statusFlagsUSG;
 
 unsigned short temp;
 
 unsigned char EEPWrite[5], EEPRead[5];
-unsigned char Production_ISC_SN_Counter[2];
+unsigned char Production_CBB_SN_Counter[2];
 
 void InitSystem(void);
 void InitReset(void);
@@ -127,39 +127,39 @@ void StartBlastTimer(void);
 void StopBlastTimer(void);
 void StartPreArmedTimer(void);
 void StopPreArmedTimer(void);
-void Receive_ISC_Packet(void);
+void Receive_CBB_Packet(void);
 void Receive_Pi_Packet(void);
-unsigned short getISC_SN(unsigned char ISC_Index);
-void Reverse_ISC_SN_List(void);
-void BroadcastGetISC_SNumbers(void);
-void GetIB651_SNumbers(unsigned short ISC_SN);
-void Add_ISC_SN(unsigned short ISC_SN);
-unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN);
-void Update_Open_Relay(unsigned short ISC_SN);
-void Update_Close_Relay(unsigned short ISC_SN);
-void Update_Ping_Command(unsigned short ISC_SN);
-void Update_ARM_ISC(unsigned short ISC_SN);
-void Update_DISARM_ISC(unsigned short ISC_SN);
-void Update_ISC_Cable_Fault(unsigned short ISC_SN);
-void Update_Default_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-void Update_DC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-void Update_AC_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-void Update_Blast_Loop_Data(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-void Update_Serial_Number(unsigned short ISC_SN, unsigned short Data_Length, char *dataBuf);
-unsigned char getISC_Index(unsigned short ISC_SN);
+unsigned short getCBB_SN(unsigned char CBB_Index);
+void Reverse_CBB_SN_List(void);
+void BroadcastGetCBB_SNumbers(void);
+void GetIB651_SNumbers(unsigned short CBB_SN);
+void Add_CBB_SN(unsigned short CBB_SN);
+unsigned char Check_Clash_CBB_SN(unsigned short CBB_SN);
+void Update_Open_Relay(unsigned short CBB_SN);
+void Update_Close_Relay(unsigned short CBB_SN);
+void Update_Ping_Command(unsigned short CBB_SN);
+void Update_ARM_CBB(unsigned short CBB_SN);
+void Update_DISARM_CBB(unsigned short CBB_SN);
+void Update_CBB_Cable_Fault(unsigned short CBB_SN);
+void Update_Default_Data(unsigned short CBB_SN, unsigned short Data_Length, char *dataBuf);
+void Update_DC_Data(unsigned short CBB_SN, unsigned short Data_Length, char *dataBuf);
+void Update_AC_Data(unsigned short CBB_SN, unsigned short Data_Length, char *dataBuf);
+void Update_Blast_Loop_Data(unsigned short CBB_SN, unsigned short Data_Length, char *dataBuf);
+void Update_Serial_Number(unsigned short CBB_SN, unsigned short Data_Length, char *dataBuf);
+unsigned char getCBB_Index(unsigned short CBB_SN);
 void Inspect_Default_Data_Packet(unsigned short Data_Length);
-unsigned short getIBCDefaultData(void);
+unsigned short getCCBDefaultData(void);
 void Transmit_Pi_Default_Data(void);
-unsigned short getParentForISC(unsigned short ISC_SN);
-void AddParentForISC(unsigned short ISC_SN, unsigned short ISC_PARENT_SN);
+unsigned short getParentForCBB(unsigned short CBB_SN);
+void AddParentForCBB(unsigned short CBB_SN, unsigned short CBB_PARENT_SN);
 void DEBUG_Print_Packet(void);
-void Check_ALL_ISC(void);
+void Check_ALL_CBB(void);
 void EEPROMTest(void);
 void EEPROMWrite(void);
 void EEPROMClearReset(void);
 void EEPROMSetReset(void);
 void EEPROMRead(void);
-void Assign_ISC_New_SN(void);
+void Assign_CBB_New_SN(void);
 void CheckBroadcastPacket(unsigned char Command);
 void Transmit_NULL_Packet(void);
 void Transmit_BLAST_Command_Packet(void);
@@ -197,7 +197,7 @@ extern unsigned short CRC16(char *, unsigned short);
 extern void ClearDataReady(void);
 
 extern void CreateMessageUARTTest(unsigned char Command);
-extern void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
+extern void CreatePiToCCBUARTMessage(unsigned char Command, unsigned short packetSourceUS);
 extern void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf);
 
 void interrupt isr(void){
@@ -210,8 +210,8 @@ void interrupt isr(void){
         ELT_Counter++;                                                          //add 1 to the ELT counter, cleared by the ELT tester
         
         if (DataReadyST7540()){
-            Receive_ISC_Packet();
-            if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){
+            Receive_CBB_Packet();
+            if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==CCB_SN){
                 IdleTimerUIG = 0;           
             }
             ReceiveNewDataST7540();
@@ -243,16 +243,16 @@ void interrupt isr(void){
         else{                       
             BTHighSpeedTickUIG = 0;
             
-            if (IdleTimerUIG > 2000){                                           //1 second then trigger null packet to let ISC's know you are here
+            if (IdleTimerUIG > 2000){                                           //1 second then trigger null packet to let CBB's know you are here
                                                                                 //Transmit Null Packet down the line
                 Transmit_NULL_Packet();
                 IdleTimerUIG = 0;
-                IBC_ComsCrashTimer++;                                           //increment counter every 1 second when coms is active
+                CCB_ComsCrashTimer++;                                           //increment counter every 1 second when coms is active
             }
             else
                 IdleTimerUIG++;
                                         
-            CheckISCTimerUIG++;
+            CheckCBBTimerUIG++;
         }
 
         if (PATEnabled){
@@ -324,18 +324,18 @@ while(1){
     CLRWDT();
     if (DataReadyUART()){                                                       //We have received a packet, now process the packet
         ClearDataReady();
-        IBC_ComsCrashTimer =0;                                                  //we have received data from the PI thus reset counter
+        CCB_ComsCrashTimer =0;                                                  //we have received data from the PI thus reset counter
         if(PacketReadParamUART(UART_CRC_VALID)){
             Receive_Pi_Packet();
         }
     }
 
-    if (ISC_Transmit_Packet_Ready == 1){
+    if (CBB_Transmit_Packet_Ready == 1){
         
         if (!TransmitBusyST7540() && LineIdleST7540()){                         //Only allowed to transmit if the we are not already transmitting and not receiving
             
             StartTransmitST7540();
-            ISC_Transmit_Packet_Ready = 0;
+            CBB_Transmit_Packet_Ready = 0;
             IdleTimerUIG = 0;
         }
     }
@@ -400,19 +400,19 @@ while(1){
             ClearToFire = 1;
         }
     
-        //IBC has timed out with no comms from the PI = 4 minutes
-    if(IBC_ComsCrashTimer > IBC_COMSCRASH_COUNT){          
+        //CCB has timed out with no comms from the PI = 4 minutes
+    if(CCB_ComsCrashTimer > CCB_COMSCRASH_COUNT){          
         //also need to make it reset not turn on the alarm
         EEPROMSetReset();                                                       //set the reset flags to ensure that it doesnt alarm.
         resetUARTPointers();
         ResetStatusUCG = 1;
         Pi_Status_Update = DEFAULT_UPDATE;
-        IBC_ComsCrashTimer= (IBC_COMSCRASH_COUNT-10);                           //subtract 10 counts from it.
+        CCB_ComsCrashTimer= (CCB_COMSCRASH_COUNT-10);                           //subtract 10 counts from it.
     }
     
     if (Pi_Status_Update == DEFAULT_UPDATE){                                    //Default Data has updated and we require letting the Pi know            
         Pi_Status_Update = CLEAR_UPDATE;
-        getIBCDefaultData();
+        getCCBDefaultData();
         Transmit_Pi_Default_Data();
     }
     
@@ -441,7 +441,7 @@ while(1){
         //Else all faults are clear and we can fire
         else if (AlarmStatusUCG == CLEAR && ClearToFire == 1){
             FiringStatusUCG=1;                                                  //firing has begun
-            getIBCDefaultData();
+            getCCBDefaultData();
             Transmit_Pi_Default_Data();
             SendUARTPacket(); 
             
@@ -472,7 +472,7 @@ while(1){
                 
                 WaitTickCount(1000);
                 BTEnabled = 0;                                                  // engage communication mode counter
-                IBC_ComsCrashTimer = IBC_COMSCRASH_COUNT-60;                    // jump the counter to only allow a 1 min leeway before resetting must happen
+                CCB_ComsCrashTimer = CCB_COMSCRASH_COUNT-60;                    // jump the counter to only allow a 1 min leeway before resetting must happen
             }
             else{
                 AlarmStatusUCG = FAULT;
@@ -510,10 +510,10 @@ while(1){
     }                                                                           //END WHILE LOOP
 }
 
-void Receive_ISC_Packet(void){
-        unsigned short tempIscSerial = PacketReadParamST7540(ST7540_SOURCE);
+void Receive_CBB_Packet(void){
+        unsigned short tempCbbSerial = PacketReadParamST7540(ST7540_SOURCE);
         LAT_DIAG1_LED = !LAT_DIAG1_LED;
-        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==IBC_SN){//CRC passes and the data is valid
+        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==CCB_SN){//CRC passes and the data is valid
             ReceiveNewDataST7540();
             CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
             if (BroadcastCheckUC == 0){
@@ -537,28 +537,28 @@ void Receive_ISC_Packet(void){
                 case CMD_AB1_UID :
                     CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_UID, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
                     SendUARTPacket();
-                    CreateMessageST7540(IBC_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_UID, 0, "");
-                    ISC_Transmit_Packet_Ready = 1;
+                    CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_UID, 0, "");
+                    CBB_Transmit_Packet_Ready = 1;
                     return;
 
                 case CMD_AB1_DATA :
                     CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
                     SendUARTPacket();
-                    CreateMessageST7540(IBC_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_DATA, 0, "");
-                    ISC_Transmit_Packet_Ready = 1;
+                    CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_DATA, 0, "");
+                    CBB_Transmit_Packet_Ready = 1;
                     return;
                     
-                case(CMD_ISC_NEW_SN):
-                    tempIscSerial = (tempIscSerial << 8) & 0XFF00;
-                    tempIscSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
-                    CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempIscSerial);
+                case(CMD_CBB_NEW_SN):
+                    tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
+                    tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+                    CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
                     SendUARTPacket();
                     return;
                     
-                case(PING_ISC):                                                 //Receiving ACK for PING
-                    tempIscSerial = (tempIscSerial << 8) & 0XFF00;
-                    tempIscSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
-                    CreateMessageUART(IBC_SN, CMD_PI_SN_ISCS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempIscSerial);
+                case(PING_CBB):                                                 //Receiving ACK for PING
+                    tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
+                    tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+                    CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
                     SendUARTPacket();
                     return;
 
@@ -570,7 +570,7 @@ void Receive_ISC_Packet(void){
             
 }
 
-void Receive_Pi_Packet(void){                                                   //We have received a request from the Pi to aquire data from an ISC
+void Receive_Pi_Packet(void){                                                   //We have received a request from the Pi to aquire data from an CBB
     
     unsigned char BroadcastUC;
             
@@ -583,85 +583,85 @@ void Receive_Pi_Packet(void){                                                   
             BroadcastUC = CMD_SEND_DEFAULT;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;         
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;         
             return;
         case(CMD_PI_FORCE_DEFAULT):
             //Get IB651 Default Values
             BroadcastUC = CMD_FORCE_DEFAULT;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;
         case(CMD_PI_SN_IB651):
-            //Get serial number list of the IB651s connected to particular ISC
+            //Get serial number list of the IB651s connected to particular CBB
             BroadcastUC = CMD_GET_SN;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;    
-        case(CMD_PI_SN_ISCS):          
-            //Ordered list of ISC's, stored on the IBC - No downstream request required
-            Check_ALL_ISC();
+        case(CMD_PI_SN_CBBS):          
+            //Ordered list of CBB's, stored on the CCB - No downstream request required
+            Check_ALL_CBB();
             return;     
-        case(CMD_PI_PING_ISC):                                                       
-            //Ping the relevant ISC
-            BroadcastUC = PING_ISC;
+        case(CMD_PI_PING_CBB):                                                       
+            //Ping the relevant CBB
+            BroadcastUC = PING_CBB;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
-            Discover_ISC_ModeUCG = 0;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
+            Discover_CBB_ModeUCG = 0;
             CF_STAUTS_TimerUIG = 0;
             return;
-        case(CMD_PI_PING_ISC_B):
-            //Ping the relevant ISC
-            BroadcastUC = PING_ISC;
+        case(CMD_PI_PING_CBB_B):
+            //Ping the relevant CBB
+            BroadcastUC = PING_CBB;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;
-        case(CMD_PI_ARM_ISC):                                                        
-            //Arm an ISC
-            BroadcastUC = ARM_ISC;
+        case(CMD_PI_ARM_CBB):                                                        
+            //Arm an CBB
+            BroadcastUC = ARM_CBB;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;
         case(CMD_PI_DISARM):                                                     
-            //Disarm an ISC
-            BroadcastUC = DISARM_ISC;
+            //Disarm an CBB
+            BroadcastUC = DISARM_CBB;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;
         case(CMD_PI_OPEN_RELAY):
-            //set ISC Relay open
+            //set CBB Relay open
             BroadcastUC = CMD_OPEN_RELAY;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;         
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;         
             return;
         case(CMD_PI_CLOSE_RELAY):
-            //Set ISC relay closed
+            //Set CBB relay closed
             BroadcastUC = CMD_CLOSE_RELAY;
             if (BroadcastCheckUC)
                 BroadcastUC |= 0b10000000;
-            CreateMessageST7540(IBC_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
-            ISC_Transmit_Packet_Ready = 1;         
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;         
             return;
-        case(CMD_PI_CLEAR_ISC_LIST):
-            //Clear the list of ISC's normally for remapping purposes
-                for (int i = 0; i < ISC_SN_Array_SizeUCG; i++)
-                    ISC_SN_ArrayUIG[i] = 0; //clear the logs
+        case(CMD_PI_CLEAR_CBB_LIST):
+            //Clear the list of CBB's normally for remapping purposes
+                for (int i = 0; i < CBB_SN_Array_SizeUCG; i++)
+                    CBB_SN_ArrayUIG[i] = 0; //clear the logs
                 
-                ISC_SN_Array_SizeUCG=0; //clear the logs       
+                CBB_SN_Array_SizeUCG=0; //clear the logs       
             return;
         case(CMD_PI_CLEAR_ALARM):
             //Clear Alarm remotely
@@ -676,29 +676,29 @@ void Receive_Pi_Packet(void){                                                   
 
 void Transmit_BLAST_Command_Packet(void){
     if (!TransmitBusyST7540() && LineIdleST7540()){                             //Only allowed to transmit if the we are not already transmitting and not receiving
-        CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, CMD_BLAST_COMMAND, 0, "");
+        CreateMessageST7540(CCB_SN, CBB_SN_BROADCAST_ADD, CMD_BLAST_COMMAND, 0, "");
                 StartTransmitST7540();
-                ISC_Transmit_Packet_Ready = 0;
+                CBB_Transmit_Packet_Ready = 0;
     }
 }
 
 void Transmit_NULL_Packet(void){
-    CreateMessageST7540(IBC_SN, ISC_NULL_SN, PING_ISC, 0, "");
-    ISC_Transmit_Packet_Ready = 1;
+    CreateMessageST7540(CCB_SN, CBB_NULL_SN, PING_CBB, 0, "");
+    CBB_Transmit_Packet_Ready = 1;
 }
 
-void Check_ALL_ISC(void){
-    CreateMessageST7540(IBC_SN, ISC_SN_BROADCAST_ADD, PING_ISC, 0, "");
-    ISC_Transmit_Packet_Ready = 1;
+void Check_ALL_CBB(void){
+    CreateMessageST7540(CCB_SN, CBB_SN_BROADCAST_ADD, PING_CBB, 0, "");
+    CBB_Transmit_Packet_Ready = 1;
 }
 
 void Transmit_Pi_Default_Data(void){
-    CreateMessageUART(IBC_SN, CMD_PI_IBC_DEFAULT, 2, PiDefaultData);
+    CreateMessageUART(CCB_SN, CMD_PI_CCB_DEFAULT, 2, PiDefaultData);
     SendUARTPacket();
 }
 
-void Update_Ping_Command(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
+void Update_Ping_Command(unsigned short CBB_SN){
+    CBB_Packet_Index = getCBB_Index(CBB_SN);
 }
 
 void CheckBroadcastPacket(unsigned char Command){
@@ -706,56 +706,56 @@ void CheckBroadcastPacket(unsigned char Command){
  BroadcastCheckUC = (Command & 0b10000000);
 }
 
-void Reverse_ISC_SN_List(void){
+void Reverse_CBB_SN_List(void){
     unsigned char TempChar;
     unsigned short TempShort;   
 
-    for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
-        TempShort = ISC_SN_ArrayUIG[i];       
+    for (int i = 0; i < CBB_SN_Array_SizeUCG; i++){
+        TempShort = CBB_SN_ArrayUIG[i];       
         TempChar = (TempShort >> 8);
-        ISC_SN_Array_ReverseUSG[i*2] = TempChar;
+        CBB_SN_Array_ReverseUSG[i*2] = TempChar;
         TempChar = TempShort & 0b11111111;
-        ISC_SN_Array_ReverseUSG[(i*2)+1] = TempChar;
+        CBB_SN_Array_ReverseUSG[(i*2)+1] = TempChar;
     }
 
 }
 
-unsigned short getISC_SN(unsigned char ISC_Index){
-    return ISC_SN_ArrayUIG[ISC_Index - 1];
+unsigned short getCBB_SN(unsigned char CBB_Index){
+    return CBB_SN_ArrayUIG[CBB_Index - 1];
 }
 
-unsigned char getISC_Index(unsigned short ISC_SN){
+unsigned char getCBB_Index(unsigned short CBB_SN){
     int index = 0;
 
-    for (index = 0; index < ISC_SN_Array_SizeUCG; index++){
-        if (ISC_SN_ArrayUIG[index] == ISC_SN)
+    for (index = 0; index < CBB_SN_Array_SizeUCG; index++){
+        if (CBB_SN_ArrayUIG[index] == CBB_SN)
             return index + 1;
     }
 
     if (index == 0)
-        Add_ISC_SN(ISC_SN);
+        Add_CBB_SN(CBB_SN);
     return 1;
 }
 
-void Add_ISC_SN(unsigned short ISC_SN){
+void Add_CBB_SN(unsigned short CBB_SN){
 
-    if (ISC_SN_Array_SizeUCG == 0){                                             //We have no ISCs listed
-        ISC_SN_Array_SizeUCG++;
-        ISC_SN_ArrayUIG[0] = ISC_SN;
-        New_ISC_SN = 1; 
+    if (CBB_SN_Array_SizeUCG == 0){                                             //We have no CBBs listed
+        CBB_SN_Array_SizeUCG++;
+        CBB_SN_ArrayUIG[0] = CBB_SN;
+        New_CBB_SN = 1; 
     }
-    else{                                                                       //We already have an ISC listed
-        if (Check_Clash_ISC_SN(ISC_SN) != 1){
-            ISC_SN_ArrayUIG[ISC_SN_Array_SizeUCG] = ISC_SN;
-            ISC_SN_Array_SizeUCG++;
-            New_ISC_SN = 1;                                                     //If we dont have a Clash, then it is a new Serial Number
+    else{                                                                       //We already have an CBB listed
+        if (Check_Clash_CBB_SN(CBB_SN) != 1){
+            CBB_SN_ArrayUIG[CBB_SN_Array_SizeUCG] = CBB_SN;
+            CBB_SN_Array_SizeUCG++;
+            New_CBB_SN = 1;                                                     //If we dont have a Clash, then it is a new Serial Number
         }
     }
 }
 
-unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN){
-    for (int i = 0; i < ISC_SN_Array_SizeUCG; i++){
-        if (ISC_SN_ArrayUIG[i] == ISC_SN){
+unsigned char Check_Clash_CBB_SN(unsigned short CBB_SN){
+    for (int i = 0; i < CBB_SN_Array_SizeUCG; i++){
+        if (CBB_SN_ArrayUIG[i] == CBB_SN){
             
             return 1;
         }
@@ -763,33 +763,33 @@ unsigned char Check_Clash_ISC_SN(unsigned short ISC_SN){
     return 0;
 }
 
-void Assign_ISC_New_SN(void){
-    unsigned char ISC_NEW_SN[2];
+void Assign_CBB_New_SN(void){
+    unsigned char CBB_NEW_SN[2];
     //Method
     EEPROMRead();
-    ISC_NEW_SN[0] = EEPRead[0];                                                 //MSB
-    ISC_NEW_SN[1] = EEPRead[1];                                                 //LSB
-    //Get Last ISC_SN from EEPROM
+    CBB_NEW_SN[0] = EEPRead[0];                                                 //MSB
+    CBB_NEW_SN[1] = EEPRead[1];                                                 //LSB
+    //Get Last CBB_SN from EEPROM
 
     if (EEPRead[1] == 0xFF){                                                    //We need to roll over LSB and increment MSB
-        ISC_NEW_SN[1] = EEPRead[1] + 1;
-        ISC_NEW_SN[0] = 0x00;
+        CBB_NEW_SN[1] = EEPRead[1] + 1;
+        CBB_NEW_SN[0] = 0x00;
     }
     else{
-        ISC_NEW_SN[0] = EEPRead[0];                                             //MSB
-        ISC_NEW_SN[1] = EEPRead[1] + 1;                                         //LSB
+        CBB_NEW_SN[0] = EEPRead[0];                                             //MSB
+        CBB_NEW_SN[1] = EEPRead[1] + 1;                                         //LSB
     }
 
-    EEPWrite[0] = ISC_NEW_SN[0];
-    EEPWrite[1] = ISC_NEW_SN[1];
+    EEPWrite[0] = CBB_NEW_SN[0];
+    EEPWrite[1] = CBB_NEW_SN[1];
     EEPROMWrite();
-    //Increment ISC_SN in EEPROM
-    //Send ISC_SN down to ISC without a SN - PING COMMAND WITH SN in DATA Field?
-    CreateMessageST7540(IBC_SN, ISC_DEFAULT_SN, CMD_ISC_NEW_SN, 2, ISC_NEW_SN);
-    ISC_Transmit_Packet_Ready = 1;
+    //Increment CBB_SN in EEPROM
+    //Send CBB_SN down to CBB without a SN - PING COMMAND WITH SN in DATA Field?
+    CreateMessageST7540(CCB_SN, CBB_DEFAULT_SN, CMD_CBB_NEW_SN, 2, CBB_NEW_SN);
+    CBB_Transmit_Packet_Ready = 1;
 }
 
-unsigned short getIBCDefaultData(void){
+unsigned short getCCBDefaultData(void){
     unsigned short returningData = 0b00000000;
 
     if (KeySwitchStatusUCG)
@@ -829,13 +829,13 @@ void Inspect_Default_Data_Packet(unsigned short Data_Length){
     }
 }
 
-void Update_Open_Relay(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
+void Update_Open_Relay(unsigned short CBB_SN){
+    CBB_Packet_Index = getCBB_Index(CBB_SN);
     PacketForPiIdentifier = CMD_OPEN_RELAY;
 }
 
-void Update_Close_Relay(unsigned short ISC_SN){
-    ISC_Packet_Index = getISC_Index(ISC_SN);
+void Update_Close_Relay(unsigned short CBB_SN){
+    CBB_Packet_Index = getCBB_Index(CBB_SN);
     PacketForPiIdentifier = CMD_CLOSE_RELAY;
 }
 

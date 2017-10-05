@@ -15,7 +15,7 @@
 #define PI_TRANSMIT_MIN_BUFFER_LENGTH 8                                         //CHANGE BACK TO 8!!!! USE 7 FOR TESTING ONLY
 #define PI_TRANSMIT_BUFFER_LENGTH 72
 
-#define IBC_SN                  0x0001                                        // must be changed in UART and main header. - UART seems to take priotiry
+#define CCB_SN                  0x0003                                        // must be changed in UART and main header. - UART seems to take priotiry
 #define FLAG_UART_TX_ACTIVE     1
 
 #define PLM_RECEIVE_BUFFER_LENGTH 71

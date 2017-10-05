@@ -30,7 +30,7 @@
  * using the SS pin normally) so instead monitor the state of the SS pin and
  * active the SPI module when a valid header pulse is received.
  *
- * Ideally we would want to use an int on chage pin but ISC-1V1 hardware didn't
+ * Ideally we would want to use an int on chage pin but CBB-1V1 hardware didn't
  * allow this so the pin was monitored every 100us.
  */
 

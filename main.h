@@ -4,7 +4,7 @@
  *
  * Created on 28 January, 2015, 8:23 AM
  *
- * IBC-1 V1.00 Code
+ * CCB V1.00 Code
  *
  */
 
@@ -114,10 +114,10 @@
 #define VOLT_ZC_THRESHOLD       1 //Calculate
 #define VOLT_MAINS_THRESHOLD    800
 
-#define IBC_SN                  0x0003 // must be changed in UART and main header. - UART seems to take priotiry
-#define ISC_SN_BROADCAST_ADD    0x00
-#define ISC_DEFAULT_SN          0x3FFE
-#define ISC_NULL_SN             0x3FFF
+#define CCB_SN                  0x0003 // must be changed in UART and main header. - UART seems to take priotiry
+#define CBB_SN_BROADCAST_ADD    0x00
+#define CBB_DEFAULT_SN          0x3FFE
+#define CBB_NULL_SN             0x3FFF
 
 #define CLEAR_UPDATE            0x00
 #define DEFAULT_UPDATE          0x01
@@ -137,11 +137,11 @@
 #define CMD_GET_SN              0b00000111
 #define CMD_SN_LIST_CHANGED     0b00001000
 #define CMD_BLAST_COMMAND       0b00100101
-#define PING_ISC                0b00101001
-#define ARM_ISC                 0b00110001
-#define DISARM_ISC              0b00110000
+#define PING_CBB                0b00101001
+#define ARM_CBB                 0b00110001
+#define DISARM_CBB              0b00110000
 #define CMD_CABLE_FAULT         0b00100110
-#define CMD_ISC_NEW_SN          0b00001001
+#define CMD_CBB_NEW_SN          0b00001001
 #define CMD_NULL                0b11111111
 #define CMD_AB1_UID             0b00001010
 #define CMD_AB1_DATA            0b00001011
@@ -160,31 +160,31 @@
 #define CMD_GET_SN_B              0b10000111
 #define CMD_SN_LIST_CHANGED_B     0b10001000
 #define CMD_BLAST_COMMAND_B       0b10100101
-#define PING_ISC_B                0b10101001
-#define ARM_ISC_B                 0b10110001
-#define DISARM_ISC_B              0b10110000
+#define PING_CBB_B                0b10101001
+#define ARM_CBB_B                 0b10110001
+#define DISARM_CBB_B              0b10110000
 #define CMD_CABLE_FAULT_B         0b10100110
-#define CMD_ISC_NEW_SN_B          0b10001001
+#define CMD_CBB_NEW_SN_B          0b10001001
 
-#define CMD_PI_SN_ISCS          0b00000001
+#define CMD_PI_SN_CBBS          0b00000001
 #define CMD_PI_SN_IB651         0b00000010
 #define CMD_PI_DEFAULT_DATA     0b00000011
 #define CMD_PI_FORCE_DEFAULT    0b01000011
 #define CMD_PI_BLAST_VALUE      0b00000110
 #define CMD_PI_FORCE_BLAST_VAL  0b01000110
-#define CMD_PI_IBC_DEFAULT      0b00001000
-#define CMD_PI_IBC_ERRORS       0b00001100
-#define CMD_PI_ISC_PARENT       0b00001111
+#define CMD_PI_CCB_DEFAULT      0b00001000
+#define CMD_PI_CCB_ERRORS       0b00001100
+#define CMD_PI_CBB_PARENT       0b00001111
 #define CMD_PI_CLOSE_RELAY      0b00010001
 #define CMD_PI_OPEN_RELAY       0b00010010
-#define CMD_PI_CLEAR_ISC_LIST   0b00010011              //clear the IBC's list of ISC's
-#define CMD_PI_MISSING_ISC_LIST 0b00010100              //gives the list of missing ISC's sent to PI
-#define CMD_PI_CLEAR_ALARM      0b00010101              //Command to clear the alarm on the IBC
+#define CMD_PI_CLEAR_CBB_LIST   0b00010011              //clear the CCB's list of CBB's
+#define CMD_PI_MISSING_CBB_LIST 0b00010100              //gives the list of missing CBB's sent to PI
+#define CMD_PI_CLEAR_ALARM      0b00010101              //Command to clear the alarm on the CCB
 #define CMD_PI_BLAST_PERMISSION 0b10010000
 #define CMD_PI_BLAST_DENIED     0b10010111
 #define CMD_PI_BLAST_ACK        0b10100101
-#define CMD_PI_PING_ISC         0b00101001
-#define CMD_PI_ARM_ISC          0b10110001
+#define CMD_PI_PING_CBB         0b00101001
+#define CMD_PI_ARM_CBB          0b10110001
 #define CMD_PI_DISARM           0b10110000
 #define CMD_PI_DC_DATA          0b00111110
 #define CMD_PI_FORCE_DC         0b01111110
@@ -195,7 +195,7 @@
 #define CMD_PI_AB1_DATA         0b00000101
 
 #define CMD_PI_DEFAULT_DATA_B   0b10000011              //COMPLETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#define CMD_PI_PING_ISC_B       0b10101001
+#define CMD_PI_PING_CBB_B       0b10101001
 //
 
 #define FLAG_UART_TX_ACTIVE         1
@@ -220,7 +220,7 @@
 #define CLEAR                       0
 #define FAULT                       1
 
-#define MAX_NO_ISC                  30
+#define MAX_NO_CBB                  30
 
 #define DATA_STATUS                 0
 #define DATA_DC_VOLT                1
@@ -230,7 +230,7 @@
 #define DATA_LENGTH                 5
 #define DATA_TYPE_COUNT             6
 
-#define IBC_COMSCRASH_COUNT         240     //tickes every 1 second amounts to 4 minures
+#define CCB_COMSCRASH_COUNT         240     //tickes every 1 second amounts to 4 minures
 
 
 //A2D Input definitions

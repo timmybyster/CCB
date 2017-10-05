@@ -29,7 +29,7 @@ unsigned short PacketReadParamUART(unsigned char paramName);
 unsigned char CheckCRCUART(void);
 void ClearDataReady(void);
 void CreateMessageUARTTest(unsigned char Command);
-void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS);
+void CreatePiToCCBUARTMessage(unsigned char Command, unsigned short packetSourceUS);
 void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceUS, unsigned short packetDestUS,unsigned char packetNOUC,unsigned char commandUC,char *dataBuf);
 
 //External function prototypes
@@ -141,9 +141,9 @@ void ClearDataReady(void){
     flagUARTRead = 0;
 }
 
-//Function used to create downstream messages from the Pi to the IBC to simulate commands from the Pi to the IBC
+//Function used to create downstream messages from the Pi to the CCB to simulate commands from the Pi to the CCB
 //through an interface terminal on a PC
-void CreatePiToIBCUARTMessage(unsigned char Command, unsigned short packetSourceUS){
+void CreatePiToCCBUARTMessage(unsigned char Command, unsigned short packetSourceUS){
     unsigned short packetCRCUS = 0;
     unsigned short packetCRCUStemp = 0;
 
@@ -208,12 +208,12 @@ void CreateMessageUARTDEBUG(unsigned char dataLenUC,unsigned short packetSourceU
 
     TransmitPiBufferCG[2] = dataLenUC;
 
-    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                //IBC-1 S/N
+    TransmitPiBufferCG[3] = packetSourceUS >> 8;                                //CCB S/N
     TransmitPiBufferCG[4] = packetSourceUS;
 
 
 
-    TransmitPiBufferCG[5] = packetDestUS >> 8;                                  //IBC-1 S/N
+    TransmitPiBufferCG[5] = packetDestUS >> 8;                                  //CCB S/N
     TransmitPiBufferCG[6] = packetDestUS;
 
     TransmitPiBufferCG[7] = packetNOUC;
@@ -246,7 +246,7 @@ void CreateMessageUART(unsigned short packetSourceUS, unsigned char commandUC, u
 
     TransmitPiBufferCG[3] = commandUC;                                          //Command
 
-    TransmitPiBufferCG[4] = packetSourceUS >> 8;                                //IBC-1 S/N
+    TransmitPiBufferCG[4] = packetSourceUS >> 8;                                //CCB S/N
     TransmitPiBufferCG[5] = packetSourceUS;
 
     for(dataBufLocUC = 0; dataBufLocUC < dataLenUC; dataBufLocUC++)             //Packet payload
