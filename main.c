@@ -209,13 +209,6 @@ void interrupt isr(void){
 
         ELT_Counter++;                                                          //add 1 to the ELT counter, cleared by the ELT tester
         
-        if (DataReadyST7540()){
-            Receive_CBB_Packet();
-            if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==CCB_SN){
-                IdleTimerUIG = 0;           
-            }
-            ReceiveNewDataST7540();
-        }
         if (CF_STAUTS_TimerUIG < (20000)){                                      //10 seconds
             CF_STAUTS_TimerUIG++;
             }
@@ -322,6 +315,14 @@ void main(void){
 
 while(1){        
     CLRWDT();
+    
+    if (DataReadyST7540()){
+        if(PacketReadParamST7540(ST7540_CRC_VALID)){// && PacketReadParamST7540(ST7540_DEST)==CCB_SN){
+            Receive_CBB_Packet();
+            IdleTimerUIG = 0;           
+        }
+        ReceiveNewDataST7540();
+    }
     if (DataReadyUART()){                                                       //We have received a packet, now process the packet
         ClearDataReady();
         CCB_ComsCrashTimer =0;                                                  //we have received data from the PI thus reset counter
@@ -511,63 +512,55 @@ while(1){
 }
 
 void Receive_CBB_Packet(void){
-        unsigned short tempCbbSerial = PacketReadParamST7540(ST7540_SOURCE);
-        LAT_DIAG1_LED = !LAT_DIAG1_LED;
-        if(PacketReadParamST7540(ST7540_CRC_VALID) && PacketReadParamST7540(ST7540_DEST)==CCB_SN){//CRC passes and the data is valid
-            ReceiveNewDataST7540();
-            CheckBroadcastPacket(PacketReadParamST7540(ST7540_CMD));
-            if (BroadcastCheckUC == 0){
+    unsigned short tempCbbSerial = PacketReadParamST7540(ST7540_SOURCE);
+    LAT_DIAG1_LED = !LAT_DIAG1_LED;
 
-            switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
-                case CMD_GET_SN :
-                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_SN_IB651, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
-                    SendUARTPacket();
-                    return;
+    switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
+        case CMD_GET_SN :
+            CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_SN_IB651, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+            SendUARTPacket();
+            return;
 
-                case CMD_SEND_DEFAULT :
-                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
-                    SendUARTPacket();
-                    return;
-                    
-                case CMD_FORCE_DEFAULT :
-                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
-                    SendUARTPacket();
-                    return;
+        case CMD_SEND_DEFAULT :
+            CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+            SendUARTPacket();
+            return;
 
-                case CMD_AB1_UID :
-                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_UID, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
-                    SendUARTPacket();
-                    CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_UID, 0, "");
-                    CBB_Transmit_Packet_Ready = 1;
-                    return;
+        case CMD_FORCE_DEFAULT :
+            CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_DEFAULT_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+            SendUARTPacket();
+            return;
 
-                case CMD_AB1_DATA :
-                    CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
-                    SendUARTPacket();
-                    CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_DATA, 0, "");
-                    CBB_Transmit_Packet_Ready = 1;
-                    return;
-                    
-                case(CMD_CBB_NEW_SN):
-                    tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
-                    tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
-                    CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
-                    SendUARTPacket();
-                    return;
-                    
-                case(PING_CBB):                                                 //Receiving ACK for PING
-                    tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
-                    tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
-                    CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
-                    SendUARTPacket();
-                    return;
+        case CMD_AB1_UID :
+            CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_UID, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+            SendUARTPacket();
+            CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_UID, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
+            return;
 
-            }
-        }
-        else                                                                    //invalid CRC - How do we handle this?
-            ReceiveNewDataST7540();                                             //configure to recieve next data as this must be ignored.
-    }
-            
+        case CMD_AB1_DATA :
+            CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_AB1_DATA, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
+            SendUARTPacket();
+            CreateMessageST7540(CCB_SN, PacketReadParamST7540(ST7540_SOURCE), CMD_AB1_DATA, 0, "");
+            LAT_CABLE_FAULT_LED = !LAT_CABLE_FAULT_LED;
+            CBB_Transmit_Packet_Ready = 1;
+            return;
+
+        case(CMD_CBB_NEW_SN):
+            tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
+            tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+            CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
+            SendUARTPacket();
+            return;
+
+        case(PING_CBB):                                                 //Receiving ACK for PING
+            tempCbbSerial = (tempCbbSerial << 8) & 0XFF00;
+            tempCbbSerial |= (PacketReadParamST7540(ST7540_SOURCE) >> 8) & 0XFF;
+            CreateMessageUART(CCB_SN, CMD_PI_SN_CBBS, PacketReadParamST7540(ST7540_DATA_LEN) + 2, &tempCbbSerial);
+            SendUARTPacket();
+            return;
+
+    }       
 }
 
 void Receive_Pi_Packet(void){                                                   //We have received a request from the Pi to aquire data from an CBB
