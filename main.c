@@ -169,6 +169,7 @@ void Write_b_eep( unsigned int badd,unsigned char bdat );
 unsigned char Read_b_eep( unsigned int badd );
 void Busy_eep ( void );
 
+void checkKeySwitch(void);
 
 extern unsigned char DataReadyUART(void);
 extern unsigned char LineIdleST7540(void);
@@ -207,6 +208,7 @@ void interrupt isr(void){
         statusFlagsUSG |= FLAG_TICK;        
         UART_TX_ISRHandler();        
 
+        checkKeySwitch();
         ELT_Counter++;                                                          //add 1 to the ELT counter, cleared by the ELT tester
         
         if (CF_STAUTS_TimerUIG < (20000)){                                      //10 seconds
@@ -1213,69 +1215,69 @@ void TurnBuzzer_AlarmOff(void){
     LAT_BUZZER_ALARM_LED = OFF;
 }
 
-unsigned char getKeySwitchState(void){                                          //Half Wave rectification,
-
-                                                                                //Detect Half cycle - 10ms, therefore 0V for min 10mS before rising voltage occurs
-    ReadMAINS_ZeroCrossing();                                                   //500uS tick, therefore 10mS is 20 Ticks
-    if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                       //Measured voltage above the threshold, therefore switch closed
-        KeySwitchStateUCG = ARMED;
-    }
-    else {                                                                      //Wait quarter of a cycle
-        WaitTickCount(15);
-        ReadMAINS_ZeroCrossing();                                               //See if we have a signal       
-        if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){                   //Measured voltage above the threshold, therefore switch closed
-            KeySwitchStateUCG = ARMED;           
-        }
-        else{                                                                   //Wait half a cycle
-            WaitTickCount(10);
-            ReadMAINS_ZeroCrossing();
-            if (mainsZero_CrossingValueUSG == VOLT_ZC_THRESHOLD){               //Measured voltage above the threshold, therefore switch closed
-                KeySwitchStateUCG = ARMED;              
-            }
-            else
-                KeySwitchStateUCG = DISARMED;
-
-        }
-    }
+void checkKeySwitch(void){
+    static unsigned char highCount;
+    static unsigned char lowCount;
+    unsigned char zeroCross;
     
-    return KeySwitchStateUCG;
+    zeroCross = PORT_MAINS_ZEROCROSSING;
+    if(zeroCross){
+        lowCount = 0;
+        highCount++;
+        if(highCount > 10)
+            keySwitch = 1;
+    }
+    else{
+        highCount = 0;
+        lowCount ++;
+        if(lowCount > 40)
+            keySwitch = 0;
+    }
 }
 
-unsigned char getFireButtonState(void){
+unsigned char getKeySwitchState(void){                                          //Half Wave rectification,
+    return keySwitch;
+}
+
+void getResetAndFireButtonState(void){
     unsigned char FireButtonStatusfirstUC;
     unsigned char FireButtonStatussecondUC;
-   
-
-    FireButtonStatusfirstUC = PORT_FIRE_SWITCH;
-    WaitTickCount(20);                                                          //Debounce for 10mS
-    FireButtonStatussecondUC = PORT_FIRE_SWITCH;
-    
-    if (FireButtonStatusfirstUC != FireButtonStatussecondUC)
-        return DEPRESSED;
-    else{
-        if (FireButtonStatussecondUC == 1)
-            return DEPRESSED;                                                   //Inverted Logic
-        else
-            return PRESSED;
-    }
-}
-
-unsigned char getResetButtonState(void){
     unsigned char ResetButtonStatusfirstUC;
     unsigned char ResetButtonStatussecondUC;
 
+    FireButtonStatusfirstUC = PORT_FIRE_SWITCH;
     ResetButtonStatusfirstUC = PORT_RESET_SWITCH;
-    WaitTickCount(50);                                                          //Debounce for 2mS
+    
+    WaitTickCount(20);                                                          //Debounce for 10mS
+    
+    FireButtonStatussecondUC = PORT_FIRE_SWITCH;
     ResetButtonStatussecondUC = PORT_RESET_SWITCH;
 
-     if (ResetButtonStatusfirstUC != ResetButtonStatussecondUC)
-        return DEPRESSED;
+    if (FireButtonStatusfirstUC != FireButtonStatussecondUC)
+        fireButton = DEPRESSED;
+    else{
+        if (FireButtonStatussecondUC == 1)
+            fireButton = DEPRESSED;                                                   //Inverted Logic
+        else
+            fireButton = PRESSED;
+    }
+    
+    if (ResetButtonStatusfirstUC != ResetButtonStatussecondUC)
+        resetButton = DEPRESSED;
      else{
         if (ResetButtonStatussecondUC == 1)
-            return DEPRESSED;
+            resetButton = DEPRESSED;
         else
-            return PRESSED;
+            resetButton = PRESSED;
     }    
+}
+
+unsigned char getFireButtonState(void){
+    return fireButton;
+}
+
+unsigned char getResetButtonState(void){
+    return resetButton;
 }
 
 void EEPROMWrite(){
