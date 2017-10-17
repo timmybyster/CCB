@@ -48,6 +48,10 @@ unsigned char CFLEDFlashEnable;
 char LowSpeedTickPATCG;
 char PATEnabled;
 
+unsigned char fireButton;
+unsigned char resetButton;
+unsigned char keySwitch;
+
 char HalfCycleCounterCG;
 char MissingPulseCounterCG;
 char ModeCG;
@@ -116,6 +120,7 @@ void TurnBuzzer_AlarmOff(void);
 unsigned char getKeySwitchState(void);
 unsigned char getFireButtonState(void);
 unsigned char getResetButtonState(void);
+void getResetAndFireButtonState(void);
 void GenerateMissingPulse(void);
 void checkCableFaults(void);
 void FIRE(void);
@@ -317,6 +322,14 @@ void main(void){
 
 while(1){        
     CLRWDT();
+    if((ELT_Counter >= 500 && earthLeakageCounter > 0) || ELT_Counter >= 1000){
+        earthLeakageStart=1;                                                    //start the test
+        TurnCableFaultDetectOn();   
+    }
+    
+    getResetAndFireButtonState();
+    
+    checkCableFaults();                                                         //check cable faults normally all the time, should it clear then clear the cable as soon as
     
     if (DataReadyST7540()){
         if(PacketReadParamST7540(ST7540_CRC_VALID)){// && PacketReadParamST7540(ST7540_DEST)==CCB_SN){
@@ -341,10 +354,7 @@ while(1){
             CBB_Transmit_Packet_Ready = 0;
             IdleTimerUIG = 0;
         }
-    }
-    
-    checkCableFaults();                                                         //check cable faults normally all the time, should it clear then clear the cable as soon as
-                                                                                //reset is pressed or past when reset is pressed but fault clears in the field
+    }                                                                            //reset is pressed or past when reset is pressed but fault clears in the field
     
     if (CableFaultStatusUCG == CABLEFAULT || CableFaultStatusUCG == EARTHFAULT){  //We have a cable fault
         if (NewCFStatusUCG == 1){                                               //We have a new cable fault
@@ -896,11 +906,6 @@ void checkCableFaults(void){
     }
     else{
         ReadCableFault();                                                       //only do the test far away from ELT
-    }
-    
-    if((ELT_Counter >= 500 && earthLeakageCounter > 0) || ELT_Counter >= 3000){
-        earthLeakageStart=1;                                                    //start the test
-        TurnCableFaultDetectOn();   
     }
     
     if (cableFaultProblemUCG == 1){                                             //We have a Cable/EL Fault        
