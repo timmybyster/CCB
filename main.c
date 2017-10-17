@@ -525,8 +525,6 @@ while(1){
 
 void Receive_CBB_Packet(void){
     unsigned short tempCbbSerial = PacketReadParamST7540(ST7540_SOURCE);
-    LAT_DIAG1_LED = !LAT_DIAG1_LED;
-
     switch(PacketReadParamST7540(ST7540_CMD)){                          //Extract the command from the Packet
         case CMD_GET_SN :
             CreateMessageUART(PacketReadParamST7540(ST7540_SOURCE), CMD_PI_SN_IB651, PacketReadParamST7540(ST7540_DATA_LEN), PacketDataST7540());
@@ -671,6 +669,22 @@ void Receive_Pi_Packet(void){                                                   
         case(CMD_PI_CLEAR_ALARM):
             //Clear Alarm remotely
             AlarmStatusUCG = CLEAR;                    
+            return;
+            
+        case (CMD_PI_AB1_UID):
+            BroadcastUC = CMD_GET_SN;
+            if (BroadcastCheckUC)
+                BroadcastUC |= 0b10000000;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
+            return;
+            
+        case (CMD_PI_AB1_DATA):
+            BroadcastUC = CMD_SEND_DEFAULT;
+            if (BroadcastCheckUC)
+                BroadcastUC |= 0b10000000;
+            CreateMessageST7540(CCB_SN, PacketReadParamUART(UART_SN), BroadcastUC, 0, "");
+            CBB_Transmit_Packet_Ready = 1;
             return;
             
         default :
